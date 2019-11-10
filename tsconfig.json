@@ -14,6 +14,7 @@
     "preserveConstEnums": true,
     "outDir": "./dist",
     "rootDir": "./src/",
-    "sourceMap": false
+    "sourceMap": false,
+    "lib": ["es6", "dom", "es2017"],
   }
 }
