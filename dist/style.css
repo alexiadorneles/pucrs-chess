@@ -5,7 +5,45 @@
 @import url('../node_modules/@fortawesome/fontawesome-free/css/v4-shims.css');
 
 body {
-  display: block;
+  display: flex;
   height: 100%;
   width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.xadrez-linha {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.black {
+  color: black;
+}
+
+.white {
+  color: white;
+}
+
+.green {
+  color: green;
+}
+
+.xadrez-quadrado {
+  position: relative;
+  font-size: 35px;
+}
+
+.peca {
+  position: absolute;
+  z-index: 999;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
