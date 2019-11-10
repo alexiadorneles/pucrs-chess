@@ -47,3 +47,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.destaque {
+  color: red;
+}
