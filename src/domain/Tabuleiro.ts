@@ -23,20 +23,25 @@ export class Tabuleiro {
     const peoesBrancos = this.instanciarPeoes(Cor.BRANCAS);
 
     for (let linha = 0; linha < 8; linha++) {
-      const cor = linha % 2 == 0 ? Cor.BRANCAS : Cor.PRETAS
-      this.posicoes[linha][0] = new ItemTabuleiro(linha, linha, cor)
-      this.posicoes[linha][1] = new ItemTabuleiro(linha, linha, cor)
-      this.posicoes[linha][2] = new ItemTabuleiro(linha, linha, cor)
-      this.posicoes[linha][3] = new ItemTabuleiro(linha, linha, cor)
-      this.posicoes[linha][4] = new ItemTabuleiro(linha, linha, cor)
-      this.posicoes[linha][5] = new ItemTabuleiro(linha, linha, cor)
-      this.posicoes[linha][6] = new ItemTabuleiro(linha, linha, cor)
-      this.posicoes[linha][7] = new ItemTabuleiro(linha, linha, cor)
+      const cor = linha % 2 === 0 ? Cor.VERDES : Cor.PRETAS
+      const pares = cor
+      const impares = cor == Cor.VERDES ? Cor.PRETAS : Cor.VERDES
+      this.posicoes[linha][0] = new ItemTabuleiro(linha, linha, pares)
+      this.posicoes[linha][1] = new ItemTabuleiro(linha, linha, impares)
+      this.posicoes[linha][2] = new ItemTabuleiro(linha, linha, pares)
+      this.posicoes[linha][3] = new ItemTabuleiro(linha, linha, impares)
+      this.posicoes[linha][4] = new ItemTabuleiro(linha, linha, pares)
+      this.posicoes[linha][5] = new ItemTabuleiro(linha, linha, impares)
+      this.posicoes[linha][6] = new ItemTabuleiro(linha, linha, pares)
+      this.posicoes[linha][7] = new ItemTabuleiro(linha, linha, impares)
     }
 
     const linha = 1
     for (let coluna = 0; coluna < 8; coluna++) {
-      const item = new ItemTabuleiro(linha, coluna, Cor.PRETAS)
+      const pares = Cor.PRETAS
+      const impares = Cor.VERDES
+      const cor = coluna % 2 === 0 ? pares : impares
+      const item = new ItemTabuleiro(linha, coluna, cor)
       item.adicionarPeca(peoesBrancos[coluna])
       this.posicoes[linha][coluna] = item
     }

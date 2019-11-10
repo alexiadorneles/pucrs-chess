@@ -9,23 +9,34 @@ var DOMGenerator = (function () {
         var root = document.getElementById('root');
         var linhas = 8;
         var colunas = 8;
-        var elementos = [];
-        for (var linha = 0; linha < linhas; linha++) {
+        var elementosLinha = [];
+        var elementosColuna = [];
+        var _loop_1 = function (linha) {
+            elementosColuna = [];
             for (var coluna = 0; coluna < colunas; coluna++) {
-                var item = this.tabuleiro.getItem(linha, coluna);
-                var elemento = this.criarElemento(item);
+                var item = this_1.tabuleiro.getItem(linha, coluna);
+                var elemento = this_1.criarElemento(item);
                 item.atribuirElemento(elemento);
-                elementos.push(elemento);
+                elementosColuna.push(elemento);
             }
+            var elementoLinha = document.createElement('div');
+            elementoLinha.setAttribute('class', 'xadrez-linha');
+            elementosColuna.forEach((function (elementoColuna) { return elementoLinha.appendChild(elementoColuna); }));
+            elementosLinha.push(elementoLinha);
+        };
+        var this_1 = this;
+        for (var linha = 0; linha < linhas; linha++) {
+            _loop_1(linha);
         }
-        elementos.forEach(function (elemento) { return root.appendChild(elemento); });
+        elementosLinha.forEach(function (elemento) { return root.appendChild(elemento); });
     };
     DOMGenerator.prototype.criarElemento = function (item) {
         var div = document.createElement('div');
+        div.setAttribute('class', 'container');
         var quadrado = document.createElement('span');
-        quadrado.setAttribute('class', "fas fa-square-full xadrez-quadrado-" + item.getCor());
+        quadrado.setAttribute('class', "fas fa-square-full xadrez-quadrado " + item.getCor());
         var iconePeca = this.criarIconePeca(item.getPeca());
-        quadrado.appendChild(iconePeca);
+        div.appendChild(iconePeca);
         div.appendChild(quadrado);
         return div;
     };
@@ -33,7 +44,7 @@ var DOMGenerator = (function () {
         var tipoPeca = peca && peca.getTipo() || '';
         var corPeca = peca && peca.getCor() || '';
         var iconePeca = document.createElement('i');
-        iconePeca.setAttribute('class', "fas fa-" + tipoPeca + " peca-" + corPeca);
+        iconePeca.setAttribute('class', "fas fa-" + tipoPeca + " peca " + corPeca);
         return iconePeca;
     };
     return DOMGenerator;
@@ -91,19 +102,24 @@ var Tabuleiro = (function () {
     Tabuleiro.prototype.gerarTabuleiroInicial = function () {
         var peoesBrancos = this.instanciarPeoes("white");
         for (var linha_1 = 0; linha_1 < 8; linha_1++) {
-            var cor = linha_1 % 2 == 0 ? "white" : "black";
-            this.posicoes[linha_1][0] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, cor);
-            this.posicoes[linha_1][1] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, cor);
-            this.posicoes[linha_1][2] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, cor);
-            this.posicoes[linha_1][3] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, cor);
-            this.posicoes[linha_1][4] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, cor);
-            this.posicoes[linha_1][5] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, cor);
-            this.posicoes[linha_1][6] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, cor);
-            this.posicoes[linha_1][7] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, cor);
+            var cor = linha_1 % 2 === 0 ? "green" : "black";
+            var pares = cor;
+            var impares = cor == "green" ? "black" : "green";
+            this.posicoes[linha_1][0] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, pares);
+            this.posicoes[linha_1][1] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, impares);
+            this.posicoes[linha_1][2] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, pares);
+            this.posicoes[linha_1][3] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, impares);
+            this.posicoes[linha_1][4] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, pares);
+            this.posicoes[linha_1][5] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, impares);
+            this.posicoes[linha_1][6] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, pares);
+            this.posicoes[linha_1][7] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, impares);
         }
         var linha = 1;
         for (var coluna = 0; coluna < 8; coluna++) {
-            var item = new ItemTabuleiro_1.ItemTabuleiro(linha, coluna, "black");
+            var pares = "black";
+            var impares = "green";
+            var cor = coluna % 2 === 0 ? pares : impares;
+            var item = new ItemTabuleiro_1.ItemTabuleiro(linha, coluna, cor);
             item.adicionarPeca(peoesBrancos[coluna]);
             this.posicoes[linha][coluna] = item;
         }

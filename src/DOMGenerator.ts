@@ -9,27 +9,38 @@ export class DOMGenerator {
     const root = document.getElementById('root')
     const linhas = 8
     const colunas = 8
-    const elementos = []
+    const elementosLinha = []
+    let elementosColuna = []
     for (let linha = 0; linha < linhas; linha++) {
+      elementosColuna = []
+
       for (let coluna = 0; coluna < colunas; coluna++) {
         const item = this.tabuleiro.getItem(linha, coluna)
         const elemento = this.criarElemento(item)
         item.atribuirElemento(elemento)
-        elementos.push(elemento)
+        elementosColuna.push(elemento)
       }
+
+      const elementoLinha = document.createElement('div')
+      elementoLinha.setAttribute('class', 'xadrez-linha')
+      elementosColuna.forEach((elementoColuna => elementoLinha.appendChild(elementoColuna)))
+      elementosLinha.push(elementoLinha)
     }
 
-    elementos.forEach(elemento => root.appendChild(elemento))
+
+    elementosLinha.forEach(elemento => root.appendChild(elemento))
   }
 
   private criarElemento(item: ItemTabuleiro): Element {
     const div = document.createElement('div')
+    div.setAttribute('class', 'container')
+
     const quadrado = document.createElement('span')
-    quadrado.setAttribute('class', `fas fa-square-full xadrez-quadrado-${item.getCor()}`)
+    quadrado.setAttribute('class', `fas fa-square-full xadrez-quadrado ${item.getCor()}`)
 
     const iconePeca = this.criarIconePeca(item.getPeca())
 
-    quadrado.appendChild(iconePeca)
+    div.appendChild(iconePeca)
     div.appendChild(quadrado)
 
     return div
@@ -40,7 +51,7 @@ export class DOMGenerator {
     const corPeca = peca && peca.getCor() || ''
 
     const iconePeca = document.createElement('i')
-    iconePeca.setAttribute('class', `fas fa-${tipoPeca} peca-${corPeca}`)
+    iconePeca.setAttribute('class', `fas fa-${tipoPeca} peca ${corPeca}`)
     return iconePeca
   }
 }

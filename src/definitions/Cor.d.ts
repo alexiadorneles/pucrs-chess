@@ -1,4 +1,5 @@
 export const enum Cor {
   BRANCAS = 'white',
-  PRETAS = 'black'
+  PRETAS = 'black',
+  VERDES = 'green',
 }
