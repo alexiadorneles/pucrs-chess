@@ -15,9 +15,8 @@ export class DOMGenerator {
       elementosColuna = []
 
       for (let coluna = 0; coluna < colunas; coluna++) {
-        const item = this.tabuleiro.getItem(linha, coluna)
+        const item = this.tabuleiro.getItem({ linha, coluna })
         const elemento = this.criarElemento(item)
-        item.atribuirElemento(elemento)
         elementosColuna.push(elemento)
       }
 
@@ -37,6 +36,8 @@ export class DOMGenerator {
 
     const quadrado = document.createElement('span')
     quadrado.setAttribute('class', `fas fa-square-full xadrez-quadrado ${item.getCor()}`)
+    quadrado.addEventListener('click', item.onClick)
+    item.atribuirElemento(quadrado)
 
     const iconePeca = this.criarIconePeca(item.getPeca())
 
