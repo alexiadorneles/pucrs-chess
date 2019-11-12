@@ -13,9 +13,8 @@ var DOMGenerator = (function () {
         var _loop_1 = function (linha) {
             elementosColuna = [];
             for (var coluna = 0; coluna < colunas; coluna++) {
-                var item = this_1.tabuleiro.getItem(linha, coluna);
+                var item = this_1.tabuleiro.getItem({ linha: linha, coluna: coluna });
                 var elemento = this_1.criarElemento(item);
-                item.atribuirElemento(elemento);
                 elementosColuna.push(elemento);
             }
             var elementoLinha = document.createElement('div');
@@ -34,6 +33,8 @@ var DOMGenerator = (function () {
         div.setAttribute('class', 'container');
         var quadrado = document.createElement('span');
         quadrado.setAttribute('class', "fas fa-square-full xadrez-quadrado " + item.getCor());
+        quadrado.addEventListener('click', item.onClick);
+        item.atribuirElemento(quadrado);
         var iconePeca = this.criarIconePeca(item.getPeca());
         div.appendChild(iconePeca);
         div.appendChild(quadrado);

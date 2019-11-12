@@ -13,14 +13,17 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Movimento_1 = require("./Movimento");
-var MovimentoVertical = (function (_super) {
-    __extends(MovimentoVertical, _super);
-    function MovimentoVertical() {
-        var _this = _super.call(this, 1) || this;
-        _this.offsetMovimentos = [{ coluna: 0, linha: 1 }];
+var Peca_1 = require("./Peca");
+var TipoPeca_1 = require("../../definitions/TipoPeca");
+var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
+var Bispo = (function (_super) {
+    __extends(Bispo, _super);
+    function Bispo(cor) {
+        var _this = this;
+        var movimentos = [new MovimentoDiagonal_1.MovimentoDiagonal()];
+        _this = _super.call(this, TipoPeca_1.TipoPeca.BISPO, cor, movimentos, true) || this;
         return _this;
     }
-    return MovimentoVertical;
-}(Movimento_1.Movimento));
-exports.MovimentoVertical = MovimentoVertical;
+    return Bispo;
+}(Peca_1.Peca));
+exports.Bispo = Bispo;

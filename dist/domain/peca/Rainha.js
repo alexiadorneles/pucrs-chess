@@ -16,14 +16,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Peca_1 = require("./Peca");
 var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
-var Peao = (function (_super) {
-    __extends(Peao, _super);
-    function Peao(cor) {
+var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
+var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
+var Rainha = (function (_super) {
+    __extends(Rainha, _super);
+    function Rainha(cor) {
         var _this = this;
-        var movimentos = [new MovimentoVertical_1.MovimentoVertical()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.PEAO, cor, movimentos, false) || this;
+        var movimentos = [new MovimentoVertical_1.MovimentoVertical(), new MovimentoHorizontal_1.MovimentoHorizontal(), new MovimentoDiagonal_1.MovimentoDiagonal()];
+        _this = _super.call(this, TipoPeca_1.TipoPeca.RAINHA, cor, movimentos, true) || this;
         return _this;
     }
-    return Peao;
+    return Rainha;
 }(Peca_1.Peca));
-exports.Peao = Peao;
+exports.Rainha = Rainha;

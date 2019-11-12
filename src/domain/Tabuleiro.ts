@@ -1,8 +1,10 @@
 import { ItemTabuleiro } from './ItemTabuleiro'
 import { Cor } from '../definitions/Cor';
-import { Peao } from './peca/Peoes';
-import { MovimentoVertical } from './movimento/MovimentoVertical';
 import { Posicao } from '../definitions/Movimento';
+import { InstanciadorPecas } from '../domain/InstanciadorPecas';
+import { TipoPeca } from '../definitions/TipoPeca';
+import { MapPosicaoPecasBrancas } from '../definitions/PosicoesIniciais';
+import { DefinidorCores } from '../domain/DefinidorCores';
 
 const initilizarMatriz = (): ItemTabuleiro[][] => {
   const itens = []
@@ -20,32 +22,11 @@ const initilizarMatriz = (): ItemTabuleiro[][] => {
 export class Tabuleiro {
   private posicoes: Array<Array<ItemTabuleiro>> = initilizarMatriz()
 
-  public gerarTabuleiroInicial() {
-    const peoesBrancos = this.instanciarPeoes(Cor.BRANCAS);
-
-    for (let linha = 0; linha < 8; linha++) {
-      const cor = linha % 2 === 0 ? Cor.VERDES : Cor.PRETAS
-      const pares = cor
-      const impares = cor == Cor.VERDES ? Cor.PRETAS : Cor.VERDES
-      this.adicionarItem(new ItemTabuleiro(linha, linha, pares), linha, 0)
-      this.adicionarItem(new ItemTabuleiro(linha, linha, impares), linha, 1)
-      this.adicionarItem(new ItemTabuleiro(linha, linha, pares), linha, 2)
-      this.adicionarItem(new ItemTabuleiro(linha, linha, impares), linha, 3)
-      this.adicionarItem(new ItemTabuleiro(linha, linha, pares), linha, 4)
-      this.adicionarItem(new ItemTabuleiro(linha, linha, impares), linha, 5)
-      this.adicionarItem(new ItemTabuleiro(linha, linha, pares), linha, 6)
-      this.adicionarItem(new ItemTabuleiro(linha, linha, impares), linha, 7)
-    }
-
-    const linha = 1
-    for (let coluna = 0; coluna < 8; coluna++) {
-      const pares = Cor.PRETAS
-      const impares = Cor.VERDES
-      const cor = coluna % 2 === 0 ? pares : impares
-      const item = new ItemTabuleiro(linha, coluna, cor)
-      item.adicionarPeca(peoesBrancos[coluna])
-      this.adicionarItem(item, linha, coluna)
-    }
+  public gerarTabuleiroInicial = () => {
+    const brancas = this.gerarPecas(Cor.BRANCAS)
+    const pretas = this.gerarPecas(Cor.ROSA)
+    const vazias = this.gerarPecasVazias()
+    brancas.concat(pretas).concat(vazias).forEach(this.adicionarItem)
   }
 
   public getItem({ linha, coluna }: Posicao) {
@@ -77,18 +58,19 @@ export class Tabuleiro {
     return posicaoExiste && posicaoLivre
   }
 
-  private adicionarItem(item: ItemTabuleiro, linha: number, coluna: number) {
+  private adicionarItem = (item: ItemTabuleiro) => {
+    const { linha, coluna } = item.getPosicao()
     this.posicoes[linha][coluna] = item
     item.adicionarAoTabuleiro(this)
   }
 
-  private instanciarPeoes(cor: Cor): Peao[] {
-    const peoes: Peao[] = []
-    const movimentos = [new MovimentoVertical()]
-    for (let i = 0; i < 8; i++) {
-      const peao = new Peao(cor, movimentos)
-      peoes.push(peao)
-    }
-    return peoes
+  private gerarPecas(cor: Cor): ItemTabuleiro[] {
+    return (Object as any).values(TipoPeca)
+      .filter((value: string) => !!value)
+      .reduce((agg: ItemTabuleiro[], tipo: TipoPeca) => agg.concat(InstanciadorPecas.instanciar(tipo, cor)), [])
+  }
+
+  private gerarPecasVazias(): ItemTabuleiro[] {
+    return MapPosicaoPecasBrancas.get(TipoPeca.VAZIO).map(posicao => new ItemTabuleiro(posicao, DefinidorCores.definir(posicao)))
   }
 }

@@ -17,9 +17,10 @@ var Movimento_1 = require("./Movimento");
 var MovimentoDiagonal = (function (_super) {
     __extends(MovimentoDiagonal, _super);
     function MovimentoDiagonal() {
-        return _super.call(this, 2) || this;
+        var _this = _super.call(this, 2) || this;
+        _this.offsetMovimentos = [{ coluna: 1, linha: 1 }];
+        return _this;
     }
-    MovimentoDiagonal.offsetMovimentos = [{ coluna: 1, linha: 1 }];
     return MovimentoDiagonal;
 }(Movimento_1.Movimento));
 exports.MovimentoDiagonal = MovimentoDiagonal;

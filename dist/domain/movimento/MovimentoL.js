@@ -17,12 +17,13 @@ var Movimento_1 = require("./Movimento");
 var MovimentoL = (function (_super) {
     __extends(MovimentoL, _super);
     function MovimentoL() {
-        return _super.call(this, 3) || this;
+        var _this = _super.call(this, 3) || this;
+        _this.offsetMovimentos = [
+            { coluna: 2, linha: 1 },
+            { coluna: 1, linha: 2 },
+        ];
+        return _this;
     }
-    MovimentoL.offsetMovimentos = [
-        { coluna: 2, linha: 1 },
-        { coluna: 1, linha: 2 },
-    ];
     return MovimentoL;
 }(Movimento_1.Movimento));
 exports.MovimentoL = MovimentoL;

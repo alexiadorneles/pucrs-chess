@@ -13,14 +13,12 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Movimento_1 = require("./Movimento");
-var MovimentoVertical = (function (_super) {
-    __extends(MovimentoVertical, _super);
-    function MovimentoVertical() {
-        var _this = _super.call(this, 1) || this;
-        _this.offsetMovimentos = [{ coluna: 0, linha: 1 }];
-        return _this;
+var Peca_1 = require("./Peca");
+var Torre = (function (_super) {
+    __extends(Torre, _super);
+    function Torre() {
+        return _super.call(this, '', cor, [], true) || this;
     }
-    return MovimentoVertical;
-}(Movimento_1.Movimento));
-exports.MovimentoVertical = MovimentoVertical;
+    return Torre;
+}(Peca_1.Peca));
+exports.Torre = Torre;

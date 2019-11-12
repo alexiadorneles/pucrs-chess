@@ -4,11 +4,11 @@ import { Posicao } from "../definitions/Movimento";
 import { Tabuleiro } from "domain/Tabuleiro";
 
 export class ItemTabuleiro {
-  private peca: Peca;
-  private isDestacado: boolean;
-  private elemento: Element;
-  private tabuleiro: Tabuleiro;
-  constructor(private linha: number, private coluna: number, private cor: Cor) { }
+  private peca: Peca
+  private isDestacado: boolean
+  private elemento: Element
+  private tabuleiro: Tabuleiro
+  constructor(private posicao: Posicao, private cor: Cor) { }
 
   public adicionarPeca(peca: Peca): void {
     this.peca = peca
@@ -36,8 +36,7 @@ export class ItemTabuleiro {
   }
 
   public getPosicao(): Posicao {
-    const { linha, coluna } = this
-    return { linha, coluna }
+    return this.posicao
   }
 
   public setDestaque(isDestacado: boolean) {

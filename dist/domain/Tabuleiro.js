@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ItemTabuleiro_1 = require("./ItemTabuleiro");
-var Peoes_1 = require("./peca/Peoes");
-var MovimentoVertical_1 = require("./movimento/MovimentoVertical");
+var InstanciadorPecas_1 = require("../domain/InstanciadorPecas");
+var TipoPeca_1 = require("../definitions/TipoPeca");
+var PosicoesIniciais_1 = require("../definitions/PosicoesIniciais");
+var DefinidorCores_1 = require("../domain/DefinidorCores");
 var initilizarMatriz = function () {
     var itens = [];
     itens[0] = [];
@@ -17,44 +19,53 @@ var initilizarMatriz = function () {
 };
 var Tabuleiro = (function () {
     function Tabuleiro() {
+        var _this = this;
         this.posicoes = initilizarMatriz();
+        this.gerarTabuleiroInicial = function () {
+            var brancas = _this.gerarPecas("white");
+            var pretas = _this.gerarPecas("rosa");
+            var vazias = _this.gerarPecasVazias();
+            brancas.concat(pretas).concat(vazias).forEach(_this.adicionarItem);
+        };
+        this.adicionarItem = function (item) {
+            var _a = item.getPosicao(), linha = _a.linha, coluna = _a.coluna;
+            _this.posicoes[linha][coluna] = item;
+            item.adicionarAoTabuleiro(_this);
+        };
     }
-    Tabuleiro.prototype.gerarTabuleiroInicial = function () {
-        var peoesBrancos = this.instanciarPeoes("white");
-        for (var linha_1 = 0; linha_1 < 8; linha_1++) {
-            var cor = linha_1 % 2 === 0 ? "green" : "black";
-            var pares = cor;
-            var impares = cor == "green" ? "black" : "green";
-            this.posicoes[linha_1][0] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, pares);
-            this.posicoes[linha_1][1] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, impares);
-            this.posicoes[linha_1][2] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, pares);
-            this.posicoes[linha_1][3] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, impares);
-            this.posicoes[linha_1][4] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, pares);
-            this.posicoes[linha_1][5] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, impares);
-            this.posicoes[linha_1][6] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, pares);
-            this.posicoes[linha_1][7] = new ItemTabuleiro_1.ItemTabuleiro(linha_1, linha_1, impares);
-        }
-        var linha = 1;
-        for (var coluna = 0; coluna < 8; coluna++) {
-            var pares = "black";
-            var impares = "green";
-            var cor = coluna % 2 === 0 ? pares : impares;
-            var item = new ItemTabuleiro_1.ItemTabuleiro(linha, coluna, cor);
-            item.adicionarPeca(peoesBrancos[coluna]);
-            this.posicoes[linha][coluna] = item;
-        }
-    };
-    Tabuleiro.prototype.getItem = function (linha, coluna) {
+    Tabuleiro.prototype.getItem = function (_a) {
+        var linha = _a.linha, coluna = _a.coluna;
         return this.posicoes[linha][coluna];
     };
-    Tabuleiro.prototype.instanciarPeoes = function (cor) {
-        var peoes = [];
-        var movimentos = [new MovimentoVertical_1.MovimentoVertical()];
-        for (var i = 0; i < 8; i++) {
-            var peao = new Peoes_1.Peao(cor, movimentos);
-            peoes.push(peao);
-        }
-        return peoes;
+    Tabuleiro.prototype.destacarPosicoes = function (posicoes) {
+        var _this = this;
+        posicoes.forEach(function (posicao) {
+            if (_this.isPosicaoValida(posicao)) {
+                _this.getItem(posicao).setDestaque(true);
+            }
+        });
+    };
+    Tabuleiro.prototype.removerDestaques = function () {
+        var removerDestaque = function (item) { return item.removerDestaque(); };
+        this.percorrerTabuleiro(removerDestaque);
+    };
+    Tabuleiro.prototype.percorrerTabuleiro = function (callback) {
+        for (var linha = 0; linha < 8; linha++)
+            for (var coluna = 0; coluna < 8; coluna++)
+                callback(this.getItem({ linha: linha, coluna: coluna }));
+    };
+    Tabuleiro.prototype.isPosicaoValida = function (posicao) {
+        var posicaoExiste = posicao.coluna < 8 && posicao.linha >= 0;
+        var posicaoLivre = !Boolean(this.getItem(posicao).getPeca());
+        return posicaoExiste && posicaoLivre;
+    };
+    Tabuleiro.prototype.gerarPecas = function (cor) {
+        return Object.values(TipoPeca_1.TipoPeca)
+            .filter(function (value) { return !!value; })
+            .reduce(function (agg, tipo) { return agg.concat(InstanciadorPecas_1.InstanciadorPecas.instanciar(tipo, cor)); }, []);
+    };
+    Tabuleiro.prototype.gerarPecasVazias = function () {
+        return PosicoesIniciais_1.MapPosicaoPecasBrancas.get(TipoPeca_1.TipoPeca.VAZIO).map(function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.DefinidorCores.definir(posicao)); });
     };
     return Tabuleiro;
 }());

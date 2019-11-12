@@ -2,7 +2,7 @@ import { Movimento } from '../movimento/Movimento'
 import { TipoPeca } from '../../definitions/TipoPeca'
 import { ItemTabuleiro } from '../ItemTabuleiro'
 import { Cor } from '../../definitions/Cor'
-import { Posicao } from 'definitions/Movimento'
+import { Posicao } from '../../definitions/Movimento'
 
 export abstract class Peca {
   protected itemTabuleiro: ItemTabuleiro
