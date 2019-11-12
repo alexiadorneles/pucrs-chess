@@ -5,6 +5,7 @@ var InstanciadorPecas_1 = require("../domain/InstanciadorPecas");
 var TipoPeca_1 = require("../definitions/TipoPeca");
 var PosicoesIniciais_1 = require("../definitions/PosicoesIniciais");
 var DefinidorCores_1 = require("../domain/DefinidorCores");
+var DOMGenerator_1 = require("../DOMGenerator");
 var initilizarMatriz = function () {
     var itens = [];
     itens[0] = [];
@@ -26,6 +27,7 @@ var Tabuleiro = (function () {
             var pretas = _this.gerarPecas("rosa");
             var vazias = _this.gerarPecasVazias();
             brancas.concat(pretas).concat(vazias).forEach(_this.adicionarItem);
+            return _this;
         };
         this.adicionarItem = function (item) {
             var _a = item.getPosicao(), linha = _a.linha, coluna = _a.coluna;
@@ -48,6 +50,19 @@ var Tabuleiro = (function () {
     Tabuleiro.prototype.removerDestaques = function () {
         var removerDestaque = function (item) { return item.removerDestaque(); };
         this.percorrerTabuleiro(removerDestaque);
+    };
+    Tabuleiro.prototype.setPecaEmMovimento = function (peca) {
+        this.pecaEmMovimento = peca;
+    };
+    Tabuleiro.prototype.isPecaEmMovimento = function () {
+        return !!this.pecaEmMovimento;
+    };
+    Tabuleiro.prototype.moverPeca = function (itemClicado) {
+        var itemDaPeca = this.pecaEmMovimento.getItemTabuleiro();
+        itemClicado.atribuirPeca(this.pecaEmMovimento);
+        this.pecaEmMovimento = null;
+        itemDaPeca.atribuirPeca(null);
+        DOMGenerator_1.DOMGenerator.getInstance().refresh();
     };
     Tabuleiro.prototype.percorrerTabuleiro = function (callback) {
         for (var linha = 0; linha < 8; linha++)

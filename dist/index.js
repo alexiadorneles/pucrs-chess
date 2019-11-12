@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var DOMGenerator_1 = require("./DOMGenerator");
 var Tabuleiro_1 = require("./domain/Tabuleiro");
-var tabuleiro = new Tabuleiro_1.Tabuleiro();
-tabuleiro.gerarTabuleiroInicial();
-new DOMGenerator_1.DOMGenerator(tabuleiro).generate();
+var DOMGenerator_1 = require("./DOMGenerator");
+var tabuleiroInicial = new Tabuleiro_1.Tabuleiro().gerarTabuleiroInicial();
+DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial);
+DOMGenerator_1.DOMGenerator.getInstance().refresh();

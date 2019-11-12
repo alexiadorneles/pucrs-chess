@@ -3,10 +3,27 @@ import { ItemTabuleiro } from './domain/ItemTabuleiro'
 import { Peca } from './domain/peca/Peca'
 
 export class DOMGenerator {
-  constructor(private tabuleiro: Tabuleiro) { }
+  private static instance: DOMGenerator
+  private tabuleiro: Tabuleiro
 
-  public generate(): any {
+  private constructor() {
+  }
+
+  public injetarTabuleiro(tabuleiro: Tabuleiro): void {
+    this.tabuleiro = tabuleiro
+  }
+
+  static getInstance(): DOMGenerator {
+    if (!DOMGenerator.instance) {
+      DOMGenerator.instance = new DOMGenerator()
+    }
+
+    return DOMGenerator.instance
+  }
+
+  public refresh(): any {
     const root = document.getElementById('root')
+    root.innerHTML = ''
     const linhas = 8
     const colunas = 8
     const elementosLinha = []

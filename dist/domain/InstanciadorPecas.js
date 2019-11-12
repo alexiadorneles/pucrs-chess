@@ -26,7 +26,7 @@ var InstanciadorPecas;
             var clazz = InstanciadorTipoMap.get(tipo);
             var item = new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.DefinidorCores.definir(posicao));
             var peca = new clazz(corPeca);
-            item.adicionarPeca(peca);
+            item.atribuirPeca(peca);
             return item;
         });
     }

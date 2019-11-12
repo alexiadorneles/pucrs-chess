@@ -1,7 +1,8 @@
 import { Peca } from "./peca/Peca";
 import { Cor } from "../definitions/Cor"
 import { Posicao } from "../definitions/Movimento";
-import { Tabuleiro } from "domain/Tabuleiro";
+import { Tabuleiro } from "../domain/Tabuleiro";
+import { DOMGenerator } from "../DOMGenerator";
 
 export class ItemTabuleiro {
   private peca: Peca
@@ -10,9 +11,11 @@ export class ItemTabuleiro {
   private tabuleiro: Tabuleiro
   constructor(private posicao: Posicao, private cor: Cor) { }
 
-  public adicionarPeca(peca: Peca): void {
+  public atribuirPeca(peca: Peca): void {
     this.peca = peca
-    this.peca.adicionarAoItem(this)
+    if (peca) {
+      this.peca.adicionarAoItem(this)
+    }
   }
 
   public atribuirElemento(elemento: Element) {
@@ -24,7 +27,20 @@ export class ItemTabuleiro {
   }
 
   public onClick = (event: Event) => {
-    this.setDestaque(!this.isDestacado)
+    if (!this.isDestacado) {
+      if (this.peca) {
+        this.tabuleiro.setPecaEmMovimento(this.peca)
+        this.setDestaque(true)
+      }
+    } else {
+      if (!this.peca) {
+        if (this.tabuleiro.isPecaEmMovimento()) {
+          this.tabuleiro.moverPeca(this)
+        }
+      } else {
+        this.setDestaque(false)
+      }
+    }
   }
 
   public getCor() {
@@ -60,7 +76,7 @@ export class ItemTabuleiro {
 
   private simularMovimento(): void {
     if (this.peca) {
-      const posicoes = this.peca.mover()
+      const posicoes = this.peca.simularMovimento()
       this.tabuleiro.destacarPosicoes(posicoes)
     }
   }

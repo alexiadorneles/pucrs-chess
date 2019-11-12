@@ -27,7 +27,7 @@ export namespace InstanciadorPecas {
       const clazz = InstanciadorTipoMap.get(tipo)
       const item = new ItemTabuleiro(posicao, DefinidorCores.definir(posicao))
       const peca = new clazz(corPeca)
-      item.adicionarPeca(peca)
+      item.atribuirPeca(peca)
       return item
     })
   }

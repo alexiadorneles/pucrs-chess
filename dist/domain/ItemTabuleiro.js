@@ -6,12 +6,29 @@ var ItemTabuleiro = (function () {
         this.posicao = posicao;
         this.cor = cor;
         this.onClick = function (event) {
-            _this.setDestaque(!_this.isDestacado);
+            if (!_this.isDestacado) {
+                if (_this.peca) {
+                    _this.tabuleiro.setPecaEmMovimento(_this.peca);
+                    _this.setDestaque(true);
+                }
+            }
+            else {
+                if (!_this.peca) {
+                    if (_this.tabuleiro.isPecaEmMovimento()) {
+                        _this.tabuleiro.moverPeca(_this);
+                    }
+                }
+                else {
+                    _this.setDestaque(false);
+                }
+            }
         };
     }
-    ItemTabuleiro.prototype.adicionarPeca = function (peca) {
+    ItemTabuleiro.prototype.atribuirPeca = function (peca) {
         this.peca = peca;
-        this.peca.adicionarAoItem(this);
+        if (peca) {
+            this.peca.adicionarAoItem(this);
+        }
     };
     ItemTabuleiro.prototype.atribuirElemento = function (elemento) {
         this.elemento = elemento;
@@ -47,7 +64,7 @@ var ItemTabuleiro = (function () {
     };
     ItemTabuleiro.prototype.simularMovimento = function () {
         if (this.peca) {
-            var posicoes = this.peca.mover();
+            var posicoes = this.peca.simularMovimento();
             this.tabuleiro.destacarPosicoes(posicoes);
         }
     };

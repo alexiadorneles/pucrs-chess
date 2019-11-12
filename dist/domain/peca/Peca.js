@@ -7,7 +7,10 @@ var Peca = (function () {
         this.movimentos = movimentos;
         this.vaiPraTras = vaiPraTras;
     }
-    Peca.prototype.mover = function () {
+    Peca.prototype.getItemTabuleiro = function () {
+        return this.itemTabuleiro;
+    };
+    Peca.prototype.simularMovimento = function () {
         var _this = this;
         var posicaoPeca = this.itemTabuleiro.getPosicao();
         return this.movimentos

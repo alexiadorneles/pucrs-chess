@@ -1,6 +1,6 @@
-import { DOMGenerator } from "./DOMGenerator"
-import { Tabuleiro } from "./domain/Tabuleiro"
+import { Tabuleiro } from './domain/Tabuleiro'
+import { DOMGenerator } from './DOMGenerator'
 
-const tabuleiro = new Tabuleiro()
-tabuleiro.gerarTabuleiroInicial()
-new DOMGenerator(tabuleiro).generate()
+const tabuleiroInicial = new Tabuleiro().gerarTabuleiroInicial()
+DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial)
+DOMGenerator.getInstance().refresh()

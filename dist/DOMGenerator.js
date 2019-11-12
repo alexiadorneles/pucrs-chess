@@ -1,11 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var DOMGenerator = (function () {
-    function DOMGenerator(tabuleiro) {
-        this.tabuleiro = tabuleiro;
+    function DOMGenerator() {
     }
-    DOMGenerator.prototype.generate = function () {
+    DOMGenerator.prototype.injetarTabuleiro = function (tabuleiro) {
+        this.tabuleiro = tabuleiro;
+    };
+    DOMGenerator.getInstance = function () {
+        if (!DOMGenerator.instance) {
+            DOMGenerator.instance = new DOMGenerator();
+        }
+        return DOMGenerator.instance;
+    };
+    DOMGenerator.prototype.refresh = function () {
         var root = document.getElementById('root');
+        root.innerHTML = '';
         var linhas = 8;
         var colunas = 8;
         var elementosLinha = [];

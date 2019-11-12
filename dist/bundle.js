@@ -2,11 +2,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var DOMGenerator = (function () {
-    function DOMGenerator(tabuleiro) {
-        this.tabuleiro = tabuleiro;
+    function DOMGenerator() {
     }
-    DOMGenerator.prototype.generate = function () {
+    DOMGenerator.prototype.injetarTabuleiro = function (tabuleiro) {
+        this.tabuleiro = tabuleiro;
+    };
+    DOMGenerator.getInstance = function () {
+        if (!DOMGenerator.instance) {
+            DOMGenerator.instance = new DOMGenerator();
+        }
+        return DOMGenerator.instance;
+    };
+    DOMGenerator.prototype.refresh = function () {
         var root = document.getElementById('root');
+        root.innerHTML = '';
         var linhas = 8;
         var colunas = 8;
         var elementosLinha = [];
@@ -222,7 +231,7 @@ var InstanciadorPecas;
             var clazz = InstanciadorTipoMap.get(tipo);
             var item = new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.DefinidorCores.definir(posicao));
             var peca = new clazz(corPeca);
-            item.adicionarPeca(peca);
+            item.atribuirPeca(peca);
             return item;
         });
     }
@@ -238,12 +247,29 @@ var ItemTabuleiro = (function () {
         this.posicao = posicao;
         this.cor = cor;
         this.onClick = function (event) {
-            _this.setDestaque(!_this.isDestacado);
+            if (!_this.isDestacado) {
+                if (_this.peca) {
+                    _this.tabuleiro.setPecaEmMovimento(_this.peca);
+                    _this.setDestaque(true);
+                }
+            }
+            else {
+                if (!_this.peca) {
+                    if (_this.tabuleiro.isPecaEmMovimento()) {
+                        _this.tabuleiro.moverPeca(_this);
+                    }
+                }
+                else {
+                    _this.setDestaque(false);
+                }
+            }
         };
     }
-    ItemTabuleiro.prototype.adicionarPeca = function (peca) {
+    ItemTabuleiro.prototype.atribuirPeca = function (peca) {
         this.peca = peca;
-        this.peca.adicionarAoItem(this);
+        if (peca) {
+            this.peca.adicionarAoItem(this);
+        }
     };
     ItemTabuleiro.prototype.atribuirElemento = function (elemento) {
         this.elemento = elemento;
@@ -279,7 +305,7 @@ var ItemTabuleiro = (function () {
     };
     ItemTabuleiro.prototype.simularMovimento = function () {
         if (this.peca) {
-            var posicoes = this.peca.mover();
+            var posicoes = this.peca.simularMovimento();
             this.tabuleiro.destacarPosicoes(posicoes);
         }
     };
@@ -303,6 +329,7 @@ var InstanciadorPecas_1 = require("../domain/InstanciadorPecas");
 var TipoPeca_1 = require("../definitions/TipoPeca");
 var PosicoesIniciais_1 = require("../definitions/PosicoesIniciais");
 var DefinidorCores_1 = require("../domain/DefinidorCores");
+var DOMGenerator_1 = require("../DOMGenerator");
 var initilizarMatriz = function () {
     var itens = [];
     itens[0] = [];
@@ -324,6 +351,7 @@ var Tabuleiro = (function () {
             var pretas = _this.gerarPecas("rosa");
             var vazias = _this.gerarPecasVazias();
             brancas.concat(pretas).concat(vazias).forEach(_this.adicionarItem);
+            return _this;
         };
         this.adicionarItem = function (item) {
             var _a = item.getPosicao(), linha = _a.linha, coluna = _a.coluna;
@@ -347,6 +375,19 @@ var Tabuleiro = (function () {
         var removerDestaque = function (item) { return item.removerDestaque(); };
         this.percorrerTabuleiro(removerDestaque);
     };
+    Tabuleiro.prototype.setPecaEmMovimento = function (peca) {
+        this.pecaEmMovimento = peca;
+    };
+    Tabuleiro.prototype.isPecaEmMovimento = function () {
+        return !!this.pecaEmMovimento;
+    };
+    Tabuleiro.prototype.moverPeca = function (itemClicado) {
+        var itemDaPeca = this.pecaEmMovimento.getItemTabuleiro();
+        itemClicado.atribuirPeca(this.pecaEmMovimento);
+        this.pecaEmMovimento = null;
+        itemDaPeca.atribuirPeca(null);
+        DOMGenerator_1.DOMGenerator.getInstance().refresh();
+    };
     Tabuleiro.prototype.percorrerTabuleiro = function (callback) {
         for (var linha = 0; linha < 8; linha++)
             for (var coluna = 0; coluna < 8; coluna++)
@@ -369,7 +410,7 @@ var Tabuleiro = (function () {
 }());
 exports.Tabuleiro = Tabuleiro;
 
-},{"../definitions/PosicoesIniciais":2,"../definitions/TipoPeca":3,"../domain/DefinidorCores":4,"../domain/InstanciadorPecas":5,"./ItemTabuleiro":6}],8:[function(require,module,exports){
+},{"../DOMGenerator":1,"../definitions/PosicoesIniciais":2,"../definitions/TipoPeca":3,"../domain/DefinidorCores":4,"../domain/InstanciadorPecas":5,"./ItemTabuleiro":6}],8:[function(require,module,exports){
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -596,7 +637,10 @@ var Peca = (function () {
         this.movimentos = movimentos;
         this.vaiPraTras = vaiPraTras;
     }
-    Peca.prototype.mover = function () {
+    Peca.prototype.getItemTabuleiro = function () {
+        return this.itemTabuleiro;
+    };
+    Peca.prototype.simularMovimento = function () {
         var _this = this;
         var posicaoPeca = this.itemTabuleiro.getPosicao();
         return this.movimentos
@@ -748,10 +792,10 @@ exports.Torre = Torre;
 },{"../../definitions/TipoPeca":3,"../movimento/MovimentoHorizontal":10,"../movimento/MovimentoVertical":12,"./Peca":15}],20:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var DOMGenerator_1 = require("./DOMGenerator");
 var Tabuleiro_1 = require("./domain/Tabuleiro");
-var tabuleiro = new Tabuleiro_1.Tabuleiro();
-tabuleiro.gerarTabuleiroInicial();
-new DOMGenerator_1.DOMGenerator(tabuleiro).generate();
+var DOMGenerator_1 = require("./DOMGenerator");
+var tabuleiroInicial = new Tabuleiro_1.Tabuleiro().gerarTabuleiroInicial();
+DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial);
+DOMGenerator_1.DOMGenerator.getInstance().refresh();
 
 },{"./DOMGenerator":1,"./domain/Tabuleiro":7}]},{},[20]);

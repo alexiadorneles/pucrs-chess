@@ -18,7 +18,11 @@ export abstract class Peca {
     this.vaiPraTras = vaiPraTras
   }
 
-  public mover(): Posicao[] {
+  public getItemTabuleiro(): ItemTabuleiro {
+    return this.itemTabuleiro
+  }
+
+  public simularMovimento(): Posicao[] {
     const posicaoPeca = this.itemTabuleiro.getPosicao()
     return this.movimentos
       .map(movimento => movimento.simularMovimento(posicaoPeca, this.vaiPraTras))

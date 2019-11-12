@@ -5,6 +5,8 @@ import { InstanciadorPecas } from '../domain/InstanciadorPecas';
 import { TipoPeca } from '../definitions/TipoPeca';
 import { MapPosicaoPecasBrancas } from '../definitions/PosicoesIniciais';
 import { DefinidorCores } from '../domain/DefinidorCores';
+import { Peca } from '../domain/peca/Peca';
+import { DOMGenerator } from '../DOMGenerator';
 
 const initilizarMatriz = (): ItemTabuleiro[][] => {
   const itens = []
@@ -21,12 +23,14 @@ const initilizarMatriz = (): ItemTabuleiro[][] => {
 
 export class Tabuleiro {
   private posicoes: Array<Array<ItemTabuleiro>> = initilizarMatriz()
+  private pecaEmMovimento: Peca
 
-  public gerarTabuleiroInicial = () => {
+  public gerarTabuleiroInicial = (): Tabuleiro => {
     const brancas = this.gerarPecas(Cor.BRANCAS)
     const pretas = this.gerarPecas(Cor.ROSA)
     const vazias = this.gerarPecasVazias()
     brancas.concat(pretas).concat(vazias).forEach(this.adicionarItem)
+    return this
   }
 
   public getItem({ linha, coluna }: Posicao) {
@@ -44,6 +48,22 @@ export class Tabuleiro {
   public removerDestaques() {
     const removerDestaque = (item: ItemTabuleiro) => item.removerDestaque()
     this.percorrerTabuleiro(removerDestaque)
+  }
+
+  public setPecaEmMovimento(peca: Peca) {
+    this.pecaEmMovimento = peca
+  }
+
+  public isPecaEmMovimento(): boolean {
+    return !!this.pecaEmMovimento
+  }
+
+  public moverPeca(itemClicado: ItemTabuleiro): void {
+    const itemDaPeca = this.pecaEmMovimento.getItemTabuleiro()
+    itemClicado.atribuirPeca(this.pecaEmMovimento)
+    this.pecaEmMovimento = null
+    itemDaPeca.atribuirPeca(null)
+    DOMGenerator.getInstance().refresh()
   }
 
   private percorrerTabuleiro(callback: Function): void {
