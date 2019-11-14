@@ -3,6 +3,7 @@ import { TipoPeca } from '../../definitions/TipoPeca'
 import { ItemTabuleiro } from '../ItemTabuleiro'
 import { Cor } from '../../definitions/Cor'
 import { Posicao } from '../../definitions/Movimento'
+import _ from 'lodash'
 
 export abstract class Peca {
   protected itemTabuleiro: ItemTabuleiro
@@ -20,6 +21,11 @@ export abstract class Peca {
 
   public getItemTabuleiro(): ItemTabuleiro {
     return this.itemTabuleiro
+  }
+
+  public podeMover(posicao: Posicao, ocupada: boolean): boolean {
+    const isPosicaoOcupadaPorEstaPeca = _.isEqual(posicao, this.getItemTabuleiro().getPosicao())
+    return ocupada ? isPosicaoOcupadaPorEstaPeca : true
   }
 
   public simularMovimento(): Posicao[] {

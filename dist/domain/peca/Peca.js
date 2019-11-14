@@ -1,5 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __importDefault(require("lodash"));
 var Peca = (function () {
     function Peca(tipo, cor, movimentos, vaiPraTras) {
         this.tipo = tipo;
@@ -9,6 +13,10 @@ var Peca = (function () {
     }
     Peca.prototype.getItemTabuleiro = function () {
         return this.itemTabuleiro;
+    };
+    Peca.prototype.podeMover = function (posicao, ocupada) {
+        var isPosicaoOcupadaPorEstaPeca = lodash_1.default.isEqual(posicao, this.getItemTabuleiro().getPosicao());
+        return ocupada ? isPosicaoOcupadaPorEstaPeca : true;
     };
     Peca.prototype.simularMovimento = function () {
         var _this = this;

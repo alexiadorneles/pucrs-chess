@@ -33,4 +33,19 @@ export abstract class ExtensorPosicoes {
       return agg.concat(novasPosicoes)
     }, [])
   }
+
+  public static extenderL = (posicoes: Posicao[]): Posicao[] => {
+    return posicoes.reduce((agg, { linha, coluna }) => {
+      const novasPosicoes: Posicao[] = []
+      novasPosicoes.push({ linha: linha + 2, coluna: coluna + 1 })
+      novasPosicoes.push({ linha: linha - 2, coluna: coluna + 1 })
+      novasPosicoes.push({ linha: linha - 2, coluna: coluna - 1 })
+      novasPosicoes.push({ linha: linha + 2, coluna: coluna - 1 })
+      novasPosicoes.push({ linha: linha + 1, coluna: coluna + 2 })
+      novasPosicoes.push({ linha: linha + 1, coluna: coluna - 2 })
+      novasPosicoes.push({ linha: linha - 1, coluna: coluna + 2 })
+      novasPosicoes.push({ linha: linha - 1, coluna: coluna - 2 })
+      return agg.concat(novasPosicoes)
+    }, [])
+  }
 }

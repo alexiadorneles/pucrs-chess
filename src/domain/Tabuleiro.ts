@@ -1,12 +1,12 @@
 import { ItemTabuleiro } from './ItemTabuleiro'
-import { Cor } from '../definitions/Cor';
-import { Posicao } from '../definitions/Movimento';
-import { InstanciadorPecas } from '../domain/InstanciadorPecas';
-import { TipoPeca } from '../definitions/TipoPeca';
-import { MapPosicaoPecasBrancas } from '../definitions/PosicoesIniciais';
-import { DefinidorCores } from '../domain/DefinidorCores';
-import { Peca } from '../domain/peca/Peca';
-import { DOMGenerator } from '../DOMGenerator';
+import { Cor } from '../definitions/Cor'
+import { Posicao } from '../definitions/Movimento'
+import { InstanciadorPecas } from '../domain/InstanciadorPecas'
+import { TipoPeca } from '../definitions/TipoPeca'
+import { MapPosicaoPecasBrancas } from '../definitions/PosicoesIniciais'
+import { DefinidorCores } from '../domain/DefinidorCores'
+import { Peca } from '../domain/peca/Peca'
+import { DOMGenerator } from '../DOMGenerator'
 
 const initilizarMatriz = (): ItemTabuleiro[][] => {
   const itens = []
@@ -33,16 +33,16 @@ export class Tabuleiro {
     return this
   }
 
-  public getItem({ linha, coluna }: Posicao) {
+  public getItem({ linha, coluna }: Posicao): ItemTabuleiro | null {
     const posicaoExiste = coluna < 8 && linha >= 0
     return posicaoExiste ? this.posicoes[linha][coluna] : null
   }
 
-  public destacarPosicoes(posicoes: Posicao[], itemEmQuestao: ItemTabuleiro) {
+  public destacarPosicoes(posicoes: Posicao[], itemEmQuestao: ItemTabuleiro): void {
     posicoes.every(posicao => {
       if (this.isPosicaoExistente(posicao)) {
         if (this.isPosicaoOcupada(posicao, itemEmQuestao)) {
-          if (!this.isEquals(posicao, itemEmQuestao.getPosicao())) {
+          if (!this.pecaEmMovimento.podeMover(posicao, true)) {
             return false
           }
         } else {
@@ -53,12 +53,12 @@ export class Tabuleiro {
     })
   }
 
-  public removerDestaques() {
+  public removerDestaques(): void {
     const removerDestaque = (item: ItemTabuleiro) => item.removerDestaque()
     this.percorrerTabuleiro(removerDestaque)
   }
 
-  public setPecaEmMovimento(peca: Peca) {
+  public setPecaEmMovimento(peca: Peca): void {
     this.pecaEmMovimento = peca
   }
 
@@ -81,10 +81,10 @@ export class Tabuleiro {
   }
 
   private isPosicaoExistente(posicao: Posicao): boolean {
-    return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8);
+    return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8)
   }
 
-  private isPosicaoOcupada(posicao: Posicao, item: ItemTabuleiro) {
+  private isPosicaoOcupada(posicao: Posicao, item: ItemTabuleiro): boolean {
     if (this.isPosicaoExistente(posicao)) {
       return Boolean(this.getItem(posicao).getPeca())
     }
@@ -94,7 +94,7 @@ export class Tabuleiro {
 
   // TODO: remover isso daqui pelo amor de deus
   // colocar o lodash
-  public isEquals(posicao: Posicao, posicaoDois: Posicao) {
+  public isEquals(posicao: Posicao, posicaoDois: Posicao): boolean {
     return (posicao.linha === posicaoDois.linha) && (posicao.coluna === posicaoDois.coluna)
   }
 

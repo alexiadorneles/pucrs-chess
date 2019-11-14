@@ -45,7 +45,7 @@ var Tabuleiro = (function () {
         posicoes.every(function (posicao) {
             if (_this.isPosicaoExistente(posicao)) {
                 if (_this.isPosicaoOcupada(posicao, itemEmQuestao)) {
-                    if (!_this.isEquals(posicao, itemEmQuestao.getPosicao())) {
+                    if (!_this.pecaEmMovimento.podeMover(posicao, true)) {
                         return false;
                     }
                 }

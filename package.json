@@ -6,7 +6,8 @@
   "scripts": {
     "build": "npm run build-ts && npm run lint",
     "build:watch": "tsc -w",
-    "lint": "tslint -c tslint.json -p tsconfig.json"
+    "lint": "tslint -c tslint.json -p tsconfig.json",
+    "generate-bundle": "browserify dist/index.js -o dist/bundle.js"
   },
   "author": "alexiadorneles",
   "license": "ISC",
@@ -17,5 +18,10 @@
     "eslint": "^6.0.1",
     "tslint": "^5.18.0",
     "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.147",
+    "browserify": "^16.5.0",
+    "lodash": "^4.17.15"
   }
 }

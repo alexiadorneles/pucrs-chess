@@ -36,6 +36,21 @@ var ExtensorPosicoes = (function () {
             return agg.concat(novasPosicoes);
         }, []);
     };
+    ExtensorPosicoes.extenderL = function (posicoes) {
+        return posicoes.reduce(function (agg, _a) {
+            var linha = _a.linha, coluna = _a.coluna;
+            var novasPosicoes = [];
+            novasPosicoes.push({ linha: linha + 2, coluna: coluna + 1 });
+            novasPosicoes.push({ linha: linha - 2, coluna: coluna + 1 });
+            novasPosicoes.push({ linha: linha - 2, coluna: coluna - 1 });
+            novasPosicoes.push({ linha: linha + 2, coluna: coluna - 1 });
+            novasPosicoes.push({ linha: linha + 1, coluna: coluna + 2 });
+            novasPosicoes.push({ linha: linha + 1, coluna: coluna - 2 });
+            novasPosicoes.push({ linha: linha - 1, coluna: coluna + 2 });
+            novasPosicoes.push({ linha: linha - 1, coluna: coluna - 2 });
+            return agg.concat(novasPosicoes);
+        }, []);
+    };
     return ExtensorPosicoes;
 }());
 exports.ExtensorPosicoes = ExtensorPosicoes;

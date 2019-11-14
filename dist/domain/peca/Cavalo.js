@@ -16,6 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Peca_1 = require("./Peca");
 var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoL_1 = require("../movimento/MovimentoL");
+var ExtensorPosicoes_1 = require("../../ExtensorPosicoes");
 var Cavalo = (function (_super) {
     __extends(Cavalo, _super);
     function Cavalo(cor) {
@@ -24,6 +25,13 @@ var Cavalo = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.CAVALO, cor, movimentos, true) || this;
         return _this;
     }
+    Cavalo.prototype.podeMover = function (posicao, ocupada) {
+        return true;
+    };
+    Cavalo.prototype.simularMovimento = function () {
+        var posicao = this.getItemTabuleiro().getPosicao();
+        return ExtensorPosicoes_1.ExtensorPosicoes.extenderL([posicao]);
+    };
     return Cavalo;
 }(Peca_1.Peca));
 exports.Cavalo = Cavalo;
