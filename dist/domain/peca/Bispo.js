@@ -16,6 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Peca_1 = require("./Peca");
 var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
+var ExtensorPosicoes_1 = require("../../ExtensorPosicoes");
 var Bispo = (function (_super) {
     __extends(Bispo, _super);
     function Bispo(cor) {
@@ -24,6 +25,9 @@ var Bispo = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.BISPO, cor, movimentos, true) || this;
         return _this;
     }
+    Bispo.prototype.simularMovimento = function () {
+        return ExtensorPosicoes_1.ExtensorPosicoes.extenderDiagonal(this.getItemTabuleiro().getPosicao());
+    };
     return Bispo;
 }(Peca_1.Peca));
 exports.Bispo = Bispo;

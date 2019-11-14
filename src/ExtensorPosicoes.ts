@@ -21,17 +21,35 @@ export abstract class ExtensorPosicoes {
     }, [])
   }
 
-  public static extenderDiagonal = (posicoes: Posicao[]): Posicao[] => {
-    return posicoes.reduce((agg, { linha, coluna }) => {
-      const novasPosicoes: Posicao[] = []
-      for (let i = coluna; i < 8; i++) {
-        novasPosicoes.push({ linha: i, coluna: i })
-      }
-      for (let i = linha; i < 8; i++) {
-        novasPosicoes.push({ linha: i, coluna: i })
-      }
-      return agg.concat(novasPosicoes)
-    }, [])
+  public static extenderDiagonal = (posicao: Posicao): Posicao[] => {
+    const offsetColuna = 8 - posicao.coluna
+    let novaPosicao = { linha: posicao.linha, coluna: posicao.coluna }
+    const novasPosicoes: Posicao[] = []
+    while (novaPosicao.coluna < 8) {
+      let { linha, coluna } = novaPosicao
+      novaPosicao = { linha: ++linha, coluna: ++coluna }
+      novasPosicoes.push(novaPosicao)
+    }
+    novaPosicao = { linha: posicao.linha, coluna: posicao.coluna }
+    while (novaPosicao.coluna >= 0) {
+      let { linha, coluna } = novaPosicao
+      novaPosicao = { linha: ++linha, coluna: --coluna }
+      novasPosicoes.push(novaPosicao)
+    }
+    novaPosicao = { linha: posicao.linha, coluna: posicao.coluna }
+    while (novaPosicao.coluna < 8) {
+      let { linha, coluna } = novaPosicao
+      novaPosicao = { linha: --linha, coluna: ++coluna }
+      novasPosicoes.push(novaPosicao)
+    }
+    novaPosicao = { linha: posicao.linha, coluna: posicao.coluna }
+    while (novaPosicao.coluna >= 0) {
+      let { linha, coluna } = novaPosicao
+      novaPosicao = { linha: --linha, coluna: --coluna }
+      novasPosicoes.push(novaPosicao)
+    }
+
+    return novasPosicoes
   }
 
   public static extenderL = (posicoes: Posicao[]): Posicao[] => {

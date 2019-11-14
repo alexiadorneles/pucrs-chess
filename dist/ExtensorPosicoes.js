@@ -23,18 +23,34 @@ var ExtensorPosicoes = (function () {
             return agg.concat(novasPosicoes);
         }, []);
     };
-    ExtensorPosicoes.extenderDiagonal = function (posicoes) {
-        return posicoes.reduce(function (agg, _a) {
-            var linha = _a.linha, coluna = _a.coluna;
-            var novasPosicoes = [];
-            for (var i = coluna; i < 8; i++) {
-                novasPosicoes.push({ linha: i, coluna: i });
-            }
-            for (var i = linha; i < 8; i++) {
-                novasPosicoes.push({ linha: i, coluna: i });
-            }
-            return agg.concat(novasPosicoes);
-        }, []);
+    ExtensorPosicoes.extenderDiagonal = function (posicao) {
+        var offsetColuna = 8 - posicao.coluna;
+        var novaPosicao = { linha: posicao.linha, coluna: posicao.coluna };
+        var novasPosicoes = [];
+        while (novaPosicao.coluna < 8) {
+            var linha = novaPosicao.linha, coluna = novaPosicao.coluna;
+            novaPosicao = { linha: ++linha, coluna: ++coluna };
+            novasPosicoes.push(novaPosicao);
+        }
+        novaPosicao = { linha: posicao.linha, coluna: posicao.coluna };
+        while (novaPosicao.coluna >= 0) {
+            var linha = novaPosicao.linha, coluna = novaPosicao.coluna;
+            novaPosicao = { linha: ++linha, coluna: --coluna };
+            novasPosicoes.push(novaPosicao);
+        }
+        novaPosicao = { linha: posicao.linha, coluna: posicao.coluna };
+        while (novaPosicao.coluna < 8) {
+            var linha = novaPosicao.linha, coluna = novaPosicao.coluna;
+            novaPosicao = { linha: --linha, coluna: ++coluna };
+            novasPosicoes.push(novaPosicao);
+        }
+        novaPosicao = { linha: posicao.linha, coluna: posicao.coluna };
+        while (novaPosicao.coluna >= 0) {
+            var linha = novaPosicao.linha, coluna = novaPosicao.coluna;
+            novaPosicao = { linha: --linha, coluna: --coluna };
+            novasPosicoes.push(novaPosicao);
+        }
+        return novasPosicoes;
     };
     ExtensorPosicoes.extenderL = function (posicoes) {
         return posicoes.reduce(function (agg, _a) {

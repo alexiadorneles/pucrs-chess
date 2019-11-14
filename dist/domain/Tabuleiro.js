@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var ItemTabuleiro_1 = require("./ItemTabuleiro");
 var InstanciadorPecas_1 = require("../domain/InstanciadorPecas");
@@ -6,6 +9,7 @@ var TipoPeca_1 = require("../definitions/TipoPeca");
 var PosicoesIniciais_1 = require("../definitions/PosicoesIniciais");
 var DefinidorCores_1 = require("../domain/DefinidorCores");
 var DOMGenerator_1 = require("../DOMGenerator");
+var lodash_1 = __importDefault(require("lodash"));
 var initilizarMatriz = function () {
     var itens = [];
     itens[0] = [];
@@ -52,8 +56,8 @@ var Tabuleiro = (function () {
                 else {
                     _this.getItem(posicao).setDestaque(true);
                 }
-                return true;
             }
+            return true;
         });
     };
     Tabuleiro.prototype.removerDestaques = function () {
@@ -61,6 +65,9 @@ var Tabuleiro = (function () {
         this.percorrerTabuleiro(removerDestaque);
     };
     Tabuleiro.prototype.setPecaEmMovimento = function (peca) {
+        if (this.pecaEmMovimento && !lodash_1.default.isEqual(this.pecaEmMovimento, peca)) {
+            this.removerDestaques();
+        }
         this.pecaEmMovimento = peca;
     };
     Tabuleiro.prototype.isPecaEmMovimento = function () {
@@ -86,9 +93,6 @@ var Tabuleiro = (function () {
             return Boolean(this.getItem(posicao).getPeca());
         }
         return false;
-    };
-    Tabuleiro.prototype.isEquals = function (posicao, posicaoDois) {
-        return (posicao.linha === posicaoDois.linha) && (posicao.coluna === posicaoDois.coluna);
     };
     Tabuleiro.prototype.gerarPecas = function (cor) {
         return Object.values(TipoPeca_1.TipoPeca)

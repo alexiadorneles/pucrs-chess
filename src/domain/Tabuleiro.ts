@@ -7,6 +7,7 @@ import { MapPosicaoPecasBrancas } from '../definitions/PosicoesIniciais'
 import { DefinidorCores } from '../domain/DefinidorCores'
 import { Peca } from '../domain/peca/Peca'
 import { DOMGenerator } from '../DOMGenerator'
+import _ from 'lodash'
 
 const initilizarMatriz = (): ItemTabuleiro[][] => {
   const itens = []
@@ -48,8 +49,8 @@ export class Tabuleiro {
         } else {
           this.getItem(posicao).setDestaque(true)
         }
-        return true
       }
+      return true
     })
   }
 
@@ -59,6 +60,9 @@ export class Tabuleiro {
   }
 
   public setPecaEmMovimento(peca: Peca): void {
+    if (this.pecaEmMovimento && !_.isEqual(this.pecaEmMovimento, peca)) {
+      this.removerDestaques()
+    }
     this.pecaEmMovimento = peca
   }
 
@@ -90,12 +94,6 @@ export class Tabuleiro {
     }
 
     return false
-  }
-
-  // TODO: remover isso daqui pelo amor de deus
-  // colocar o lodash
-  public isEquals(posicao: Posicao, posicaoDois: Posicao): boolean {
-    return (posicao.linha === posicaoDois.linha) && (posicao.coluna === posicaoDois.coluna)
   }
 
   private adicionarItem = (item: ItemTabuleiro) => {
