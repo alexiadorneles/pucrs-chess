@@ -77,7 +77,7 @@ export class ItemTabuleiro {
   private simularMovimento(): void {
     if (this.peca) {
       const posicoes = this.peca.simularMovimento()
-      this.tabuleiro.destacarPosicoes(posicoes)
+      this.tabuleiro.destacarPosicoes(posicoes, this)
     }
   }
 

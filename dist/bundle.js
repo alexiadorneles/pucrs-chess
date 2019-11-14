@@ -64,6 +64,49 @@ exports.DOMGenerator = DOMGenerator;
 },{}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var ExtensorPosicoes = (function () {
+    function ExtensorPosicoes() {
+    }
+    ExtensorPosicoes.extenderVertical = function (posicoes) {
+        return posicoes.reduce(function (agg, _a) {
+            var linha = _a.linha, coluna = _a.coluna;
+            var novasPosicoes = [];
+            for (var i = linha; i < 8; i++) {
+                novasPosicoes.push({ linha: i, coluna: coluna });
+            }
+            return agg.concat(novasPosicoes);
+        }, []);
+    };
+    ExtensorPosicoes.extenderHorizontal = function (posicoes) {
+        return posicoes.reduce(function (agg, _a) {
+            var linha = _a.linha, coluna = _a.coluna;
+            var novasPosicoes = [];
+            for (var i = coluna; i < 8; i++) {
+                novasPosicoes.push({ linha: linha, coluna: i });
+            }
+            return agg.concat(novasPosicoes);
+        }, []);
+    };
+    ExtensorPosicoes.extenderDiagonal = function (posicoes) {
+        return posicoes.reduce(function (agg, _a) {
+            var linha = _a.linha, coluna = _a.coluna;
+            var novasPosicoes = [];
+            for (var i = coluna; i < 8; i++) {
+                novasPosicoes.push({ linha: i, coluna: i });
+            }
+            for (var i = linha; i < 8; i++) {
+                novasPosicoes.push({ linha: i, coluna: i });
+            }
+            return agg.concat(novasPosicoes);
+        }, []);
+    };
+    return ExtensorPosicoes;
+}());
+exports.ExtensorPosicoes = ExtensorPosicoes;
+
+},{}],3:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var TipoPeca_1 = require("../definitions/TipoPeca");
 var posicaoPeoesBrancos = [
     { linha: 1, coluna: 0 },
@@ -173,7 +216,7 @@ exports.MapPosicaoPecasPretas = new Map([
     [TipoPeca_1.TipoPeca.REI, posicaoReiPreto],
 ]);
 
-},{"../definitions/TipoPeca":3}],3:[function(require,module,exports){
+},{"../definitions/TipoPeca":4}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TipoPeca;
@@ -187,7 +230,7 @@ var TipoPeca;
     TipoPeca["VAZIO"] = "";
 })(TipoPeca = exports.TipoPeca || (exports.TipoPeca = {}));
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var DefinidorCores;
@@ -202,7 +245,7 @@ var DefinidorCores;
     DefinidorCores.definir = definir;
 })(DefinidorCores = exports.DefinidorCores || (exports.DefinidorCores = {}));
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TipoPeca_1 = require("../definitions/TipoPeca");
@@ -238,7 +281,7 @@ var InstanciadorPecas;
     InstanciadorPecas.instanciar = instanciar;
 })(InstanciadorPecas = exports.InstanciadorPecas || (exports.InstanciadorPecas = {}));
 
-},{"../definitions/PosicoesIniciais":2,"../definitions/TipoPeca":3,"../domain/ItemTabuleiro":6,"../domain/peca/Bispo":13,"../domain/peca/Cavalo":14,"../domain/peca/Peoes":16,"../domain/peca/Rainha":17,"../domain/peca/Rei":18,"../domain/peca/Torre":19,"./DefinidorCores":4}],6:[function(require,module,exports){
+},{"../definitions/PosicoesIniciais":3,"../definitions/TipoPeca":4,"../domain/ItemTabuleiro":7,"../domain/peca/Bispo":14,"../domain/peca/Cavalo":15,"../domain/peca/Peoes":17,"../domain/peca/Rainha":18,"../domain/peca/Rei":19,"../domain/peca/Torre":20,"./DefinidorCores":5}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ItemTabuleiro = (function () {
@@ -306,7 +349,7 @@ var ItemTabuleiro = (function () {
     ItemTabuleiro.prototype.simularMovimento = function () {
         if (this.peca) {
             var posicoes = this.peca.simularMovimento();
-            this.tabuleiro.destacarPosicoes(posicoes);
+            this.tabuleiro.destacarPosicoes(posicoes, this);
         }
     };
     ItemTabuleiro.prototype.atualizarClasse = function () {
@@ -321,7 +364,7 @@ var ItemTabuleiro = (function () {
 }());
 exports.ItemTabuleiro = ItemTabuleiro;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ItemTabuleiro_1 = require("./ItemTabuleiro");
@@ -361,13 +404,22 @@ var Tabuleiro = (function () {
     }
     Tabuleiro.prototype.getItem = function (_a) {
         var linha = _a.linha, coluna = _a.coluna;
-        return this.posicoes[linha][coluna];
+        var posicaoExiste = coluna < 8 && linha >= 0;
+        return posicaoExiste ? this.posicoes[linha][coluna] : null;
     };
-    Tabuleiro.prototype.destacarPosicoes = function (posicoes) {
+    Tabuleiro.prototype.destacarPosicoes = function (posicoes, itemEmQuestao) {
         var _this = this;
-        posicoes.forEach(function (posicao) {
-            if (_this.isPosicaoValida(posicao)) {
-                _this.getItem(posicao).setDestaque(true);
+        posicoes.every(function (posicao) {
+            if (_this.isPosicaoExistente(posicao)) {
+                if (_this.isPosicaoOcupada(posicao, itemEmQuestao)) {
+                    if (!_this.isEquals(posicao, itemEmQuestao.getPosicao())) {
+                        return false;
+                    }
+                }
+                else {
+                    _this.getItem(posicao).setDestaque(true);
+                }
+                return true;
             }
         });
     };
@@ -393,10 +445,17 @@ var Tabuleiro = (function () {
             for (var coluna = 0; coluna < 8; coluna++)
                 callback(this.getItem({ linha: linha, coluna: coluna }));
     };
-    Tabuleiro.prototype.isPosicaoValida = function (posicao) {
-        var posicaoExiste = posicao.coluna < 8 && posicao.linha >= 0;
-        var posicaoLivre = !Boolean(this.getItem(posicao).getPeca());
-        return posicaoExiste && posicaoLivre;
+    Tabuleiro.prototype.isPosicaoExistente = function (posicao) {
+        return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8);
+    };
+    Tabuleiro.prototype.isPosicaoOcupada = function (posicao, item) {
+        if (this.isPosicaoExistente(posicao)) {
+            return Boolean(this.getItem(posicao).getPeca());
+        }
+        return false;
+    };
+    Tabuleiro.prototype.isEquals = function (posicao, posicaoDois) {
+        return (posicao.linha === posicaoDois.linha) && (posicao.coluna === posicaoDois.coluna);
     };
     Tabuleiro.prototype.gerarPecas = function (cor) {
         return Object.values(TipoPeca_1.TipoPeca)
@@ -410,7 +469,7 @@ var Tabuleiro = (function () {
 }());
 exports.Tabuleiro = Tabuleiro;
 
-},{"../DOMGenerator":1,"../definitions/PosicoesIniciais":2,"../definitions/TipoPeca":3,"../domain/DefinidorCores":4,"../domain/InstanciadorPecas":5,"./ItemTabuleiro":6}],8:[function(require,module,exports){
+},{"../DOMGenerator":1,"../definitions/PosicoesIniciais":3,"../definitions/TipoPeca":4,"../domain/DefinidorCores":5,"../domain/InstanciadorPecas":6,"./ItemTabuleiro":7}],9:[function(require,module,exports){
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -450,7 +509,7 @@ var Movimento = (function () {
 }());
 exports.Movimento = Movimento;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -478,7 +537,7 @@ var MovimentoDiagonal = (function (_super) {
 }(Movimento_1.Movimento));
 exports.MovimentoDiagonal = MovimentoDiagonal;
 
-},{"./Movimento":8}],10:[function(require,module,exports){
+},{"./Movimento":9}],11:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -506,7 +565,7 @@ var MovimentoHorizontal = (function (_super) {
 }(Movimento_1.Movimento));
 exports.MovimentoHorizontal = MovimentoHorizontal;
 
-},{"./Movimento":8}],11:[function(require,module,exports){
+},{"./Movimento":9}],12:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -537,7 +596,7 @@ var MovimentoL = (function (_super) {
 }(Movimento_1.Movimento));
 exports.MovimentoL = MovimentoL;
 
-},{"./Movimento":8}],12:[function(require,module,exports){
+},{"./Movimento":9}],13:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -565,7 +624,7 @@ var MovimentoVertical = (function (_super) {
 }(Movimento_1.Movimento));
 exports.MovimentoVertical = MovimentoVertical;
 
-},{"./Movimento":8}],13:[function(require,module,exports){
+},{"./Movimento":9}],14:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -596,7 +655,7 @@ var Bispo = (function (_super) {
 }(Peca_1.Peca));
 exports.Bispo = Bispo;
 
-},{"../../definitions/TipoPeca":3,"../movimento/MovimentoDiagonal":9,"./Peca":15}],14:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"./Peca":16}],15:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -627,7 +686,7 @@ var Cavalo = (function (_super) {
 }(Peca_1.Peca));
 exports.Cavalo = Cavalo;
 
-},{"../../definitions/TipoPeca":3,"../movimento/MovimentoL":11,"./Peca":15}],15:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoL":12,"./Peca":16}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Peca = (function () {
@@ -660,7 +719,7 @@ var Peca = (function () {
 }());
 exports.Peca = Peca;
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -691,7 +750,7 @@ var Peao = (function (_super) {
 }(Peca_1.Peca));
 exports.Peao = Peao;
 
-},{"../../definitions/TipoPeca":3,"../movimento/MovimentoVertical":12,"./Peca":15}],17:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoVertical":13,"./Peca":16}],18:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -712,6 +771,7 @@ var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
 var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
 var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
+var ExtensorPosicoes_1 = require("../../ExtensorPosicoes");
 var Rainha = (function (_super) {
     __extends(Rainha, _super);
     function Rainha(cor) {
@@ -720,11 +780,16 @@ var Rainha = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.RAINHA, cor, movimentos, true) || this;
         return _this;
     }
+    Rainha.prototype.simularMovimento = function () {
+        var posicao = this.getItemTabuleiro().getPosicao();
+        var extensaoVertical = ExtensorPosicoes_1.ExtensorPosicoes.extenderVertical([posicao]);
+        return extensaoVertical.concat(ExtensorPosicoes_1.ExtensorPosicoes.extenderHorizontal([posicao])).concat(ExtensorPosicoes_1.ExtensorPosicoes.extenderDiagonal([posicao]));
+    };
     return Rainha;
 }(Peca_1.Peca));
 exports.Rainha = Rainha;
 
-},{"../../definitions/TipoPeca":3,"../movimento/MovimentoDiagonal":9,"../movimento/MovimentoHorizontal":10,"../movimento/MovimentoVertical":12,"./Peca":15}],18:[function(require,module,exports){
+},{"../../ExtensorPosicoes":2,"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":16}],19:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -741,23 +806,23 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Peca_1 = require("./Peca");
-var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
 var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
 var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
+var TipoPeca_1 = require("../../definitions/TipoPeca");
 var Rei = (function (_super) {
     __extends(Rei, _super);
     function Rei(cor) {
         var _this = this;
         var movimentos = [new MovimentoVertical_1.MovimentoVertical(), new MovimentoHorizontal_1.MovimentoHorizontal(), new MovimentoDiagonal_1.MovimentoDiagonal()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.TORRE, cor, movimentos, true) || this;
+        _this = _super.call(this, TipoPeca_1.TipoPeca.REI, cor, movimentos, true) || this;
         return _this;
     }
     return Rei;
 }(Peca_1.Peca));
 exports.Rei = Rei;
 
-},{"../../definitions/TipoPeca":3,"../movimento/MovimentoDiagonal":9,"../movimento/MovimentoHorizontal":10,"../movimento/MovimentoVertical":12,"./Peca":15}],19:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":16}],20:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -774,9 +839,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Peca_1 = require("./Peca");
-var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
 var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
+var TipoPeca_1 = require("../../definitions/TipoPeca");
+var ExtensorPosicoes_1 = require("../../ExtensorPosicoes");
 var Torre = (function (_super) {
     __extends(Torre, _super);
     function Torre(cor) {
@@ -785,11 +851,14 @@ var Torre = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.TORRE, cor, movimentos, true) || this;
         return _this;
     }
+    Torre.prototype.simularMovimento = function () {
+        return ExtensorPosicoes_1.ExtensorPosicoes.extenderVertical([this.getItemTabuleiro().getPosicao()]).concat(ExtensorPosicoes_1.ExtensorPosicoes.extenderHorizontal([this.getItemTabuleiro().getPosicao()]));
+    };
     return Torre;
 }(Peca_1.Peca));
 exports.Torre = Torre;
 
-},{"../../definitions/TipoPeca":3,"../movimento/MovimentoHorizontal":10,"../movimento/MovimentoVertical":12,"./Peca":15}],20:[function(require,module,exports){
+},{"../../ExtensorPosicoes":2,"../../definitions/TipoPeca":4,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":16}],21:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Tabuleiro_1 = require("./domain/Tabuleiro");
@@ -798,4 +867,4 @@ var tabuleiroInicial = new Tabuleiro_1.Tabuleiro().gerarTabuleiroInicial();
 DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial);
 DOMGenerator_1.DOMGenerator.getInstance().refresh();
 
-},{"./DOMGenerator":1,"./domain/Tabuleiro":7}]},{},[20]);
+},{"./DOMGenerator":1,"./domain/Tabuleiro":8}]},{},[21]);

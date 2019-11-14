@@ -14,9 +14,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Peca_1 = require("./Peca");
-var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
 var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
+var TipoPeca_1 = require("../../definitions/TipoPeca");
+var ExtensorPosicoes_1 = require("../../ExtensorPosicoes");
 var Torre = (function (_super) {
     __extends(Torre, _super);
     function Torre(cor) {
@@ -25,6 +26,9 @@ var Torre = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.TORRE, cor, movimentos, true) || this;
         return _this;
     }
+    Torre.prototype.simularMovimento = function () {
+        return ExtensorPosicoes_1.ExtensorPosicoes.extenderVertical([this.getItemTabuleiro().getPosicao()]).concat(ExtensorPosicoes_1.ExtensorPosicoes.extenderHorizontal([this.getItemTabuleiro().getPosicao()]));
+    };
     return Torre;
 }(Peca_1.Peca));
 exports.Torre = Torre;

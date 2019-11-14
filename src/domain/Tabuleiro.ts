@@ -34,13 +34,21 @@ export class Tabuleiro {
   }
 
   public getItem({ linha, coluna }: Posicao) {
-    return this.posicoes[linha][coluna]
+    const posicaoExiste = coluna < 8 && linha >= 0
+    return posicaoExiste ? this.posicoes[linha][coluna] : null
   }
 
-  public destacarPosicoes(posicoes: Posicao[]) {
-    posicoes.forEach(posicao => {
-      if (this.isPosicaoValida(posicao)) {
-        this.getItem(posicao).setDestaque(true)
+  public destacarPosicoes(posicoes: Posicao[], itemEmQuestao: ItemTabuleiro) {
+    posicoes.every(posicao => {
+      if (this.isPosicaoExistente(posicao)) {
+        if (this.isPosicaoOcupada(posicao, itemEmQuestao)) {
+          if (!this.isEquals(posicao, itemEmQuestao.getPosicao())) {
+            return false
+          }
+        } else {
+          this.getItem(posicao).setDestaque(true)
+        }
+        return true
       }
     })
   }
@@ -72,10 +80,22 @@ export class Tabuleiro {
         callback(this.getItem({ linha, coluna }))
   }
 
-  private isPosicaoValida(posicao: Posicao) {
-    const posicaoExiste = posicao.coluna < 8 && posicao.linha >= 0
-    const posicaoLivre = !Boolean(this.getItem(posicao).getPeca())
-    return posicaoExiste && posicaoLivre
+  private isPosicaoExistente(posicao: Posicao): boolean {
+    return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8);
+  }
+
+  private isPosicaoOcupada(posicao: Posicao, item: ItemTabuleiro) {
+    if (this.isPosicaoExistente(posicao)) {
+      return Boolean(this.getItem(posicao).getPeca())
+    }
+
+    return false
+  }
+
+  // TODO: remover isso daqui pelo amor de deus
+  // colocar o lodash
+  public isEquals(posicao: Posicao, posicaoDois: Posicao) {
+    return (posicao.linha === posicaoDois.linha) && (posicao.coluna === posicaoDois.coluna)
   }
 
   private adicionarItem = (item: ItemTabuleiro) => {

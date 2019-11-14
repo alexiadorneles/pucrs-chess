@@ -14,16 +14,16 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Peca_1 = require("./Peca");
-var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
 var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
 var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
+var TipoPeca_1 = require("../../definitions/TipoPeca");
 var Rei = (function (_super) {
     __extends(Rei, _super);
     function Rei(cor) {
         var _this = this;
         var movimentos = [new MovimentoVertical_1.MovimentoVertical(), new MovimentoHorizontal_1.MovimentoHorizontal(), new MovimentoDiagonal_1.MovimentoDiagonal()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.TORRE, cor, movimentos, true) || this;
+        _this = _super.call(this, TipoPeca_1.TipoPeca.REI, cor, movimentos, true) || this;
         return _this;
     }
     return Rei;

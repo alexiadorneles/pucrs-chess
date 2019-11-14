@@ -37,13 +37,22 @@ var Tabuleiro = (function () {
     }
     Tabuleiro.prototype.getItem = function (_a) {
         var linha = _a.linha, coluna = _a.coluna;
-        return this.posicoes[linha][coluna];
+        var posicaoExiste = coluna < 8 && linha >= 0;
+        return posicaoExiste ? this.posicoes[linha][coluna] : null;
     };
-    Tabuleiro.prototype.destacarPosicoes = function (posicoes) {
+    Tabuleiro.prototype.destacarPosicoes = function (posicoes, itemEmQuestao) {
         var _this = this;
-        posicoes.forEach(function (posicao) {
-            if (_this.isPosicaoValida(posicao)) {
-                _this.getItem(posicao).setDestaque(true);
+        posicoes.every(function (posicao) {
+            if (_this.isPosicaoExistente(posicao)) {
+                if (_this.isPosicaoOcupada(posicao, itemEmQuestao)) {
+                    if (!_this.isEquals(posicao, itemEmQuestao.getPosicao())) {
+                        return false;
+                    }
+                }
+                else {
+                    _this.getItem(posicao).setDestaque(true);
+                }
+                return true;
             }
         });
     };
@@ -69,10 +78,17 @@ var Tabuleiro = (function () {
             for (var coluna = 0; coluna < 8; coluna++)
                 callback(this.getItem({ linha: linha, coluna: coluna }));
     };
-    Tabuleiro.prototype.isPosicaoValida = function (posicao) {
-        var posicaoExiste = posicao.coluna < 8 && posicao.linha >= 0;
-        var posicaoLivre = !Boolean(this.getItem(posicao).getPeca());
-        return posicaoExiste && posicaoLivre;
+    Tabuleiro.prototype.isPosicaoExistente = function (posicao) {
+        return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8);
+    };
+    Tabuleiro.prototype.isPosicaoOcupada = function (posicao, item) {
+        if (this.isPosicaoExistente(posicao)) {
+            return Boolean(this.getItem(posicao).getPeca());
+        }
+        return false;
+    };
+    Tabuleiro.prototype.isEquals = function (posicao, posicaoDois) {
+        return (posicao.linha === posicaoDois.linha) && (posicao.coluna === posicaoDois.coluna);
     };
     Tabuleiro.prototype.gerarPecas = function (cor) {
         return Object.values(TipoPeca_1.TipoPeca)

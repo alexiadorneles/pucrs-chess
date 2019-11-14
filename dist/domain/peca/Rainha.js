@@ -18,6 +18,7 @@ var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
 var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
 var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
+var ExtensorPosicoes_1 = require("../../ExtensorPosicoes");
 var Rainha = (function (_super) {
     __extends(Rainha, _super);
     function Rainha(cor) {
@@ -26,6 +27,11 @@ var Rainha = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.RAINHA, cor, movimentos, true) || this;
         return _this;
     }
+    Rainha.prototype.simularMovimento = function () {
+        var posicao = this.getItemTabuleiro().getPosicao();
+        var extensaoVertical = ExtensorPosicoes_1.ExtensorPosicoes.extenderVertical([posicao]);
+        return extensaoVertical.concat(ExtensorPosicoes_1.ExtensorPosicoes.extenderHorizontal([posicao])).concat(ExtensorPosicoes_1.ExtensorPosicoes.extenderDiagonal([posicao]));
+    };
     return Rainha;
 }(Peca_1.Peca));
 exports.Rainha = Rainha;
