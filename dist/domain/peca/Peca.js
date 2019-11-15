@@ -142,6 +142,9 @@ var Peca = (function () {
         this.movimentos = movimentos;
         this.vaiPraTras = vaiPraTras;
     }
+    Peca.prototype.isVaiPraTras = function () {
+        return this.vaiPraTras;
+    };
     Peca.prototype.getItemTabuleiro = function () {
         return this.itemTabuleiro;
     };

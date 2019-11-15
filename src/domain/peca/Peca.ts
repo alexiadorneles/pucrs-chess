@@ -20,6 +20,10 @@ export abstract class Peca {
     this.vaiPraTras = vaiPraTras
   }
 
+  public isVaiPraTras(): boolean {
+    return this.vaiPraTras
+  }
+
   public getItemTabuleiro(): ItemTabuleiro {
     return this.itemTabuleiro
   }

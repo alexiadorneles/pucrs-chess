@@ -18,11 +18,15 @@ var Movimento = (function () {
     Movimento.prototype.getTipo = function () {
         return this.tipo;
     };
-    Movimento.prototype.simularMovimento = function (posicaoAtual, podeIrPraTras) {
+    Movimento.prototype.simularMovimento = function (posicaoAtual, peca) {
         var _this = this;
-        var novasPosicoesFrente = this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaFrente(offset, posicaoAtual); });
-        var novasPosicoesTras = this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaTras(offset, posicaoAtual); });
-        return podeIrPraTras ? novasPosicoesFrente.concat(novasPosicoesTras) : novasPosicoesFrente;
+        var novasPosicoesFrente = peca.getCor() === "white"
+            ? this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaFrente(offset, posicaoAtual); })
+            : this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaTras(offset, posicaoAtual); });
+        var novasPosicoesTras = peca.getCor() === "white"
+            ? this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaTras(offset, posicaoAtual); })
+            : this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaFrente(offset, posicaoAtual); });
+        return peca.isVaiPraTras() ? novasPosicoesFrente.concat(novasPosicoesTras) : novasPosicoesFrente;
     };
     Movimento.prototype.aplicarOffsetParaFrente = function (offset, posicao) {
         var novaPosicao = __assign({}, posicao);

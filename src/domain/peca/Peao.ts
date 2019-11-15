@@ -1,16 +1,14 @@
 import { Peca } from './Peca'
+import { TipoPeca } from '../../definitions/TipoPeca'
 import { Cor } from '../../definitions/Cor'
 import { MovimentoVertical } from '../movimento/MovimentoVertical'
-import { MovimentoHorizontal } from '../movimento/MovimentoHorizontal'
-import { MovimentoDiagonal } from '../movimento/MovimentoDiagonal'
-import { TipoPeca } from '../../definitions/TipoPeca'
-import { Tabuleiro } from '../../domain/Tabuleiro'
+import { Tabuleiro } from '../Tabuleiro'
 import { Posicao } from '../../definitions/Movimento'
 
-export class Rei extends Peca {
+export class Peao extends Peca {
   constructor(cor: Cor) {
-    const movimentos = [new MovimentoVertical(), new MovimentoHorizontal(), new MovimentoDiagonal()]
-    super(TipoPeca.REI, cor, movimentos, true)
+    const movimentos = [new MovimentoVertical()]
+    super(TipoPeca.PEAO, cor, movimentos, false)
   }
   public simularMovimento(tabuleiro: Tabuleiro): Posicao[] {
     const posicaoPeca = this.itemTabuleiro.getPosicao()
@@ -19,5 +17,4 @@ export class Rei extends Peca {
       .reduce((aggregation, movimento: Posicao[]) => aggregation.concat(movimento), [])
 
   }
-
 }

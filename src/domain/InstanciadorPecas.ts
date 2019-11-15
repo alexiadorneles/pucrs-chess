@@ -5,7 +5,7 @@ import { MapPosicaoPecasBrancas, MapPosicaoPecasPretas } from '../definitions/Po
 import { ItemTabuleiro } from '../domain/ItemTabuleiro'
 import { DefinidorCores } from './DefinidorCores'
 import { Cavalo } from '../domain/peca/Cavalo'
-import { Peao } from '../domain/peca/Peoes'
+import { Peao } from './peca/Peao'
 import { Bispo } from '../domain/peca/Bispo'
 import { Rainha } from '../domain/peca/Rainha'
 import { Rei } from '../domain/peca/Rei'

@@ -10,8 +10,4 @@ export class Bispo extends Peca {
     const movimentos = [new MovimentoDiagonal()]
     super(TipoPeca.BISPO, cor, movimentos, true)
   }
-
-  // public simularMovimento(): Posicao[] {
-  //   return ExtensorPosicoes.extenderDiagonal(this.getItemTabuleiro().getPosicao())
-  // }
 }

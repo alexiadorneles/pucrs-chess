@@ -284,13 +284,13 @@ var PosicoesIniciais_1 = require("../definitions/PosicoesIniciais");
 var ItemTabuleiro_1 = require("../domain/ItemTabuleiro");
 var DefinidorCores_1 = require("./DefinidorCores");
 var Cavalo_1 = require("../domain/peca/Cavalo");
-var Peoes_1 = require("../domain/peca/Peoes");
+var Peao_1 = require("./peca/Peao");
 var Bispo_1 = require("../domain/peca/Bispo");
 var Rainha_1 = require("../domain/peca/Rainha");
 var Rei_1 = require("../domain/peca/Rei");
 var Torre_1 = require("../domain/peca/Torre");
 var InstanciadorTipoMap = new Map([
-    [TipoPeca_1.TipoPeca.PEAO, Peoes_1.Peao],
+    [TipoPeca_1.TipoPeca.PEAO, Peao_1.Peao],
     [TipoPeca_1.TipoPeca.CAVALO, Cavalo_1.Cavalo],
     [TipoPeca_1.TipoPeca.BISPO, Bispo_1.Bispo],
     [TipoPeca_1.TipoPeca.RAINHA, Rainha_1.Rainha],
@@ -312,7 +312,7 @@ var InstanciadorPecas;
     InstanciadorPecas.instanciar = instanciar;
 })(InstanciadorPecas = exports.InstanciadorPecas || (exports.InstanciadorPecas = {}));
 
-},{"../definitions/PosicoesIniciais":3,"../definitions/TipoPeca":4,"../domain/ItemTabuleiro":7,"../domain/peca/Bispo":14,"../domain/peca/Cavalo":15,"../domain/peca/Peoes":17,"../domain/peca/Rainha":18,"../domain/peca/Rei":19,"../domain/peca/Torre":20,"./DefinidorCores":5}],7:[function(require,module,exports){
+},{"../definitions/PosicoesIniciais":3,"../definitions/TipoPeca":4,"../domain/ItemTabuleiro":7,"../domain/peca/Bispo":14,"../domain/peca/Cavalo":15,"../domain/peca/Rainha":18,"../domain/peca/Rei":19,"../domain/peca/Torre":20,"./DefinidorCores":5,"./peca/Peao":16}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ItemTabuleiro = (function () {
@@ -517,11 +517,15 @@ var Movimento = (function () {
     Movimento.prototype.getTipo = function () {
         return this.tipo;
     };
-    Movimento.prototype.simularMovimento = function (posicaoAtual, podeIrPraTras) {
+    Movimento.prototype.simularMovimento = function (posicaoAtual, peca) {
         var _this = this;
-        var novasPosicoesFrente = this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaFrente(offset, posicaoAtual); });
-        var novasPosicoesTras = this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaTras(offset, posicaoAtual); });
-        return podeIrPraTras ? novasPosicoesFrente.concat(novasPosicoesTras) : novasPosicoesFrente;
+        var novasPosicoesFrente = peca.getCor() === "white"
+            ? this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaFrente(offset, posicaoAtual); })
+            : this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaTras(offset, posicaoAtual); });
+        var novasPosicoesTras = peca.getCor() === "white"
+            ? this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaTras(offset, posicaoAtual); })
+            : this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaFrente(offset, posicaoAtual); });
+        return peca.isVaiPraTras() ? novasPosicoesFrente.concat(novasPosicoesTras) : novasPosicoesFrente;
     };
     Movimento.prototype.aplicarOffsetParaFrente = function (offset, posicao) {
         var novaPosicao = __assign({}, posicao);
@@ -685,7 +689,7 @@ var Bispo = (function (_super) {
 }(Peca_1.Peca));
 exports.Bispo = Bispo;
 
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"./Peca":16}],15:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"./Peca":17}],15:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -724,7 +728,45 @@ var Cavalo = (function (_super) {
 }(Peca_1.Peca));
 exports.Cavalo = Cavalo;
 
-},{"../../ExtensorPosicoes":2,"../../definitions/TipoPeca":4,"../movimento/MovimentoL":12,"./Peca":16}],16:[function(require,module,exports){
+},{"../../ExtensorPosicoes":2,"../../definitions/TipoPeca":4,"../movimento/MovimentoL":12,"./Peca":17}],16:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var Peca_1 = require("./Peca");
+var TipoPeca_1 = require("../../definitions/TipoPeca");
+var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
+var Peao = (function (_super) {
+    __extends(Peao, _super);
+    function Peao(cor) {
+        var _this = this;
+        var movimentos = [new MovimentoVertical_1.MovimentoVertical()];
+        _this = _super.call(this, TipoPeca_1.TipoPeca.PEAO, cor, movimentos, false) || this;
+        return _this;
+    }
+    Peao.prototype.simularMovimento = function (tabuleiro) {
+        var _this = this;
+        var posicaoPeca = this.itemTabuleiro.getPosicao();
+        return this.movimentos
+            .map(function (movimento) { return movimento.simularMovimento(posicaoPeca, _this); })
+            .reduce(function (aggregation, movimento) { return aggregation.concat(movimento); }, []);
+    };
+    return Peao;
+}(Peca_1.Peca));
+exports.Peao = Peao;
+
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoVertical":13,"./Peca":17}],17:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -869,6 +911,9 @@ var Peca = (function () {
         this.movimentos = movimentos;
         this.vaiPraTras = vaiPraTras;
     }
+    Peca.prototype.isVaiPraTras = function () {
+        return this.vaiPraTras;
+    };
     Peca.prototype.getItemTabuleiro = function () {
         return this.itemTabuleiro;
     };
@@ -895,38 +940,7 @@ var Peca = (function () {
 }());
 exports.Peca = Peca;
 
-},{"lodash":22}],17:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var Peca_1 = require("./Peca");
-var TipoPeca_1 = require("../../definitions/TipoPeca");
-var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
-var Peao = (function (_super) {
-    __extends(Peao, _super);
-    function Peao(cor) {
-        var _this = this;
-        var movimentos = [new MovimentoVertical_1.MovimentoVertical()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.PEAO, cor, movimentos, false) || this;
-        return _this;
-    }
-    return Peao;
-}(Peca_1.Peca));
-exports.Peao = Peao;
-
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoVertical":13,"./Peca":16}],18:[function(require,module,exports){
+},{"lodash":22}],18:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -959,7 +973,7 @@ var Rainha = (function (_super) {
 }(Peca_1.Peca));
 exports.Rainha = Rainha;
 
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":16}],19:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":17}],19:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -988,11 +1002,18 @@ var Rei = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.REI, cor, movimentos, true) || this;
         return _this;
     }
+    Rei.prototype.simularMovimento = function (tabuleiro) {
+        var _this = this;
+        var posicaoPeca = this.itemTabuleiro.getPosicao();
+        return this.movimentos
+            .map(function (movimento) { return movimento.simularMovimento(posicaoPeca, _this); })
+            .reduce(function (aggregation, movimento) { return aggregation.concat(movimento); }, []);
+    };
     return Rei;
 }(Peca_1.Peca));
 exports.Rei = Rei;
 
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":16}],20:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":17}],20:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1024,7 +1045,7 @@ var Torre = (function (_super) {
 }(Peca_1.Peca));
 exports.Torre = Torre;
 
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":16}],21:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":17}],21:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Tabuleiro_1 = require("./domain/Tabuleiro");

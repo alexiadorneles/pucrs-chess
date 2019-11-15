@@ -1,4 +1,6 @@
 import { Posicao, TipoMovimento, OffsetMovimento } from '../../definitions/Movimento'
+import { Peca } from '../../domain/peca/Peca'
+import { Cor } from '../../definitions/Cor'
 
 export abstract class Movimento {
   constructor(private tipo: TipoMovimento) { }
@@ -8,10 +10,14 @@ export abstract class Movimento {
     return this.tipo
   }
 
-  public simularMovimento(posicaoAtual: Posicao, podeIrPraTras: boolean): Posicao[] {
-    const novasPosicoesFrente = this.offsetMovimentos.map(offset => this.aplicarOffsetParaFrente(offset, posicaoAtual))
-    const novasPosicoesTras = this.offsetMovimentos.map(offset => this.aplicarOffsetParaTras(offset, posicaoAtual))
-    return podeIrPraTras ? novasPosicoesFrente.concat(novasPosicoesTras) : novasPosicoesFrente
+  public simularMovimento(posicaoAtual: Posicao, peca: Peca): Posicao[] {
+    const novasPosicoesFrente = peca.getCor() === Cor.BRANCAS
+      ? this.offsetMovimentos.map(offset => this.aplicarOffsetParaFrente(offset, posicaoAtual))
+      : this.offsetMovimentos.map(offset => this.aplicarOffsetParaTras(offset, posicaoAtual))
+    const novasPosicoesTras = peca.getCor() === Cor.BRANCAS
+      ? this.offsetMovimentos.map(offset => this.aplicarOffsetParaTras(offset, posicaoAtual))
+      : this.offsetMovimentos.map(offset => this.aplicarOffsetParaFrente(offset, posicaoAtual))
+    return peca.isVaiPraTras() ? novasPosicoesFrente.concat(novasPosicoesTras) : novasPosicoesFrente
   }
 
   private aplicarOffsetParaFrente(offset: OffsetMovimento, posicao: Posicao): Posicao {
