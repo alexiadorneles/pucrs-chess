@@ -10,7 +10,8 @@ export class Peao extends Peca {
     const movimentos = [new MovimentoVertical()]
     super(TipoPeca.PEAO, cor, movimentos, false)
   }
-  public simularMovimento(tabuleiro: Tabuleiro): Posicao[] {
+
+  public simularMovimento(): Posicao[] {
     const posicaoPeca = this.itemTabuleiro.getPosicao()
     return this.movimentos
       .map(movimento => movimento.simularMovimento(posicaoPeca, this))

@@ -54,6 +54,10 @@ export class ItemTabuleiro {
     return this.posicao
   }
 
+  public getTabuleiro(): Tabuleiro {
+    return this.tabuleiro
+  }
+
   public setDestaque(isDestacado: boolean): void {
     this.isDestacado = isDestacado
     this.atualizarClasse()
@@ -75,7 +79,7 @@ export class ItemTabuleiro {
 
   private simularMovimento(): void {
     if (this.peca) {
-      const posicoes = this.peca.simularMovimento(this.tabuleiro)
+      const posicoes = this.peca.simularMovimento()
       this.tabuleiro.destacarPosicoes(posicoes, this)
     }
   }

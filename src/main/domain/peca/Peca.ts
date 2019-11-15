@@ -28,12 +28,7 @@ export abstract class Peca {
     return this.itemTabuleiro
   }
 
-  public podeMover(posicao: Posicao, ocupada: boolean): boolean {
-    const isPosicaoOcupadaPorEstaPeca = _.isEqual(posicao, this.getItemTabuleiro().getPosicao())
-    return ocupada ? isPosicaoOcupadaPorEstaPeca : true
-  }
-
-  public calculatePossibleMoviment = ({ linha, coluna }: Posicao, tabuleiro: Tabuleiro, tipoMovimento: TipoMovimento): Posicao[] => {
+  private calculatePossibleMoviment = ({ linha, coluna }: Posicao, tipoMovimento: TipoMovimento): Posicao[] => {
     const moviments: Posicao[] = []
     let movimentoColuna
     let movimentoLinha
@@ -42,7 +37,7 @@ export abstract class Peca {
       movimentoColuna = coluna + 1
       while (!hasPiece) {
         const nextMoviment = { linha, coluna: movimentoColuna }
-        hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment)
+        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
         if (!hasPiece) {
           moviments.push(nextMoviment)
         }
@@ -53,7 +48,7 @@ export abstract class Peca {
       movimentoColuna = coluna - 1
       while (!hasPiece) {
         const nextMoviment = { linha, coluna: movimentoColuna }
-        hasPiece = tabuleiro.isPosicaoOcupada({ linha: linha, coluna: movimentoColuna })
+        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada({ linha: linha, coluna: movimentoColuna })
         if (!hasPiece) {
           moviments.push(nextMoviment)
         }
@@ -66,7 +61,7 @@ export abstract class Peca {
       movimentoLinha = linha + 1
       while (!hasPiece) {
         const nextMoviment = { linha: movimentoLinha, coluna }
-        hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment)
+        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
         if (!hasPiece) {
           moviments.push(nextMoviment)
         }
@@ -77,7 +72,7 @@ export abstract class Peca {
       movimentoLinha = linha - 1
       while (!hasPiece) {
         const nextMoviment = { linha: movimentoLinha, coluna: coluna }
-        hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment)
+        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
         if (!hasPiece) {
           moviments.push(nextMoviment)
         }
@@ -91,7 +86,7 @@ export abstract class Peca {
       movimentoColuna = coluna - 1
       while (!hasPiece) {
         const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
-        hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment)
+        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
         if (!hasPiece) {
           moviments.push(nextMoviment)
         }
@@ -106,7 +101,7 @@ export abstract class Peca {
       movimentoColuna = coluna + 1
       while (!hasPiece) {
         const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
-        hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment)
+        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
         if (!hasPiece) {
           moviments.push(nextMoviment)
         }
@@ -121,7 +116,7 @@ export abstract class Peca {
       movimentoColuna = coluna + 1
       while (!hasPiece) {
         const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
-        hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment)
+        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
         if (!hasPiece) {
           moviments.push(nextMoviment)
         }
@@ -136,7 +131,7 @@ export abstract class Peca {
       movimentoColuna = coluna - 1
       while (!hasPiece) {
         const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
-        hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment)
+        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
         if (!hasPiece) {
           moviments.push(nextMoviment)
         }
@@ -150,10 +145,9 @@ export abstract class Peca {
     }
   }
 
-
-  public simularMovimento(tabuleiro: Tabuleiro): Posicao[] {
+  public simularMovimento(): Posicao[] {
     return _.flatten(this.movimentos.map(moviment =>
-      this.calculatePossibleMoviment(this.getItemTabuleiro().getPosicao(), tabuleiro, moviment.getTipo()))
+      this.calculatePossibleMoviment(this.getItemTabuleiro().getPosicao(), moviment.getTipo()))
     )
   }
 

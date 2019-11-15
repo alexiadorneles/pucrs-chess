@@ -6,7 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
 var Peca = (function () {
     function Peca(tipo, cor, movimentos, vaiPraTras) {
-        this.calculatePossibleMoviment = function (_a, tabuleiro, tipoMovimento) {
+        var _this = this;
+        this.calculatePossibleMoviment = function (_a, tipoMovimento) {
             var linha = _a.linha, coluna = _a.coluna;
             var moviments = [];
             var movimentoColuna;
@@ -16,7 +17,7 @@ var Peca = (function () {
                 movimentoColuna = coluna + 1;
                 while (!hasPiece) {
                     var nextMoviment = { linha: linha, coluna: movimentoColuna };
-                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
+                    hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment);
                     if (!hasPiece) {
                         moviments.push(nextMoviment);
                     }
@@ -29,7 +30,7 @@ var Peca = (function () {
                 movimentoColuna = coluna - 1;
                 while (!hasPiece) {
                     var nextMoviment = { linha: linha, coluna: movimentoColuna };
-                    hasPiece = tabuleiro.isPosicaoOcupada({ linha: linha, coluna: movimentoColuna });
+                    hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada({ linha: linha, coluna: movimentoColuna });
                     if (!hasPiece) {
                         moviments.push(nextMoviment);
                     }
@@ -45,7 +46,7 @@ var Peca = (function () {
                 movimentoLinha = linha + 1;
                 while (!hasPiece) {
                     var nextMoviment = { linha: movimentoLinha, coluna: coluna };
-                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
+                    hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment);
                     if (!hasPiece) {
                         moviments.push(nextMoviment);
                     }
@@ -58,7 +59,7 @@ var Peca = (function () {
                 movimentoLinha = linha - 1;
                 while (!hasPiece) {
                     var nextMoviment = { linha: movimentoLinha, coluna: coluna };
-                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
+                    hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment);
                     if (!hasPiece) {
                         moviments.push(nextMoviment);
                     }
@@ -75,7 +76,7 @@ var Peca = (function () {
                 movimentoColuna = coluna - 1;
                 while (!hasPiece) {
                     var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
-                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
+                    hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment);
                     if (!hasPiece) {
                         moviments.push(nextMoviment);
                     }
@@ -91,7 +92,7 @@ var Peca = (function () {
                 movimentoColuna = coluna + 1;
                 while (!hasPiece) {
                     var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
-                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
+                    hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment);
                     if (!hasPiece) {
                         moviments.push(nextMoviment);
                     }
@@ -107,7 +108,7 @@ var Peca = (function () {
                 movimentoColuna = coluna + 1;
                 while (!hasPiece) {
                     var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
-                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
+                    hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment);
                     if (!hasPiece) {
                         moviments.push(nextMoviment);
                     }
@@ -123,7 +124,7 @@ var Peca = (function () {
                 movimentoColuna = coluna - 1;
                 while (!hasPiece) {
                     var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
-                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
+                    hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment);
                     if (!hasPiece) {
                         moviments.push(nextMoviment);
                     }
@@ -148,14 +149,10 @@ var Peca = (function () {
     Peca.prototype.getItemTabuleiro = function () {
         return this.itemTabuleiro;
     };
-    Peca.prototype.podeMover = function (posicao, ocupada) {
-        var isPosicaoOcupadaPorEstaPeca = lodash_1.default.isEqual(posicao, this.getItemTabuleiro().getPosicao());
-        return ocupada ? isPosicaoOcupadaPorEstaPeca : true;
-    };
-    Peca.prototype.simularMovimento = function (tabuleiro) {
+    Peca.prototype.simularMovimento = function () {
         var _this = this;
         return lodash_1.default.flatten(this.movimentos.map(function (moviment) {
-            return _this.calculatePossibleMoviment(_this.getItemTabuleiro().getPosicao(), tabuleiro, moviment.getTipo());
+            return _this.calculatePossibleMoviment(_this.getItemTabuleiro().getPosicao(), moviment.getTipo());
         }));
     };
     Peca.prototype.adicionarAoItem = function (item) {

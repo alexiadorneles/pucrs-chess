@@ -33,6 +33,9 @@ var Tabuleiro = (function () {
             brancas.concat(pretas).concat(vazias).forEach(_this.adicionarItem);
             return _this;
         };
+        this.isPosicaoValida = function (posicao) {
+            return _this.isPosicaoExistente(posicao) && !_this.isPosicaoOcupada(posicao);
+        };
         this.adicionarItem = function (item) {
             var _a = item.getPosicao(), linha = _a.linha, coluna = _a.coluna;
             _this.posicoes[linha][coluna] = item;
@@ -46,7 +49,7 @@ var Tabuleiro = (function () {
     };
     Tabuleiro.prototype.destacarPosicoes = function (posicoes, itemEmQuestao) {
         var _this = this;
-        itemEmQuestao.getPeca().simularMovimento(this).forEach(function (posicao) {
+        itemEmQuestao.getPeca().simularMovimento().forEach(function (posicao) {
             if (_this.isPosicaoExistente(posicao) && !_this.isPosicaoOcupada(posicao)) {
                 _this.getItem(posicao).setDestaque(true);
             }
@@ -81,10 +84,7 @@ var Tabuleiro = (function () {
         return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8);
     };
     Tabuleiro.prototype.isPosicaoOcupada = function (posicao) {
-        if (this.isPosicaoExistente(posicao)) {
-            return Boolean(this.getItem(posicao).getPeca());
-        }
-        return false;
+        return Boolean(this.getItem(posicao).getPeca());
     };
     Tabuleiro.prototype.gerarPecas = function (cor) {
         return Object.values(TipoPeca_1.TipoPeca)

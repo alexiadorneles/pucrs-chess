@@ -24,7 +24,7 @@ var Peao = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.PEAO, cor, movimentos, false) || this;
         return _this;
     }
-    Peao.prototype.simularMovimento = function (tabuleiro) {
+    Peao.prototype.simularMovimento = function () {
         var _this = this;
         var posicaoPeca = this.itemTabuleiro.getPosicao();
         return this.movimentos

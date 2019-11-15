@@ -40,27 +40,12 @@ export class Tabuleiro {
   }
 
   public destacarPosicoes(posicoes: Posicao[], itemEmQuestao: ItemTabuleiro): void {
-    itemEmQuestao.getPeca().simularMovimento(this).forEach((posicao) => {
+    itemEmQuestao.getPeca().simularMovimento().forEach((posicao) => {
       if (this.isPosicaoExistente(posicao) && !this.isPosicaoOcupada(posicao)) {
         this.getItem(posicao).setDestaque(true)
       }
     })
   }
-  //   else {
-  //   posicoes.every(posicao => {
-  //     if (this.isPosicaoExistente(posicao)) {
-  //       if (this.isPosicaoOcupada(posicao)) {
-  //         if (!this.pecaEmMovimento.podeMover(posicao, true)) {
-  //           return false
-  //         }
-  //       } else {
-  //         this.getItem(posicao).setDestaque(true)
-  //       }
-  //     }
-  //     return true
-  //   })
-  // }
-  // }
 
   public removerDestaques(): void {
     const removerDestaque = (item: ItemTabuleiro) => item.removerDestaque()
@@ -92,19 +77,19 @@ export class Tabuleiro {
         callback(this.getItem({ linha, coluna }))
   }
 
-  private isPosicaoExistente(posicao: Posicao): boolean {
+  public isPosicaoValida = (posicao: Posicao): boolean => {
+    return this.isPosicaoExistente(posicao) && !this.isPosicaoOcupada(posicao)
+  }
+
+  public isPosicaoExistente(posicao: Posicao): boolean {
     return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8)
   }
 
   public isPosicaoOcupada(posicao: Posicao): boolean {
-    if (this.isPosicaoExistente(posicao)) {
-      return Boolean(this.getItem(posicao).getPeca())
-    }
-
-    return false
+    return Boolean(this.getItem(posicao).getPeca())
   }
 
-  private adicionarItem = (item: ItemTabuleiro) => {
+  public adicionarItem = (item: ItemTabuleiro) => {
     const { linha, coluna } = item.getPosicao()
     this.posicoes[linha][coluna] = item
     item.adicionarAoTabuleiro(this)

@@ -26,7 +26,7 @@ var Rei = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.REI, cor, movimentos, true) || this;
         return _this;
     }
-    Rei.prototype.simularMovimento = function (tabuleiro) {
+    Rei.prototype.simularMovimento = function () {
         var _this = this;
         var posicaoPeca = this.itemTabuleiro.getPosicao();
         return this.movimentos

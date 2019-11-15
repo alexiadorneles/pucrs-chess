@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var TipoPeca_1 = require("../../definitions/TipoPeca");
-var ExtensorPosicoes_1 = require("../../ExtensorPosicoes");
 var MovimentoL_1 = require("../movimento/MovimentoL");
 var Peca_1 = require("./Peca");
 var Cavalo = (function (_super) {
@@ -25,12 +24,18 @@ var Cavalo = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.CAVALO, cor, movimentos, true) || this;
         return _this;
     }
-    Cavalo.prototype.podeMover = function (posicao, ocupada) {
-        return true;
-    };
     Cavalo.prototype.simularMovimento = function () {
-        var posicao = this.getItemTabuleiro().getPosicao();
-        return ExtensorPosicoes_1.ExtensorPosicoes.extenderL([posicao]);
+        var _a = this.getItemTabuleiro().getPosicao(), linha = _a.linha, coluna = _a.coluna;
+        var novasPosicoes = [];
+        novasPosicoes.push({ linha: linha + 2, coluna: coluna + 1 });
+        novasPosicoes.push({ linha: linha - 2, coluna: coluna + 1 });
+        novasPosicoes.push({ linha: linha - 2, coluna: coluna - 1 });
+        novasPosicoes.push({ linha: linha + 2, coluna: coluna - 1 });
+        novasPosicoes.push({ linha: linha + 1, coluna: coluna + 2 });
+        novasPosicoes.push({ linha: linha + 1, coluna: coluna - 2 });
+        novasPosicoes.push({ linha: linha - 1, coluna: coluna + 2 });
+        novasPosicoes.push({ linha: linha - 1, coluna: coluna - 2 });
+        return novasPosicoes.filter(this.getItemTabuleiro().getTabuleiro().isPosicaoValida);
     };
     return Cavalo;
 }(Peca_1.Peca));

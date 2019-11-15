@@ -45,6 +45,9 @@ var ItemTabuleiro = (function () {
     ItemTabuleiro.prototype.getPosicao = function () {
         return this.posicao;
     };
+    ItemTabuleiro.prototype.getTabuleiro = function () {
+        return this.tabuleiro;
+    };
     ItemTabuleiro.prototype.setDestaque = function (isDestacado) {
         this.isDestacado = isDestacado;
         this.atualizarClasse();
@@ -64,7 +67,7 @@ var ItemTabuleiro = (function () {
     };
     ItemTabuleiro.prototype.simularMovimento = function () {
         if (this.peca) {
-            var posicoes = this.peca.simularMovimento(this.tabuleiro);
+            var posicoes = this.peca.simularMovimento();
             this.tabuleiro.destacarPosicoes(posicoes, this);
         }
     };

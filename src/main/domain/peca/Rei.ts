@@ -13,7 +13,7 @@ export class Rei extends Peca {
     super(TipoPeca.REI, cor, movimentos, true)
   }
 
-  public simularMovimento(tabuleiro: Tabuleiro): Posicao[] {
+  public simularMovimento(): Posicao[] {
     const posicaoPeca = this.itemTabuleiro.getPosicao()
     return this.movimentos
       .map(movimento => movimento.simularMovimento(posicaoPeca, this))
