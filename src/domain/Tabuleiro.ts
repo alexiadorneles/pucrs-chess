@@ -6,6 +6,7 @@ import { TipoPeca } from '../definitions/TipoPeca'
 import { MapPosicaoPecasBrancas } from '../definitions/PosicoesIniciais'
 import { DefinidorCores } from '../domain/DefinidorCores'
 import { Peca } from '../domain/peca/Peca'
+import { Rainha } from '../domain/peca/Rainha'
 import { DOMGenerator } from '../DOMGenerator'
 import _ from 'lodash'
 
@@ -40,18 +41,28 @@ export class Tabuleiro {
   }
 
   public destacarPosicoes(posicoes: Posicao[], itemEmQuestao: ItemTabuleiro): void {
-    posicoes.every(posicao => {
-      if (this.isPosicaoExistente(posicao)) {
-        if (this.isPosicaoOcupada(posicao, itemEmQuestao)) {
-          if (!this.pecaEmMovimento.podeMover(posicao, true)) {
-            return false
-          }
-        } else {
+    if (itemEmQuestao.getPeca() instanceof Rainha) {
+      itemEmQuestao.getPeca().calculateMoviment(this)
+      itemEmQuestao.getPeca().possibleMoves.forEach(([x, y]) => {
+        const posicao = { linha: x, coluna: y }
+        if (this.isPosicaoExistente(posicao) && !this.isPosicaoOcupada(posicao)) {
           this.getItem(posicao).setDestaque(true)
         }
-      }
-      return true
-    })
+      })
+    } else {
+      posicoes.every(posicao => {
+        if (this.isPosicaoExistente(posicao)) {
+          if (this.isPosicaoOcupada(posicao)) {
+            if (!this.pecaEmMovimento.podeMover(posicao, true)) {
+              return false
+            }
+          } else {
+            this.getItem(posicao).setDestaque(true)
+          }
+        }
+        return true
+      })
+    }
   }
 
   public removerDestaques(): void {
@@ -88,7 +99,7 @@ export class Tabuleiro {
     return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8)
   }
 
-  private isPosicaoOcupada(posicao: Posicao, item: ItemTabuleiro): boolean {
+  public isPosicaoOcupada(posicao: Posicao): boolean {
     if (this.isPosicaoExistente(posicao)) {
       return Boolean(this.getItem(posicao).getPeca())
     }

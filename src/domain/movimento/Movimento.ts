@@ -4,6 +4,10 @@ export abstract class Movimento {
   constructor(private tipo: TipoMovimento) { }
   protected offsetMovimentos: OffsetMovimento[]
 
+  public getTipo(): TipoMovimento {
+    return this.tipo
+  }
+
   public simularMovimento(posicaoAtual: Posicao, podeIrPraTras: boolean): Posicao[] {
     const novasPosicoesFrente = this.offsetMovimentos.map(offset => this.aplicarOffsetParaFrente(offset, posicaoAtual))
     const novasPosicoesTras = this.offsetMovimentos.map(offset => this.aplicarOffsetParaTras(offset, posicaoAtual))

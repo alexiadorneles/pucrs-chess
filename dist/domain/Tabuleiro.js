@@ -8,6 +8,7 @@ var InstanciadorPecas_1 = require("../domain/InstanciadorPecas");
 var TipoPeca_1 = require("../definitions/TipoPeca");
 var PosicoesIniciais_1 = require("../definitions/PosicoesIniciais");
 var DefinidorCores_1 = require("../domain/DefinidorCores");
+var Rainha_1 = require("../domain/peca/Rainha");
 var DOMGenerator_1 = require("../DOMGenerator");
 var lodash_1 = __importDefault(require("lodash"));
 var initilizarMatriz = function () {
@@ -46,19 +47,31 @@ var Tabuleiro = (function () {
     };
     Tabuleiro.prototype.destacarPosicoes = function (posicoes, itemEmQuestao) {
         var _this = this;
-        posicoes.every(function (posicao) {
-            if (_this.isPosicaoExistente(posicao)) {
-                if (_this.isPosicaoOcupada(posicao, itemEmQuestao)) {
-                    if (!_this.pecaEmMovimento.podeMover(posicao, true)) {
-                        return false;
-                    }
-                }
-                else {
+        if (itemEmQuestao.getPeca() instanceof Rainha_1.Rainha) {
+            itemEmQuestao.getPeca().calculateMoviment(this);
+            itemEmQuestao.getPeca().possibleMoves.forEach(function (_a) {
+                var x = _a[0], y = _a[1];
+                var posicao = { linha: x, coluna: y };
+                if (_this.isPosicaoExistente(posicao) && !_this.isPosicaoOcupada(posicao)) {
                     _this.getItem(posicao).setDestaque(true);
                 }
-            }
-            return true;
-        });
+            });
+        }
+        else {
+            posicoes.every(function (posicao) {
+                if (_this.isPosicaoExistente(posicao)) {
+                    if (_this.isPosicaoOcupada(posicao)) {
+                        if (!_this.pecaEmMovimento.podeMover(posicao, true)) {
+                            return false;
+                        }
+                    }
+                    else {
+                        _this.getItem(posicao).setDestaque(true);
+                    }
+                }
+                return true;
+            });
+        }
     };
     Tabuleiro.prototype.removerDestaques = function () {
         var removerDestaque = function (item) { return item.removerDestaque(); };
@@ -88,7 +101,7 @@ var Tabuleiro = (function () {
     Tabuleiro.prototype.isPosicaoExistente = function (posicao) {
         return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8);
     };
-    Tabuleiro.prototype.isPosicaoOcupada = function (posicao, item) {
+    Tabuleiro.prototype.isPosicaoOcupada = function (posicao) {
         if (this.isPosicaoExistente(posicao)) {
             return Boolean(this.getItem(posicao).getPeca());
         }

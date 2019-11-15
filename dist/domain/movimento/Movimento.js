@@ -15,6 +15,9 @@ var Movimento = (function () {
     function Movimento(tipo) {
         this.tipo = tipo;
     }
+    Movimento.prototype.getTipo = function () {
+        return this.tipo;
+    };
     Movimento.prototype.simularMovimento = function (posicaoAtual, podeIrPraTras) {
         var _this = this;
         var novasPosicoesFrente = this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaFrente(offset, posicaoAtual); });
