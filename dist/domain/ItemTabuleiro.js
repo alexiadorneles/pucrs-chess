@@ -64,7 +64,7 @@ var ItemTabuleiro = (function () {
     };
     ItemTabuleiro.prototype.simularMovimento = function () {
         if (this.peca) {
-            var posicoes = this.peca.simularMovimento();
+            var posicoes = this.peca.simularMovimento(this.tabuleiro);
             this.tabuleiro.destacarPosicoes(posicoes, this);
         }
     };

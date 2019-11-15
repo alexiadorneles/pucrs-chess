@@ -379,7 +379,7 @@ var ItemTabuleiro = (function () {
     };
     ItemTabuleiro.prototype.simularMovimento = function () {
         if (this.peca) {
-            var posicoes = this.peca.simularMovimento();
+            var posicoes = this.peca.simularMovimento(this.tabuleiro);
             this.tabuleiro.destacarPosicoes(posicoes, this);
         }
     };
@@ -406,7 +406,6 @@ var InstanciadorPecas_1 = require("../domain/InstanciadorPecas");
 var TipoPeca_1 = require("../definitions/TipoPeca");
 var PosicoesIniciais_1 = require("../definitions/PosicoesIniciais");
 var DefinidorCores_1 = require("../domain/DefinidorCores");
-var Rainha_1 = require("../domain/peca/Rainha");
 var DOMGenerator_1 = require("../DOMGenerator");
 var lodash_1 = __importDefault(require("lodash"));
 var initilizarMatriz = function () {
@@ -445,31 +444,11 @@ var Tabuleiro = (function () {
     };
     Tabuleiro.prototype.destacarPosicoes = function (posicoes, itemEmQuestao) {
         var _this = this;
-        if (itemEmQuestao.getPeca() instanceof Rainha_1.Rainha) {
-            itemEmQuestao.getPeca().calculateMoviment(this);
-            itemEmQuestao.getPeca().possibleMoves.forEach(function (_a) {
-                var x = _a[0], y = _a[1];
-                var posicao = { linha: x, coluna: y };
-                if (_this.isPosicaoExistente(posicao) && !_this.isPosicaoOcupada(posicao)) {
-                    _this.getItem(posicao).setDestaque(true);
-                }
-            });
-        }
-        else {
-            posicoes.every(function (posicao) {
-                if (_this.isPosicaoExistente(posicao)) {
-                    if (_this.isPosicaoOcupada(posicao)) {
-                        if (!_this.pecaEmMovimento.podeMover(posicao, true)) {
-                            return false;
-                        }
-                    }
-                    else {
-                        _this.getItem(posicao).setDestaque(true);
-                    }
-                }
-                return true;
-            });
-        }
+        itemEmQuestao.getPeca().simularMovimento(this).forEach(function (posicao) {
+            if (_this.isPosicaoExistente(posicao) && !_this.isPosicaoOcupada(posicao)) {
+                _this.getItem(posicao).setDestaque(true);
+            }
+        });
     };
     Tabuleiro.prototype.removerDestaques = function () {
         var removerDestaque = function (item) { return item.removerDestaque(); };
@@ -517,7 +496,7 @@ var Tabuleiro = (function () {
 }());
 exports.Tabuleiro = Tabuleiro;
 
-},{"../DOMGenerator":1,"../definitions/PosicoesIniciais":3,"../definitions/TipoPeca":4,"../domain/DefinidorCores":5,"../domain/InstanciadorPecas":6,"../domain/peca/Rainha":18,"./ItemTabuleiro":7,"lodash":22}],9:[function(require,module,exports){
+},{"../DOMGenerator":1,"../definitions/PosicoesIniciais":3,"../definitions/TipoPeca":4,"../domain/DefinidorCores":5,"../domain/InstanciadorPecas":6,"./ItemTabuleiro":7,"lodash":22}],9:[function(require,module,exports){
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -694,7 +673,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Peca_1 = require("./Peca");
 var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
-var ExtensorPosicoes_1 = require("../../ExtensorPosicoes");
 var Bispo = (function (_super) {
     __extends(Bispo, _super);
     function Bispo(cor) {
@@ -703,14 +681,11 @@ var Bispo = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.BISPO, cor, movimentos, true) || this;
         return _this;
     }
-    Bispo.prototype.simularMovimento = function () {
-        return ExtensorPosicoes_1.ExtensorPosicoes.extenderDiagonal(this.getItemTabuleiro().getPosicao());
-    };
     return Bispo;
 }(Peca_1.Peca));
 exports.Bispo = Bispo;
 
-},{"../../ExtensorPosicoes":2,"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"./Peca":16}],15:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"./Peca":16}],15:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -758,6 +733,137 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
 var Peca = (function () {
     function Peca(tipo, cor, movimentos, vaiPraTras) {
+        this.calculatePossibleMoviment = function (_a, tabuleiro, tipoMovimento) {
+            var linha = _a.linha, coluna = _a.coluna;
+            var moviments = [];
+            var movimentoColuna;
+            var movimentoLinha;
+            if (tipoMovimento == 0) {
+                var hasPiece = false;
+                movimentoColuna = coluna + 1;
+                while (!hasPiece) {
+                    var nextMoviment = { linha: linha, coluna: movimentoColuna };
+                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
+                    if (!hasPiece) {
+                        moviments.push(nextMoviment);
+                    }
+                    if (movimentoColuna >= 7)
+                        break;
+                    else
+                        movimentoColuna = movimentoColuna + 1;
+                }
+                hasPiece = false;
+                movimentoColuna = coluna - 1;
+                while (!hasPiece) {
+                    var nextMoviment = { linha: linha, coluna: movimentoColuna };
+                    hasPiece = tabuleiro.isPosicaoOcupada({ linha: linha, coluna: movimentoColuna });
+                    if (!hasPiece) {
+                        moviments.push(nextMoviment);
+                    }
+                    if (movimentoColuna <= 0)
+                        break;
+                    else
+                        movimentoColuna = movimentoColuna - 1;
+                }
+                return moviments;
+            }
+            else if (tipoMovimento == 1) {
+                var hasPiece = false;
+                movimentoLinha = linha + 1;
+                while (!hasPiece) {
+                    var nextMoviment = { linha: movimentoLinha, coluna: coluna };
+                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
+                    if (!hasPiece) {
+                        moviments.push(nextMoviment);
+                    }
+                    if (movimentoLinha >= 7)
+                        break;
+                    else
+                        movimentoLinha = movimentoLinha + 1;
+                }
+                hasPiece = false;
+                movimentoLinha = linha - 1;
+                while (!hasPiece) {
+                    var nextMoviment = { linha: movimentoLinha, coluna: coluna };
+                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
+                    if (!hasPiece) {
+                        moviments.push(nextMoviment);
+                    }
+                    if (movimentoLinha <= 0)
+                        break;
+                    else
+                        movimentoLinha = movimentoLinha - 1;
+                }
+                return moviments;
+            }
+            else {
+                var hasPiece = false;
+                movimentoLinha = linha + 1;
+                movimentoColuna = coluna - 1;
+                while (!hasPiece) {
+                    var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
+                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
+                    if (!hasPiece) {
+                        moviments.push(nextMoviment);
+                    }
+                    if (movimentoLinha >= 7 || movimentoColuna <= 0)
+                        break;
+                    else {
+                        movimentoLinha = movimentoLinha + 1;
+                        movimentoColuna = movimentoColuna - 1;
+                    }
+                }
+                hasPiece = false;
+                movimentoLinha = linha - 1;
+                movimentoColuna = coluna + 1;
+                while (!hasPiece) {
+                    var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
+                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
+                    if (!hasPiece) {
+                        moviments.push(nextMoviment);
+                    }
+                    if (movimentoLinha <= 0 || movimentoColuna >= 7)
+                        break;
+                    else {
+                        movimentoLinha = movimentoLinha - 1;
+                        movimentoColuna = movimentoColuna + 1;
+                    }
+                }
+                hasPiece = false;
+                movimentoLinha = linha + 1;
+                movimentoColuna = coluna + 1;
+                while (!hasPiece) {
+                    var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
+                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
+                    if (!hasPiece) {
+                        moviments.push(nextMoviment);
+                    }
+                    if (movimentoLinha >= 7 || movimentoColuna >= 7)
+                        break;
+                    else {
+                        movimentoLinha = movimentoLinha + 1;
+                        movimentoColuna = movimentoColuna + 1;
+                    }
+                }
+                hasPiece = false;
+                movimentoLinha = linha - 1;
+                movimentoColuna = coluna - 1;
+                while (!hasPiece) {
+                    var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
+                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
+                    if (!hasPiece) {
+                        moviments.push(nextMoviment);
+                    }
+                    if (movimentoLinha <= 0 || movimentoColuna <= 0)
+                        break;
+                    else {
+                        movimentoLinha = movimentoLinha - 1;
+                        movimentoColuna = movimentoColuna - 1;
+                    }
+                }
+                return moviments;
+            }
+        };
         this.tipo = tipo;
         this.cor = cor;
         this.movimentos = movimentos;
@@ -770,12 +876,11 @@ var Peca = (function () {
         var isPosicaoOcupadaPorEstaPeca = lodash_1.default.isEqual(posicao, this.getItemTabuleiro().getPosicao());
         return ocupada ? isPosicaoOcupadaPorEstaPeca : true;
     };
-    Peca.prototype.simularMovimento = function () {
+    Peca.prototype.simularMovimento = function (tabuleiro) {
         var _this = this;
-        var posicaoPeca = this.itemTabuleiro.getPosicao();
-        return this.movimentos
-            .map(function (movimento) { return movimento.simularMovimento(posicaoPeca, _this.vaiPraTras); })
-            .reduce(function (aggregation, movimento) { return aggregation.concat(movimento); }, []);
+        return lodash_1.default.flatten(this.movimentos.map(function (moviment) {
+            return _this.calculatePossibleMoviment(_this.getItemTabuleiro().getPosicao(), tabuleiro, moviment.getTipo());
+        }));
     };
     Peca.prototype.adicionarAoItem = function (item) {
         this.itemTabuleiro = item;
@@ -836,133 +941,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var Peca_1 = require("./Peca");
 var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
 var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
 var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
-var ExtensorPosicoes_1 = require("../../ExtensorPosicoes");
-var lodash_1 = __importDefault(require("lodash"));
-var calculatePossibleMoviment = function (posicao, table, movimentStyle) {
-    var x = posicao.linha;
-    var y = posicao.coluna;
-    var moviments = [];
-    var yMove;
-    var xMove;
-    if (movimentStyle == 0) {
-        var hasPiece = false;
-        yMove = y + 1;
-        while (!hasPiece) {
-            var nextMoviment = [x, yMove];
-            hasPiece = table.isPosicaoOcupada({ linha: x, coluna: yMove });
-            moviments.push(nextMoviment);
-            if (yMove >= 7)
-                break;
-            else
-                yMove = yMove + 1;
-        }
-        hasPiece = false;
-        yMove = y - 1;
-        while (!hasPiece) {
-            var nextMoviment = [x, yMove];
-            hasPiece = table.isPosicaoOcupada({ linha: x, coluna: yMove });
-            moviments.push(nextMoviment);
-            if (yMove <= 0)
-                break;
-            else
-                yMove = yMove - 1;
-        }
-        return moviments;
-    }
-    else if (movimentStyle == 1) {
-        var hasPiece = false;
-        xMove = x + 1;
-        while (!hasPiece) {
-            var nextMoviment = [xMove, y];
-            hasPiece = table.isPosicaoOcupada({ linha: xMove, coluna: y });
-            moviments.push(nextMoviment);
-            if (xMove >= 7)
-                break;
-            else
-                xMove = xMove + 1;
-        }
-        hasPiece = false;
-        xMove = x - 1;
-        while (!hasPiece) {
-            var nextMoviment = [xMove, y];
-            hasPiece = table.isPosicaoOcupada({ linha: xMove, coluna: y });
-            moviments.push(nextMoviment);
-            if (xMove <= 0)
-                break;
-            else
-                xMove = xMove - 1;
-        }
-        return moviments;
-    }
-    else {
-        var hasPiece = false;
-        xMove = x + 1;
-        yMove = y - 1;
-        while (!hasPiece) {
-            var nextMoviment = [xMove, yMove];
-            hasPiece = table.isPosicaoOcupada({ linha: xMove, coluna: yMove });
-            moviments.push(nextMoviment);
-            if (xMove >= 7 || yMove <= 0)
-                break;
-            else {
-                xMove = xMove + 1;
-                yMove = yMove - 1;
-            }
-        }
-        hasPiece = false;
-        xMove = x - 1;
-        yMove = y + 1;
-        while (!hasPiece) {
-            var nextMoviment = [xMove, yMove];
-            hasPiece = table.isPosicaoOcupada({ linha: xMove, coluna: yMove });
-            moviments.push(nextMoviment);
-            if (xMove <= 0 || yMove >= 7)
-                break;
-            else {
-                xMove = xMove - 1;
-                yMove = yMove + 1;
-            }
-        }
-        hasPiece = false;
-        xMove = x + 1;
-        yMove = y + 1;
-        while (!hasPiece) {
-            var nextMoviment = [xMove, yMove];
-            hasPiece = table.isPosicaoOcupada({ linha: xMove, coluna: yMove });
-            moviments.push(nextMoviment);
-            if (xMove >= 7 || yMove >= 7)
-                break;
-            else {
-                xMove = xMove + 1;
-                yMove = yMove + 1;
-            }
-        }
-        hasPiece = false;
-        xMove = x - 1;
-        yMove = y - 1;
-        while (!hasPiece) {
-            var nextMoviment = [xMove, yMove];
-            hasPiece = table.isPosicaoOcupada({ linha: xMove, coluna: yMove });
-            moviments.push(nextMoviment);
-            if (xMove <= 0 || yMove <= 0)
-                break;
-            else {
-                xMove = xMove - 1;
-                yMove = yMove - 1;
-            }
-        }
-        return moviments;
-    }
-};
 var Rainha = (function (_super) {
     __extends(Rainha, _super);
     function Rainha(cor) {
@@ -971,22 +955,11 @@ var Rainha = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.RAINHA, cor, movimentos, true) || this;
         return _this;
     }
-    Rainha.prototype.simularMovimento = function () {
-        var posicao = this.getItemTabuleiro().getPosicao();
-        var extensaoVertical = ExtensorPosicoes_1.ExtensorPosicoes.extenderVertical([posicao]);
-        return extensaoVertical.concat(ExtensorPosicoes_1.ExtensorPosicoes.extenderHorizontal([posicao])).concat(ExtensorPosicoes_1.ExtensorPosicoes.extenderDiagonal(posicao));
-    };
-    Rainha.prototype.calculateMoviment = function (tabuleiro) {
-        var _this = this;
-        this.possibleMoves = lodash_1.default.flatten(this.movimentos.map(function (moviment) {
-            return calculatePossibleMoviment(_this.getItemTabuleiro().getPosicao(), tabuleiro, moviment.getTipo());
-        }));
-    };
     return Rainha;
 }(Peca_1.Peca));
 exports.Rainha = Rainha;
 
-},{"../../ExtensorPosicoes":2,"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":16,"lodash":22}],19:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":16}],19:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1039,7 +1012,6 @@ var Peca_1 = require("./Peca");
 var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
 var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
 var TipoPeca_1 = require("../../definitions/TipoPeca");
-var ExtensorPosicoes_1 = require("../../ExtensorPosicoes");
 var Torre = (function (_super) {
     __extends(Torre, _super);
     function Torre(cor) {
@@ -1048,14 +1020,11 @@ var Torre = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.TORRE, cor, movimentos, true) || this;
         return _this;
     }
-    Torre.prototype.simularMovimento = function () {
-        return ExtensorPosicoes_1.ExtensorPosicoes.extenderVertical([this.getItemTabuleiro().getPosicao()]).concat(ExtensorPosicoes_1.ExtensorPosicoes.extenderHorizontal([this.getItemTabuleiro().getPosicao()]));
-    };
     return Torre;
 }(Peca_1.Peca));
 exports.Torre = Torre;
 
-},{"../../ExtensorPosicoes":2,"../../definitions/TipoPeca":4,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":16}],21:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":16}],21:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Tabuleiro_1 = require("./domain/Tabuleiro");

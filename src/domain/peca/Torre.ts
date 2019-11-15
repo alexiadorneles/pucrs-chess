@@ -12,9 +12,9 @@ export class Torre extends Peca {
     super(TipoPeca.TORRE, cor, movimentos, true)
   }
 
-  public simularMovimento(): Posicao[] {
-    return ExtensorPosicoes.extenderVertical([this.getItemTabuleiro().getPosicao()]).concat(
-      ExtensorPosicoes.extenderHorizontal([this.getItemTabuleiro().getPosicao()])
-    )
-  }
+  // public simularMovimento(): Posicao[] {
+  //   return ExtensorPosicoes.extenderVertical([this.getItemTabuleiro().getPosicao()]).concat(
+  //     ExtensorPosicoes.extenderHorizontal([this.getItemTabuleiro().getPosicao()])
+  //   )
+  // }
 }

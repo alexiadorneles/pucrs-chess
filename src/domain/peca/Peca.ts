@@ -2,8 +2,9 @@ import { Movimento } from '../movimento/Movimento'
 import { TipoPeca } from '../../definitions/TipoPeca'
 import { ItemTabuleiro } from '../ItemTabuleiro'
 import { Cor } from '../../definitions/Cor'
-import { Posicao } from '../../definitions/Movimento'
+import { Posicao, TipoMovimento } from '../../definitions/Movimento'
 import _ from 'lodash'
+import { Tabuleiro } from 'domain/Tabuleiro'
 
 export abstract class Peca {
   protected itemTabuleiro: ItemTabuleiro
@@ -28,11 +29,128 @@ export abstract class Peca {
     return ocupada ? isPosicaoOcupadaPorEstaPeca : true
   }
 
-  public simularMovimento(): Posicao[] {
-    const posicaoPeca = this.itemTabuleiro.getPosicao()
-    return this.movimentos
-      .map(movimento => movimento.simularMovimento(posicaoPeca, this.vaiPraTras))
-      .reduce((aggregation, movimento: Posicao[]) => aggregation.concat(movimento), [])
+  public calculatePossibleMoviment = ({ linha, coluna }: Posicao, tabuleiro: Tabuleiro, tipoMovimento: TipoMovimento): Posicao[] => {
+    const moviments: Posicao[] = []
+    let movimentoColuna
+    let movimentoLinha
+    if (tipoMovimento == TipoMovimento.HORIZONTAL) {
+      let hasPiece = false
+      movimentoColuna = coluna + 1
+      while (!hasPiece) {
+        const nextMoviment = { linha, coluna: movimentoColuna }
+        hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment)
+        if (!hasPiece) {
+          moviments.push(nextMoviment)
+        }
+        if (movimentoColuna >= 7) break
+        else movimentoColuna = movimentoColuna + 1
+      }
+      hasPiece = false
+      movimentoColuna = coluna - 1
+      while (!hasPiece) {
+        const nextMoviment = { linha, coluna: movimentoColuna }
+        hasPiece = tabuleiro.isPosicaoOcupada({ linha: linha, coluna: movimentoColuna })
+        if (!hasPiece) {
+          moviments.push(nextMoviment)
+        }
+        if (movimentoColuna <= 0) break
+        else movimentoColuna = movimentoColuna - 1
+      }
+      return moviments
+    } else if (tipoMovimento == TipoMovimento.VERTICAL) {
+      let hasPiece = false
+      movimentoLinha = linha + 1
+      while (!hasPiece) {
+        const nextMoviment = { linha: movimentoLinha, coluna }
+        hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment)
+        if (!hasPiece) {
+          moviments.push(nextMoviment)
+        }
+        if (movimentoLinha >= 7) break
+        else movimentoLinha = movimentoLinha + 1
+      }
+      hasPiece = false
+      movimentoLinha = linha - 1
+      while (!hasPiece) {
+        const nextMoviment = { linha: movimentoLinha, coluna: coluna }
+        hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment)
+        if (!hasPiece) {
+          moviments.push(nextMoviment)
+        }
+        if (movimentoLinha <= 0) break
+        else movimentoLinha = movimentoLinha - 1
+      }
+      return moviments
+    } else {
+      let hasPiece = false
+      movimentoLinha = linha + 1
+      movimentoColuna = coluna - 1
+      while (!hasPiece) {
+        const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
+        hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment)
+        if (!hasPiece) {
+          moviments.push(nextMoviment)
+        }
+        if (movimentoLinha >= 7 || movimentoColuna <= 0) break
+        else {
+          movimentoLinha = movimentoLinha + 1
+          movimentoColuna = movimentoColuna - 1
+        }
+      }
+      hasPiece = false
+      movimentoLinha = linha - 1
+      movimentoColuna = coluna + 1
+      while (!hasPiece) {
+        const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
+        hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment)
+        if (!hasPiece) {
+          moviments.push(nextMoviment)
+        }
+        if (movimentoLinha <= 0 || movimentoColuna >= 7) break
+        else {
+          movimentoLinha = movimentoLinha - 1
+          movimentoColuna = movimentoColuna + 1
+        }
+      }
+      hasPiece = false
+      movimentoLinha = linha + 1
+      movimentoColuna = coluna + 1
+      while (!hasPiece) {
+        const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
+        hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment)
+        if (!hasPiece) {
+          moviments.push(nextMoviment)
+        }
+        if (movimentoLinha >= 7 || movimentoColuna >= 7) break
+        else {
+          movimentoLinha = movimentoLinha + 1
+          movimentoColuna = movimentoColuna + 1
+        }
+      }
+      hasPiece = false
+      movimentoLinha = linha - 1
+      movimentoColuna = coluna - 1
+      while (!hasPiece) {
+        const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
+        hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment)
+        if (!hasPiece) {
+          moviments.push(nextMoviment)
+        }
+        if (movimentoLinha <= 0 || movimentoColuna <= 0) break
+        else {
+          movimentoLinha = movimentoLinha - 1
+          movimentoColuna = movimentoColuna - 1
+        }
+      }
+      return moviments
+    }
+  }
+
+
+  public simularMovimento(tabuleiro: Tabuleiro): Posicao[] {
+    return _.flatten(this.movimentos.map(moviment =>
+      this.calculatePossibleMoviment(this.getItemTabuleiro().getPosicao(), tabuleiro, moviment.getTipo()))
+    )
   }
 
   public adicionarAoItem(item: ItemTabuleiro): void {

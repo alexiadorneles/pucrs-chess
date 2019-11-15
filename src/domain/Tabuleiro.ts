@@ -41,29 +41,27 @@ export class Tabuleiro {
   }
 
   public destacarPosicoes(posicoes: Posicao[], itemEmQuestao: ItemTabuleiro): void {
-    if (itemEmQuestao.getPeca() instanceof Rainha) {
-      itemEmQuestao.getPeca().calculateMoviment(this)
-      itemEmQuestao.getPeca().possibleMoves.forEach(([x, y]) => {
-        const posicao = { linha: x, coluna: y }
-        if (this.isPosicaoExistente(posicao) && !this.isPosicaoOcupada(posicao)) {
-          this.getItem(posicao).setDestaque(true)
-        }
-      })
-    } else {
-      posicoes.every(posicao => {
-        if (this.isPosicaoExistente(posicao)) {
-          if (this.isPosicaoOcupada(posicao)) {
-            if (!this.pecaEmMovimento.podeMover(posicao, true)) {
-              return false
-            }
-          } else {
-            this.getItem(posicao).setDestaque(true)
-          }
-        }
-        return true
-      })
-    }
+    itemEmQuestao.getPeca().simularMovimento(this).forEach((posicao) => {
+      if (this.isPosicaoExistente(posicao) && !this.isPosicaoOcupada(posicao)) {
+        this.getItem(posicao).setDestaque(true)
+      }
+    })
   }
+  //   else {
+  //   posicoes.every(posicao => {
+  //     if (this.isPosicaoExistente(posicao)) {
+  //       if (this.isPosicaoOcupada(posicao)) {
+  //         if (!this.pecaEmMovimento.podeMover(posicao, true)) {
+  //           return false
+  //         }
+  //       } else {
+  //         this.getItem(posicao).setDestaque(true)
+  //       }
+  //     }
+  //     return true
+  //   })
+  // }
+  // }
 
   public removerDestaques(): void {
     const removerDestaque = (item: ItemTabuleiro) => item.removerDestaque()

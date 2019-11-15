@@ -11,7 +11,7 @@ export class Bispo extends Peca {
     super(TipoPeca.BISPO, cor, movimentos, true)
   }
 
-  public simularMovimento(): Posicao[] {
-    return ExtensorPosicoes.extenderDiagonal(this.getItemTabuleiro().getPosicao())
-  }
+  // public simularMovimento(): Posicao[] {
+  //   return ExtensorPosicoes.extenderDiagonal(this.getItemTabuleiro().getPosicao())
+  // }
 }
