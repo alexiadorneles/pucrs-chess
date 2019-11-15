@@ -1,4 +1,4 @@
-import { Posicao } from 'definitions/Movimento'
+import { Posicao } from 'main/definitions/Movimento'
 
 export abstract class ExtensorPosicoes {
   public static extenderVertical = (posicoes: Posicao[]): Posicao[] => {

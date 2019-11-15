@@ -1,5 +1,5 @@
 import { Posicao, TipoMovimento, OffsetMovimento } from '../../definitions/Movimento'
-import { Peca } from '../../domain/peca/Peca'
+import { Peca } from '../peca/Peca'
 import { Cor } from '../../definitions/Cor'
 
 export abstract class Movimento {

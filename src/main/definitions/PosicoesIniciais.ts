@@ -1,5 +1,5 @@
-import { Posicao } from '../definitions/Movimento'
-import { TipoPeca } from '../definitions/TipoPeca'
+import { Posicao } from './Movimento'
+import { TipoPeca } from './TipoPeca'
 
 const posicaoPeoesBrancos = [
   { linha: 1, coluna: 0 },

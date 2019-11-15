@@ -1,10 +1,10 @@
-import { Movimento } from '../movimento/Movimento'
-import { TipoPeca } from '../../definitions/TipoPeca'
-import { ItemTabuleiro } from '../ItemTabuleiro'
+import _ from 'lodash'
+import { Tabuleiro } from 'main/domain/Tabuleiro'
 import { Cor } from '../../definitions/Cor'
 import { Posicao, TipoMovimento } from '../../definitions/Movimento'
-import _ from 'lodash'
-import { Tabuleiro } from 'domain/Tabuleiro'
+import { TipoPeca } from '../../definitions/TipoPeca'
+import { ItemTabuleiro } from '../ItemTabuleiro'
+import { Movimento } from '../movimento/Movimento'
 
 export abstract class Peca {
   protected itemTabuleiro: ItemTabuleiro

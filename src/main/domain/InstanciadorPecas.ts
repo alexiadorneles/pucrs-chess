@@ -1,15 +1,15 @@
-import { TipoPeca } from '../definitions/TipoPeca'
-import { Peca } from '../domain/peca/Peca'
 import { Cor } from '../definitions/Cor'
 import { MapPosicaoPecasBrancas, MapPosicaoPecasPretas } from '../definitions/PosicoesIniciais'
-import { ItemTabuleiro } from '../domain/ItemTabuleiro'
+import { TipoPeca } from '../definitions/TipoPeca'
 import { DefinidorCores } from './DefinidorCores'
-import { Cavalo } from '../domain/peca/Cavalo'
+import { ItemTabuleiro } from './ItemTabuleiro'
+import { Bispo } from './peca/Bispo'
+import { Cavalo } from './peca/Cavalo'
 import { Peao } from './peca/Peao'
-import { Bispo } from '../domain/peca/Bispo'
-import { Rainha } from '../domain/peca/Rainha'
-import { Rei } from '../domain/peca/Rei'
-import { Torre } from '../domain/peca/Torre'
+import { Peca } from './peca/Peca'
+import { Rainha } from './peca/Rainha'
+import { Rei } from './peca/Rei'
+import { Torre } from './peca/Torre'
 
 const InstanciadorTipoMap: Map<TipoPeca, new (corPeca: Cor) => Peca> = new Map([
   [TipoPeca.PEAO, Peao],

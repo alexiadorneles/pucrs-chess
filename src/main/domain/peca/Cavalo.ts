@@ -1,9 +1,9 @@
-import { Peca } from './Peca'
-import { TipoPeca } from '../../definitions/TipoPeca'
 import { Cor } from '../../definitions/Cor'
-import { MovimentoL } from '../movimento/MovimentoL'
 import { Posicao } from '../../definitions/Movimento'
+import { TipoPeca } from '../../definitions/TipoPeca'
 import { ExtensorPosicoes } from '../../ExtensorPosicoes'
+import { MovimentoL } from '../movimento/MovimentoL'
+import { Peca } from './Peca'
 
 export class Cavalo extends Peca {
   constructor(cor: Cor) {

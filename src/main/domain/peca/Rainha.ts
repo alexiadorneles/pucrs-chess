@@ -1,13 +1,9 @@
-import { Peca } from './Peca'
-import { TipoPeca } from '../../definitions/TipoPeca'
 import { Cor } from '../../definitions/Cor'
-import { MovimentoVertical } from '../movimento/MovimentoVertical'
-import { MovimentoHorizontal } from '../movimento/MovimentoHorizontal'
+import { TipoPeca } from '../../definitions/TipoPeca'
 import { MovimentoDiagonal } from '../movimento/MovimentoDiagonal'
-import { ExtensorPosicoes } from '../../ExtensorPosicoes'
-import { Posicao, TipoMovimento } from '../../definitions/Movimento'
-import _ from 'lodash'
-import { Tabuleiro } from 'domain/Tabuleiro'
+import { MovimentoHorizontal } from '../movimento/MovimentoHorizontal'
+import { MovimentoVertical } from '../movimento/MovimentoVertical'
+import { Peca } from './Peca'
 
 export class Rainha extends Peca {
   constructor(cor: Cor) {

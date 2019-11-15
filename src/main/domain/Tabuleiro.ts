@@ -1,14 +1,13 @@
-import { ItemTabuleiro } from './ItemTabuleiro'
+import _ from 'lodash'
 import { Cor } from '../definitions/Cor'
 import { Posicao } from '../definitions/Movimento'
-import { InstanciadorPecas } from '../domain/InstanciadorPecas'
-import { TipoPeca } from '../definitions/TipoPeca'
 import { MapPosicaoPecasBrancas } from '../definitions/PosicoesIniciais'
-import { DefinidorCores } from '../domain/DefinidorCores'
-import { Peca } from '../domain/peca/Peca'
-import { Rainha } from '../domain/peca/Rainha'
+import { TipoPeca } from '../definitions/TipoPeca'
 import { DOMGenerator } from '../DOMGenerator'
-import _ from 'lodash'
+import { DefinidorCores } from './DefinidorCores'
+import { InstanciadorPecas } from './InstanciadorPecas'
+import { ItemTabuleiro } from './ItemTabuleiro'
+import { Peca } from './peca/Peca'
 
 const initilizarMatriz = (): ItemTabuleiro[][] => {
   const itens = []

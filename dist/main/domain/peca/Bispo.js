@@ -15,17 +15,15 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
-var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
-var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
 var Peca_1 = require("./Peca");
-var Rainha = (function (_super) {
-    __extends(Rainha, _super);
-    function Rainha(cor) {
+var Bispo = (function (_super) {
+    __extends(Bispo, _super);
+    function Bispo(cor) {
         var _this = this;
-        var movimentos = [new MovimentoVertical_1.MovimentoVertical(), new MovimentoHorizontal_1.MovimentoHorizontal(), new MovimentoDiagonal_1.MovimentoDiagonal()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.RAINHA, cor, movimentos, true) || this;
+        var movimentos = [new MovimentoDiagonal_1.MovimentoDiagonal()];
+        _this = _super.call(this, TipoPeca_1.TipoPeca.BISPO, cor, movimentos, true) || this;
         return _this;
     }
-    return Rainha;
+    return Bispo;
 }(Peca_1.Peca));
-exports.Rainha = Rainha;
+exports.Bispo = Bispo;

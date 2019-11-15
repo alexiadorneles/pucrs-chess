@@ -956,11 +956,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Peca_1 = require("./Peca");
 var TipoPeca_1 = require("../../definitions/TipoPeca");
-var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
-var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
 var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
+var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
+var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
+var Peca_1 = require("./Peca");
 var Rainha = (function (_super) {
     __extends(Rainha, _super);
     function Rainha(cor) {

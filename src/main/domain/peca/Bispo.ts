@@ -1,9 +1,7 @@
-import { Peca } from './Peca'
-import { TipoPeca } from '../../definitions/TipoPeca'
 import { Cor } from '../../definitions/Cor'
+import { TipoPeca } from '../../definitions/TipoPeca'
 import { MovimentoDiagonal } from '../movimento/MovimentoDiagonal'
-import { ExtensorPosicoes } from '../../ExtensorPosicoes'
-import { Posicao } from '../../definitions/Movimento'
+import { Peca } from './Peca'
 
 export class Bispo extends Peca {
   constructor(cor: Cor) {

@@ -1,8 +1,7 @@
-import { Peca } from "./peca/Peca";
-import { Cor } from "../definitions/Cor"
-import { Posicao } from "../definitions/Movimento";
-import { Tabuleiro } from "../domain/Tabuleiro";
-import { DOMGenerator } from "../DOMGenerator";
+import { Cor } from '../definitions/Cor'
+import { Posicao } from '../definitions/Movimento'
+import { Peca } from './peca/Peca'
+import { Tabuleiro } from './Tabuleiro'
 
 export class ItemTabuleiro {
   private peca: Peca
@@ -18,11 +17,11 @@ export class ItemTabuleiro {
     }
   }
 
-  public atribuirElemento(elemento: Element) {
+  public atribuirElemento(elemento: Element): void {
     this.elemento = elemento
   }
 
-  public adicionarAoTabuleiro(tabuleiro: Tabuleiro) {
+  public adicionarAoTabuleiro(tabuleiro: Tabuleiro): void {
     this.tabuleiro = tabuleiro
   }
 
@@ -43,11 +42,11 @@ export class ItemTabuleiro {
     }
   }
 
-  public getCor() {
+  public getCor(): Cor {
     return this.cor
   }
 
-  public getPeca() {
+  public getPeca(): Peca {
     return this.peca
   }
 
@@ -55,7 +54,7 @@ export class ItemTabuleiro {
     return this.posicao
   }
 
-  public setDestaque(isDestacado: boolean) {
+  public setDestaque(isDestacado: boolean): void {
     this.isDestacado = isDestacado
     this.atualizarClasse()
     if (this.isDestacado) {
@@ -65,7 +64,7 @@ export class ItemTabuleiro {
     }
   }
 
-  public removerDestaque() {
+  public removerDestaque(): void {
     this.isDestacado = false
     this.atualizarClasse()
   }

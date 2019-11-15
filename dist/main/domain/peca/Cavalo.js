@@ -14,18 +14,24 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var TipoPeca_1 = require("../../definitions/TipoPeca");
-var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
-var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
-var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
+var ExtensorPosicoes_1 = require("../../ExtensorPosicoes");
+var MovimentoL_1 = require("../movimento/MovimentoL");
 var Peca_1 = require("./Peca");
-var Rainha = (function (_super) {
-    __extends(Rainha, _super);
-    function Rainha(cor) {
+var Cavalo = (function (_super) {
+    __extends(Cavalo, _super);
+    function Cavalo(cor) {
         var _this = this;
-        var movimentos = [new MovimentoVertical_1.MovimentoVertical(), new MovimentoHorizontal_1.MovimentoHorizontal(), new MovimentoDiagonal_1.MovimentoDiagonal()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.RAINHA, cor, movimentos, true) || this;
+        var movimentos = [new MovimentoL_1.MovimentoL()];
+        _this = _super.call(this, TipoPeca_1.TipoPeca.CAVALO, cor, movimentos, true) || this;
         return _this;
     }
-    return Rainha;
+    Cavalo.prototype.podeMover = function (posicao, ocupada) {
+        return true;
+    };
+    Cavalo.prototype.simularMovimento = function () {
+        var posicao = this.getItemTabuleiro().getPosicao();
+        return ExtensorPosicoes_1.ExtensorPosicoes.extenderL([posicao]);
+    };
+    return Cavalo;
 }(Peca_1.Peca));
-exports.Rainha = Rainha;
+exports.Cavalo = Cavalo;

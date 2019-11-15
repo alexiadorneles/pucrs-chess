@@ -18,14 +18,21 @@ var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
 var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
 var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
 var Peca_1 = require("./Peca");
-var Rainha = (function (_super) {
-    __extends(Rainha, _super);
-    function Rainha(cor) {
+var Rei = (function (_super) {
+    __extends(Rei, _super);
+    function Rei(cor) {
         var _this = this;
         var movimentos = [new MovimentoVertical_1.MovimentoVertical(), new MovimentoHorizontal_1.MovimentoHorizontal(), new MovimentoDiagonal_1.MovimentoDiagonal()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.RAINHA, cor, movimentos, true) || this;
+        _this = _super.call(this, TipoPeca_1.TipoPeca.REI, cor, movimentos, true) || this;
         return _this;
     }
-    return Rainha;
+    Rei.prototype.simularMovimento = function (tabuleiro) {
+        var _this = this;
+        var posicaoPeca = this.itemTabuleiro.getPosicao();
+        return this.movimentos
+            .map(function (movimento) { return movimento.simularMovimento(posicaoPeca, _this); })
+            .reduce(function (aggregation, movimento) { return aggregation.concat(movimento); }, []);
+    };
+    return Rei;
 }(Peca_1.Peca));
-exports.Rainha = Rainha;
+exports.Rei = Rei;

@@ -1,5 +1,5 @@
-import { Posicao } from '../definitions/Movimento'
 import { Cor } from '../definitions/Cor'
+import { Posicao } from '../definitions/Movimento'
 
 export namespace DefinidorCores {
   export function definir({ linha, coluna }: Posicao): Cor {
