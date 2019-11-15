@@ -1,8 +1,8 @@
+import _ from 'lodash'
 import { Cor } from '../../definitions/Cor'
 import { Posicao } from '../../definitions/Movimento'
 import { TipoPeca } from '../../definitions/TipoPeca'
 import { MovimentoVertical } from '../movimento/MovimentoVertical'
-import { Tabuleiro } from '../Tabuleiro'
 import { Peca } from './Peca'
 
 export class Peao extends Peca {
@@ -13,9 +13,9 @@ export class Peao extends Peca {
 
   public simularMovimento(): Posicao[] {
     const posicaoPeca = this.itemTabuleiro.getPosicao()
-    return this.movimentos
-      .map(movimento => movimento.simularMovimento(posicaoPeca, this))
-      .reduce((aggregation, movimento: Posicao[]) => aggregation.concat(movimento), [])
-
+    const posicao = this.cor === Cor.BRANCAS
+      ? { linha: ++posicaoPeca.linha, coluna: posicaoPeca.coluna }
+      : { linha: --posicaoPeca.linha, coluna: posicaoPeca.coluna }
+    return _.castArray(posicao)
   }
 }

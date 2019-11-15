@@ -28,127 +28,14 @@ export abstract class Peca {
     return this.itemTabuleiro
   }
 
-  private calculatePossibleMoviment = ({ linha, coluna }: Posicao, tipoMovimento: TipoMovimento): Posicao[] => {
-    const moviments: Posicao[] = []
-    let movimentoColuna
-    let movimentoLinha
-    if (tipoMovimento == TipoMovimento.HORIZONTAL) {
-      let hasPiece = false
-      movimentoColuna = coluna + 1
-      while (!hasPiece) {
-        const nextMoviment = { linha, coluna: movimentoColuna }
-        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
-        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
-          moviments.push(nextMoviment)
-        }
-        if (movimentoColuna >= 7) break
-        else movimentoColuna = movimentoColuna + 1
-      }
-      hasPiece = false
-      movimentoColuna = coluna - 1
-      while (!hasPiece) {
-        const nextMoviment = { linha, coluna: movimentoColuna }
-        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada({ linha: linha, coluna: movimentoColuna })
-        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
-          moviments.push(nextMoviment)
-        }
-        if (movimentoColuna <= 0) break
-        else movimentoColuna = movimentoColuna - 1
-      }
-      return moviments
-    } else if (tipoMovimento == TipoMovimento.VERTICAL) {
-      let hasPiece = false
-      movimentoLinha = linha + 1
-      while (!hasPiece) {
-        const nextMoviment = { linha: movimentoLinha, coluna }
-        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
-        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
-          moviments.push(nextMoviment)
-        }
-        if (movimentoLinha >= 7) break
-        else movimentoLinha = movimentoLinha + 1
-      }
-      hasPiece = false
-      movimentoLinha = linha - 1
-      while (!hasPiece) {
-        const nextMoviment = { linha: movimentoLinha, coluna: coluna }
-        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
-        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
-          moviments.push(nextMoviment)
-        }
-        if (movimentoLinha <= 0) break
-        else movimentoLinha = movimentoLinha - 1
-      }
-      return moviments
-    } else {
-      let hasPiece = false
-      movimentoLinha = linha + 1
-      movimentoColuna = coluna - 1
-      while (!hasPiece) {
-        const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
-        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
-        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
-          moviments.push(nextMoviment)
-        }
-        if (movimentoLinha >= 7 || movimentoColuna <= 0) break
-        else {
-          movimentoLinha = movimentoLinha + 1
-          movimentoColuna = movimentoColuna - 1
-        }
-      }
-      hasPiece = false
-      movimentoLinha = linha - 1
-      movimentoColuna = coluna + 1
-      while (!hasPiece) {
-        const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
-        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
-        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
-          moviments.push(nextMoviment)
-        }
-        if (movimentoLinha <= 0 || movimentoColuna >= 7) break
-        else {
-          movimentoLinha = movimentoLinha - 1
-          movimentoColuna = movimentoColuna + 1
-        }
-      }
-      hasPiece = false
-      movimentoLinha = linha + 1
-      movimentoColuna = coluna + 1
-      while (!hasPiece) {
-        const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
-        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
-        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
-          moviments.push(nextMoviment)
-        }
-        if (movimentoLinha >= 7 || movimentoColuna >= 7) break
-        else {
-          movimentoLinha = movimentoLinha + 1
-          movimentoColuna = movimentoColuna + 1
-        }
-      }
-      hasPiece = false
-      movimentoLinha = linha - 1
-      movimentoColuna = coluna - 1
-      while (!hasPiece) {
-        const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
-        hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
-        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
-          moviments.push(nextMoviment)
-        }
-        if (movimentoLinha <= 0 || movimentoColuna <= 0) break
-        else {
-          movimentoLinha = movimentoLinha - 1
-          movimentoColuna = movimentoColuna - 1
-        }
-      }
-      return moviments
-    }
+  public getTabuleiro(): Tabuleiro {
+    return this.itemTabuleiro.getTabuleiro()
   }
 
   public simularMovimento(): Posicao[] {
-    return _.flatten(this.movimentos.map(moviment =>
-      this.calculatePossibleMoviment(this.getItemTabuleiro().getPosicao(), moviment.getTipo()))
-    )
+    const posicaoAtual = this.getItemTabuleiro().getPosicao()
+    const posicoes = this.movimentos.map(movimento => movimento.simularMovimento(posicaoAtual, this))
+    return _.flatten(posicoes)
   }
 
   public adicionarAoItem(item: ItemTabuleiro): void {

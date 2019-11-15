@@ -20,14 +20,14 @@ export abstract class Movimento {
     return peca.isVaiPraTras() ? novasPosicoesFrente.concat(novasPosicoesTras) : novasPosicoesFrente
   }
 
-  private aplicarOffsetParaFrente(offset: OffsetMovimento, posicao: Posicao): Posicao {
+  protected aplicarOffsetParaFrente(offset: OffsetMovimento, posicao: Posicao): Posicao {
     const novaPosicao = { ...posicao }
     novaPosicao.coluna = posicao.coluna + offset.coluna
     novaPosicao.linha = posicao.linha + offset.linha
     return novaPosicao
   }
 
-  private aplicarOffsetParaTras(offset: OffsetMovimento, posicao: Posicao): Posicao {
+  protected aplicarOffsetParaTras(offset: OffsetMovimento, posicao: Posicao): Posicao {
     const novaPosicao = { ...posicao }
     novaPosicao.coluna = posicao.coluna - offset.coluna
     novaPosicao.linha = posicao.linha - offset.linha

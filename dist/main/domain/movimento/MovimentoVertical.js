@@ -21,6 +21,40 @@ var MovimentoVertical = (function (_super) {
         _this.offsetMovimentos = [{ coluna: 0, linha: 1 }];
         return _this;
     }
+    MovimentoVertical.prototype.simularMovimento = function (_a, peca) {
+        var linha = _a.linha, coluna = _a.coluna;
+        var isPosicaoOcupada = false;
+        var movimentoLinha = linha + 1;
+        var posicoes = [];
+        var tabuleiro = peca.getTabuleiro();
+        while (!isPosicaoOcupada) {
+            var nextMoviment = { linha: movimentoLinha, coluna: coluna };
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(nextMoviment);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
+                posicoes.push(nextMoviment);
+            }
+            if (movimentoLinha >= 7)
+                break;
+            else
+                movimentoLinha = movimentoLinha + 1;
+        }
+        if (peca.isVaiPraTras()) {
+            isPosicaoOcupada = false;
+            movimentoLinha = linha - 1;
+            while (!isPosicaoOcupada) {
+                var nextMoviment = { linha: movimentoLinha, coluna: coluna };
+                isPosicaoOcupada = tabuleiro.isPosicaoOcupada(nextMoviment);
+                if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
+                    posicoes.push(nextMoviment);
+                }
+                if (movimentoLinha <= 0)
+                    break;
+                else
+                    movimentoLinha = movimentoLinha - 1;
+            }
+        }
+        return posicoes;
+    };
     return MovimentoVertical;
 }(Movimento_1.Movimento));
 exports.MovimentoVertical = MovimentoVertical;
