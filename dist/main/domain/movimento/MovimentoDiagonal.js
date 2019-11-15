@@ -29,10 +29,10 @@ var MovimentoDiagonal = (function (_super) {
         var posicoes = [];
         var tabuleiro = peca.getTabuleiro();
         while (!isPosicaoOcupada) {
-            var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
-            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(nextMoviment);
-            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
-                posicoes.push(nextMoviment);
+            var proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna };
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
             }
             if (movimentoLinha >= 7 || movimentoColuna <= 0)
                 break;
@@ -45,10 +45,10 @@ var MovimentoDiagonal = (function (_super) {
         movimentoLinha = linha - 1;
         movimentoColuna = coluna + 1;
         while (!isPosicaoOcupada) {
-            var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
-            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(nextMoviment);
-            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
-                posicoes.push(nextMoviment);
+            var proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna };
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
             }
             if (movimentoLinha <= 0 || movimentoColuna >= 7)
                 break;
@@ -61,10 +61,10 @@ var MovimentoDiagonal = (function (_super) {
         movimentoLinha = linha + 1;
         movimentoColuna = coluna + 1;
         while (!isPosicaoOcupada) {
-            var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
-            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(nextMoviment);
-            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
-                posicoes.push(nextMoviment);
+            var proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna };
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
             }
             if (movimentoLinha >= 7 || movimentoColuna >= 7)
                 break;
@@ -77,10 +77,10 @@ var MovimentoDiagonal = (function (_super) {
         movimentoLinha = linha - 1;
         movimentoColuna = coluna - 1;
         while (!isPosicaoOcupada) {
-            var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
-            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(nextMoviment);
-            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
-                posicoes.push(nextMoviment);
+            var proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna };
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
             }
             if (movimentoLinha <= 0 || movimentoColuna <= 0)
                 break;

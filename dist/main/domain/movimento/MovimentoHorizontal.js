@@ -24,32 +24,32 @@ var MovimentoHorizontal = (function (_super) {
     MovimentoHorizontal.prototype.simularMovimento = function (_a, peca) {
         var linha = _a.linha, coluna = _a.coluna;
         var isPosicaoOcupada = false;
-        var movimentoColuna = coluna + 1;
+        var offset = coluna + 1;
         var posicoes = [];
         var tabuleiro = peca.getTabuleiro();
         while (!isPosicaoOcupada) {
-            var proximaPosicao = { linha: linha, coluna: movimentoColuna };
+            var proximaPosicao = { linha: linha, coluna: offset };
             isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
             if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
                 posicoes.push(proximaPosicao);
             }
-            if (movimentoColuna >= 7)
+            if (offset >= 7)
                 break;
             else
-                movimentoColuna = movimentoColuna + 1;
+                offset = offset + 1;
         }
         isPosicaoOcupada = false;
-        movimentoColuna = coluna - 1;
+        offset = coluna - 1;
         while (!isPosicaoOcupada) {
-            var nextMoviment = { linha: linha, coluna: movimentoColuna };
-            isPosicaoOcupada = tabuleiro.isPosicaoOcupada({ linha: linha, coluna: movimentoColuna });
-            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
-                posicoes.push(nextMoviment);
+            var proximaPosicao = { linha: linha, coluna: offset };
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
             }
-            if (movimentoColuna <= 0)
+            if (offset <= 0)
                 break;
             else
-                movimentoColuna = movimentoColuna - 1;
+                offset = offset - 1;
         }
         return posicoes;
     };

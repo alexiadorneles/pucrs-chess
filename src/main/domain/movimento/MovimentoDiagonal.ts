@@ -15,10 +15,10 @@ export class MovimentoDiagonal extends Movimento {
     const tabuleiro = peca.getTabuleiro()
 
     while (!isPosicaoOcupada) {
-      const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
-      isPosicaoOcupada = tabuleiro.isPosicaoOcupada(nextMoviment)
-      if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
-        posicoes.push(nextMoviment)
+      const proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna }
+      isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao)
+      if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+        posicoes.push(proximaPosicao)
       }
       if (movimentoLinha >= 7 || movimentoColuna <= 0) break
       else {
@@ -31,10 +31,10 @@ export class MovimentoDiagonal extends Movimento {
     movimentoLinha = linha - 1
     movimentoColuna = coluna + 1
     while (!isPosicaoOcupada) {
-      const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
-      isPosicaoOcupada = tabuleiro.isPosicaoOcupada(nextMoviment)
-      if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
-        posicoes.push(nextMoviment)
+      const proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna }
+      isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao)
+      if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+        posicoes.push(proximaPosicao)
       }
       if (movimentoLinha <= 0 || movimentoColuna >= 7) break
       else {
@@ -47,10 +47,10 @@ export class MovimentoDiagonal extends Movimento {
     movimentoLinha = linha + 1
     movimentoColuna = coluna + 1
     while (!isPosicaoOcupada) {
-      const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
-      isPosicaoOcupada = tabuleiro.isPosicaoOcupada(nextMoviment)
-      if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
-        posicoes.push(nextMoviment)
+      const proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna }
+      isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao)
+      if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+        posicoes.push(proximaPosicao)
       }
       if (movimentoLinha >= 7 || movimentoColuna >= 7) break
       else {
@@ -63,10 +63,10 @@ export class MovimentoDiagonal extends Movimento {
     movimentoLinha = linha - 1
     movimentoColuna = coluna - 1
     while (!isPosicaoOcupada) {
-      const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
-      isPosicaoOcupada = tabuleiro.isPosicaoOcupada(nextMoviment)
-      if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
-        posicoes.push(nextMoviment)
+      const proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna }
+      isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao)
+      if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+        posicoes.push(proximaPosicao)
       }
       if (movimentoLinha <= 0 || movimentoColuna <= 0) break
       else {

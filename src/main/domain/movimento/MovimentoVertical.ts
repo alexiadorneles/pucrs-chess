@@ -8,33 +8,31 @@ export class MovimentoVertical extends Movimento {
 
   public simularMovimento({ linha, coluna }: Posicao, peca: Peca): Posicao[] {
     let isPosicaoOcupada = false
-    let movimentoLinha = linha + 1
+    let offset = linha + 1
 
     const posicoes = []
     const tabuleiro = peca.getTabuleiro()
 
     while (!isPosicaoOcupada) {
-      const nextMoviment = { linha: movimentoLinha, coluna }
-      isPosicaoOcupada = tabuleiro.isPosicaoOcupada(nextMoviment)
-      if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
-        posicoes.push(nextMoviment)
+      const proximaPosicao = { linha: offset, coluna }
+      isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao)
+      if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+        posicoes.push(proximaPosicao)
       }
-      if (movimentoLinha >= 7) break
-      else movimentoLinha = movimentoLinha + 1
+      if (offset >= 7) break
+      else offset = offset + 1
     }
 
-    if (peca.isVaiPraTras()) {
-      isPosicaoOcupada = false
-      movimentoLinha = linha - 1
-      while (!isPosicaoOcupada) {
-        const nextMoviment = { linha: movimentoLinha, coluna: coluna }
-        isPosicaoOcupada = tabuleiro.isPosicaoOcupada(nextMoviment)
-        if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
-          posicoes.push(nextMoviment)
-        }
-        if (movimentoLinha <= 0) break
-        else movimentoLinha = movimentoLinha - 1
+    isPosicaoOcupada = false
+    offset = linha - 1
+    while (!isPosicaoOcupada) {
+      const proximaPosicao = { linha: offset, coluna: coluna }
+      isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao)
+      if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+        posicoes.push(proximaPosicao)
       }
+      if (offset <= 0) break
+      else offset = offset - 1
     }
     return posicoes
   }

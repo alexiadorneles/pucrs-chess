@@ -24,34 +24,32 @@ var MovimentoVertical = (function (_super) {
     MovimentoVertical.prototype.simularMovimento = function (_a, peca) {
         var linha = _a.linha, coluna = _a.coluna;
         var isPosicaoOcupada = false;
-        var movimentoLinha = linha + 1;
+        var offset = linha + 1;
         var posicoes = [];
         var tabuleiro = peca.getTabuleiro();
         while (!isPosicaoOcupada) {
-            var nextMoviment = { linha: movimentoLinha, coluna: coluna };
-            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(nextMoviment);
-            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
-                posicoes.push(nextMoviment);
+            var proximaPosicao = { linha: offset, coluna: coluna };
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
             }
-            if (movimentoLinha >= 7)
+            if (offset >= 7)
                 break;
             else
-                movimentoLinha = movimentoLinha + 1;
+                offset = offset + 1;
         }
-        if (peca.isVaiPraTras()) {
-            isPosicaoOcupada = false;
-            movimentoLinha = linha - 1;
-            while (!isPosicaoOcupada) {
-                var nextMoviment = { linha: movimentoLinha, coluna: coluna };
-                isPosicaoOcupada = tabuleiro.isPosicaoOcupada(nextMoviment);
-                if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
-                    posicoes.push(nextMoviment);
-                }
-                if (movimentoLinha <= 0)
-                    break;
-                else
-                    movimentoLinha = movimentoLinha - 1;
+        isPosicaoOcupada = false;
+        offset = linha - 1;
+        while (!isPosicaoOcupada) {
+            var proximaPosicao = { linha: offset, coluna: coluna };
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
             }
+            if (offset <= 0)
+                break;
+            else
+                offset = offset - 1;
         }
         return posicoes;
     };

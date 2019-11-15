@@ -8,31 +8,31 @@ export class MovimentoHorizontal extends Movimento {
 
   public simularMovimento({ linha, coluna }: Posicao, peca: Peca): Posicao[] {
     let isPosicaoOcupada = false
-    let movimentoColuna = coluna + 1
+    let offset = coluna + 1
 
     const posicoes = []
     const tabuleiro = peca.getTabuleiro()
 
     while (!isPosicaoOcupada) {
-      const proximaPosicao = { linha, coluna: movimentoColuna }
+      const proximaPosicao = { linha, coluna: offset }
       isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao)
       if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
         posicoes.push(proximaPosicao)
       }
-      if (movimentoColuna >= 7) break
-      else movimentoColuna = movimentoColuna + 1
+      if (offset >= 7) break
+      else offset = offset + 1
     }
 
     isPosicaoOcupada = false
-    movimentoColuna = coluna - 1
+    offset = coluna - 1
     while (!isPosicaoOcupada) {
-      const nextMoviment = { linha, coluna: movimentoColuna }
-      isPosicaoOcupada = tabuleiro.isPosicaoOcupada({ linha: linha, coluna: movimentoColuna })
-      if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(nextMoviment)) {
-        posicoes.push(nextMoviment)
+      const proximaPosicao = { linha, coluna: offset }
+      isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao)
+      if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+        posicoes.push(proximaPosicao)
       }
-      if (movimentoColuna <= 0) break
-      else movimentoColuna = movimentoColuna - 1
+      if (offset <= 0) break
+      else offset = offset - 1
     }
     return posicoes
   }
