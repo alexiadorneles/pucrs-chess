@@ -18,7 +18,7 @@ var Peca = (function () {
                 while (!hasPiece) {
                     var nextMoviment = { linha: linha, coluna: movimentoColuna };
                     hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment);
-                    if (!hasPiece) {
+                    if (!hasPiece && _this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
                         moviments.push(nextMoviment);
                     }
                     if (movimentoColuna >= 7)
@@ -31,7 +31,7 @@ var Peca = (function () {
                 while (!hasPiece) {
                     var nextMoviment = { linha: linha, coluna: movimentoColuna };
                     hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada({ linha: linha, coluna: movimentoColuna });
-                    if (!hasPiece) {
+                    if (!hasPiece && _this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
                         moviments.push(nextMoviment);
                     }
                     if (movimentoColuna <= 0)
@@ -47,7 +47,7 @@ var Peca = (function () {
                 while (!hasPiece) {
                     var nextMoviment = { linha: movimentoLinha, coluna: coluna };
                     hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment);
-                    if (!hasPiece) {
+                    if (!hasPiece && _this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
                         moviments.push(nextMoviment);
                     }
                     if (movimentoLinha >= 7)
@@ -60,7 +60,7 @@ var Peca = (function () {
                 while (!hasPiece) {
                     var nextMoviment = { linha: movimentoLinha, coluna: coluna };
                     hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment);
-                    if (!hasPiece) {
+                    if (!hasPiece && _this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
                         moviments.push(nextMoviment);
                     }
                     if (movimentoLinha <= 0)
@@ -77,7 +77,7 @@ var Peca = (function () {
                 while (!hasPiece) {
                     var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
                     hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment);
-                    if (!hasPiece) {
+                    if (!hasPiece && _this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
                         moviments.push(nextMoviment);
                     }
                     if (movimentoLinha >= 7 || movimentoColuna <= 0)
@@ -93,7 +93,7 @@ var Peca = (function () {
                 while (!hasPiece) {
                     var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
                     hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment);
-                    if (!hasPiece) {
+                    if (!hasPiece && _this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
                         moviments.push(nextMoviment);
                     }
                     if (movimentoLinha <= 0 || movimentoColuna >= 7)
@@ -109,7 +109,7 @@ var Peca = (function () {
                 while (!hasPiece) {
                     var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
                     hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment);
-                    if (!hasPiece) {
+                    if (!hasPiece && _this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
                         moviments.push(nextMoviment);
                     }
                     if (movimentoLinha >= 7 || movimentoColuna >= 7)
@@ -125,7 +125,7 @@ var Peca = (function () {
                 while (!hasPiece) {
                     var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
                     hasPiece = _this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment);
-                    if (!hasPiece) {
+                    if (!hasPiece && _this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
                         moviments.push(nextMoviment);
                     }
                     if (movimentoLinha <= 0 || movimentoColuna <= 0)

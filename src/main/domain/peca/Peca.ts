@@ -38,7 +38,7 @@ export abstract class Peca {
       while (!hasPiece) {
         const nextMoviment = { linha, coluna: movimentoColuna }
         hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
-        if (!hasPiece) {
+        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
           moviments.push(nextMoviment)
         }
         if (movimentoColuna >= 7) break
@@ -49,7 +49,7 @@ export abstract class Peca {
       while (!hasPiece) {
         const nextMoviment = { linha, coluna: movimentoColuna }
         hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada({ linha: linha, coluna: movimentoColuna })
-        if (!hasPiece) {
+        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
           moviments.push(nextMoviment)
         }
         if (movimentoColuna <= 0) break
@@ -62,7 +62,7 @@ export abstract class Peca {
       while (!hasPiece) {
         const nextMoviment = { linha: movimentoLinha, coluna }
         hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
-        if (!hasPiece) {
+        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
           moviments.push(nextMoviment)
         }
         if (movimentoLinha >= 7) break
@@ -73,7 +73,7 @@ export abstract class Peca {
       while (!hasPiece) {
         const nextMoviment = { linha: movimentoLinha, coluna: coluna }
         hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
-        if (!hasPiece) {
+        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
           moviments.push(nextMoviment)
         }
         if (movimentoLinha <= 0) break
@@ -87,7 +87,7 @@ export abstract class Peca {
       while (!hasPiece) {
         const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
         hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
-        if (!hasPiece) {
+        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
           moviments.push(nextMoviment)
         }
         if (movimentoLinha >= 7 || movimentoColuna <= 0) break
@@ -102,7 +102,7 @@ export abstract class Peca {
       while (!hasPiece) {
         const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
         hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
-        if (!hasPiece) {
+        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
           moviments.push(nextMoviment)
         }
         if (movimentoLinha <= 0 || movimentoColuna >= 7) break
@@ -117,7 +117,7 @@ export abstract class Peca {
       while (!hasPiece) {
         const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
         hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
-        if (!hasPiece) {
+        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
           moviments.push(nextMoviment)
         }
         if (movimentoLinha >= 7 || movimentoColuna >= 7) break
@@ -132,7 +132,7 @@ export abstract class Peca {
       while (!hasPiece) {
         const nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna }
         hasPiece = this.getItemTabuleiro().getTabuleiro().isPosicaoOcupada(nextMoviment)
-        if (!hasPiece) {
+        if (!hasPiece && this.getItemTabuleiro().getTabuleiro().isPosicaoExistente(nextMoviment)) {
           moviments.push(nextMoviment)
         }
         if (movimentoLinha <= 0 || movimentoColuna <= 0) break
