@@ -24,19 +24,6 @@ var Cavalo = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.CAVALO, cor, movimentos, true) || this;
         return _this;
     }
-    Cavalo.prototype.simularMovimento = function () {
-        var _a = this.getItemTabuleiro().getPosicao(), linha = _a.linha, coluna = _a.coluna;
-        var novasPosicoes = [];
-        novasPosicoes.push({ linha: linha + 2, coluna: coluna + 1 });
-        novasPosicoes.push({ linha: linha - 2, coluna: coluna + 1 });
-        novasPosicoes.push({ linha: linha - 2, coluna: coluna - 1 });
-        novasPosicoes.push({ linha: linha + 2, coluna: coluna - 1 });
-        novasPosicoes.push({ linha: linha + 1, coluna: coluna + 2 });
-        novasPosicoes.push({ linha: linha + 1, coluna: coluna - 2 });
-        novasPosicoes.push({ linha: linha - 1, coluna: coluna + 2 });
-        novasPosicoes.push({ linha: linha - 1, coluna: coluna - 2 });
-        return novasPosicoes.filter(this.getItemTabuleiro().getTabuleiro().isPosicaoValida);
-    };
     return Cavalo;
 }(Peca_1.Peca));
 exports.Cavalo = Cavalo;

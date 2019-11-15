@@ -12,6 +12,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -29,11 +40,10 @@ var Peao = (function (_super) {
         return _this;
     }
     Peao.prototype.simularMovimento = function () {
-        var posicaoPeca = this.itemTabuleiro.getPosicao();
-        var posicao = this.cor === "white"
-            ? { linha: ++posicaoPeca.linha, coluna: posicaoPeca.coluna }
-            : { linha: --posicaoPeca.linha, coluna: posicaoPeca.coluna };
-        return lodash_1.default.castArray(posicao);
+        var posicaoAtual = this.itemTabuleiro.getPosicao();
+        var novaPosicao = __assign({}, posicaoAtual);
+        novaPosicao.linha = this.cor === "white" ? ++posicaoAtual.linha : --posicaoAtual.linha;
+        return lodash_1.default.castArray(novaPosicao);
     };
     return Peao;
 }(Peca_1.Peca));

@@ -6,8 +6,13 @@ export const enum TipoMovimento {
 }
 
 export interface OffsetMovimento {
-  coluna: number
-  linha: number
+  modificadorColuna: Modificador
+  modificadorLinha: Modificador
+}
+
+export interface Modificador {
+  quantidade: number
+  apply: Function
 }
 
 export interface Posicao {

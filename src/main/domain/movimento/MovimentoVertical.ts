@@ -1,10 +1,20 @@
 import { Movimento } from './Movimento'
 import { OffsetMovimento, TipoMovimento, Posicao } from '../../definitions/Movimento'
 import { Peca } from '../peca/Peca'
+import { ModificadorImpl } from '../ModificadorImpl'
 
 export class MovimentoVertical extends Movimento {
   constructor() { super(TipoMovimento.VERTICAL) }
-  protected offsetMovimentos: OffsetMovimento[] = [{ coluna: 0, linha: 1 }]
+  protected offsetMovimentos: OffsetMovimento[] = [
+    {
+      modificadorColuna: new ModificadorImpl(0, ModificadorImpl.soma),
+      modificadorLinha: new ModificadorImpl(1, ModificadorImpl.soma),
+    },
+    {
+      modificadorColuna: new ModificadorImpl(0, ModificadorImpl.subtracao),
+      modificadorLinha: new ModificadorImpl(1, ModificadorImpl.subtracao),
+    }
+  ]
 
   public simularMovimento({ linha, coluna }: Posicao, peca: Peca): Posicao[] {
     let isPosicaoOcupada = false

@@ -14,11 +14,29 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Movimento_1 = require("./Movimento");
+var ModificadorImpl_1 = require("../ModificadorImpl");
 var MovimentoDiagonal = (function (_super) {
     __extends(MovimentoDiagonal, _super);
     function MovimentoDiagonal() {
         var _this = _super.call(this, 2) || this;
-        _this.offsetMovimentos = [{ coluna: 1, linha: 1 }];
+        _this.offsetMovimentos = [
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+            },
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+            },
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+            },
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+            },
+        ];
         return _this;
     }
     MovimentoDiagonal.prototype.simularMovimento = function (_a, peca) {

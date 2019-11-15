@@ -1,10 +1,28 @@
 import { Movimento } from './Movimento'
 import { TipoMovimento, OffsetMovimento, Posicao } from '../../definitions/Movimento'
 import { Peca } from '../peca/Peca'
+import { ModificadorImpl } from '../ModificadorImpl'
 
 export class MovimentoDiagonal extends Movimento {
   constructor() { super(TipoMovimento.DIAGONAL) }
-  protected offsetMovimentos: OffsetMovimento[] = [{ coluna: 1, linha: 1 }]
+  protected offsetMovimentos: OffsetMovimento[] = [
+    {
+      modificadorLinha: new ModificadorImpl(1, ModificadorImpl.soma),
+      modificadorColuna: new ModificadorImpl(1, ModificadorImpl.soma),
+    },
+    {
+      modificadorLinha: new ModificadorImpl(1, ModificadorImpl.soma),
+      modificadorColuna: new ModificadorImpl(1, ModificadorImpl.subtracao),
+    },
+    {
+      modificadorLinha: new ModificadorImpl(1, ModificadorImpl.subtracao),
+      modificadorColuna: new ModificadorImpl(1, ModificadorImpl.subtracao),
+    },
+    {
+      modificadorLinha: new ModificadorImpl(1, ModificadorImpl.subtracao),
+      modificadorColuna: new ModificadorImpl(1, ModificadorImpl.soma),
+    },
+  ]
 
   public simularMovimento({ linha, coluna }: Posicao, peca: Peca): Posicao[] {
     let isPosicaoOcupada = false

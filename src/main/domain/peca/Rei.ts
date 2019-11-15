@@ -12,11 +12,4 @@ export class Rei extends Peca {
     const movimentos = [new MovimentoVertical(), new MovimentoHorizontal(), new MovimentoDiagonal()]
     super(TipoPeca.REI, cor, movimentos, true)
   }
-
-  public simularMovimento(): Posicao[] {
-    const posicaoPeca = this.itemTabuleiro.getPosicao()
-    return this.movimentos
-      .map(movimento => movimento.simularMovimento(posicaoPeca, this))
-      .reduce((aggregation, movimento: Posicao[]) => aggregation.concat(movimento), [])
-  }
 }

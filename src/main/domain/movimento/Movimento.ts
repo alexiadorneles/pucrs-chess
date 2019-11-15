@@ -1,6 +1,5 @@
-import { Posicao, TipoMovimento, OffsetMovimento } from '../../definitions/Movimento'
+import { OffsetMovimento, Posicao, TipoMovimento } from '../../definitions/Movimento'
 import { Peca } from '../peca/Peca'
-import { Cor } from '../../definitions/Cor'
 
 export abstract class Movimento {
   constructor(private tipo: TipoMovimento) { }
@@ -10,27 +9,30 @@ export abstract class Movimento {
     return this.tipo
   }
 
-  public simularMovimento(posicaoAtual: Posicao, peca: Peca): Posicao[] {
-    const novasPosicoesFrente = peca.getCor() === Cor.BRANCAS
-      ? this.offsetMovimentos.map(offset => this.aplicarOffsetParaFrente(offset, posicaoAtual))
-      : this.offsetMovimentos.map(offset => this.aplicarOffsetParaTras(offset, posicaoAtual))
-    const novasPosicoesTras = peca.getCor() === Cor.BRANCAS
-      ? this.offsetMovimentos.map(offset => this.aplicarOffsetParaTras(offset, posicaoAtual))
-      : this.offsetMovimentos.map(offset => this.aplicarOffsetParaFrente(offset, posicaoAtual))
-    return peca.isVaiPraTras() ? novasPosicoesFrente.concat(novasPosicoesTras) : novasPosicoesFrente
+  public simularMovimento(posicao: Posicao, peca: Peca): Posicao[] {
+    // let isPosicaoOcupada = false
+    // const posicoes: Posicao[] = []
+    // const tabuleiro = peca.getTabuleiro()
+    // let proximaPosicao = { ...posicao }
+    // this.offsetMovimentos.forEach(offset => {
+    //   while (!isPosicaoOcupada) {
+    //     proximaPosicao = this.criarNovaPosicaoBaseadaEmOffset(proximaPosicao, offset)
+    //     isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao)
+    //     if (!tabuleiro.isPosicaoValida(proximaPosicao)) break
+    //     if (!isPosicaoOcupada) posicoes.push(proximaPosicao)
+    //   }
+    // })
+    // return posicoes
+    return []
   }
 
-  protected aplicarOffsetParaFrente(offset: OffsetMovimento, posicao: Posicao): Posicao {
-    const novaPosicao = { ...posicao }
-    novaPosicao.coluna = posicao.coluna + offset.coluna
-    novaPosicao.linha = posicao.linha + offset.linha
-    return novaPosicao
-  }
-
-  protected aplicarOffsetParaTras(offset: OffsetMovimento, posicao: Posicao): Posicao {
-    const novaPosicao = { ...posicao }
-    novaPosicao.coluna = posicao.coluna - offset.coluna
-    novaPosicao.linha = posicao.linha - offset.linha
-    return novaPosicao
+  protected criarNovaPosicaoBaseadaEmOffset(
+    { linha, coluna }: Posicao,
+    { modificadorColuna, modificadorLinha }: OffsetMovimento
+  ): Posicao {
+    return {
+      linha: modificadorLinha.apply(linha),
+      coluna: modificadorColuna.apply(coluna),
+    }
   }
 }

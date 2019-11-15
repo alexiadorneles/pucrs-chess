@@ -12,10 +12,9 @@ export class Peao extends Peca {
   }
 
   public simularMovimento(): Posicao[] {
-    const posicaoPeca = this.itemTabuleiro.getPosicao()
-    const posicao = this.cor === Cor.BRANCAS
-      ? { linha: ++posicaoPeca.linha, coluna: posicaoPeca.coluna }
-      : { linha: --posicaoPeca.linha, coluna: posicaoPeca.coluna }
-    return _.castArray(posicao)
+    const posicaoAtual = this.itemTabuleiro.getPosicao()
+    const novaPosicao = { ...posicaoAtual }
+    novaPosicao.linha = this.cor === Cor.BRANCAS ? ++posicaoAtual.linha : --posicaoAtual.linha
+    return _.castArray(novaPosicao)
   }
 }

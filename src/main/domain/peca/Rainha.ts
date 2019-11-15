@@ -10,14 +10,4 @@ export class Rainha extends Peca {
     const movimentos = [new MovimentoVertical(), new MovimentoHorizontal(), new MovimentoDiagonal()]
     super(TipoPeca.RAINHA, cor, movimentos, true)
   }
-
-  // public simularMovimento(): Posicao[] {
-  //   return
-  // }
-
-  // public calculateMoviment(tabuleiro: Tabuleiro): void {
-  //   this.possibleMoves = _.flatten(this.movimentos.map(moviment =>
-  //     calculatePossibleMoviment(this.getItemTabuleiro().getPosicao(), tabuleiro, moviment.getTipo()))
-  //   )
-  // }
 }
