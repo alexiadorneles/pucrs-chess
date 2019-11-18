@@ -11,7 +11,7 @@ import { Rainha } from './peca/Rainha'
 import { Rei } from './peca/Rei'
 import { Torre } from './peca/Torre'
 
-const InstanciadorTipoMap: Map<TipoPeca, new (corPeca: Cor) => Peca> = new Map([
+export const InstanciadorTipoMap: Map<TipoPeca, new (corPeca: Cor) => Peca> = new Map([
   [TipoPeca.PEAO, Peao],
   [TipoPeca.CAVALO, Cavalo],
   [TipoPeca.BISPO, Bispo],

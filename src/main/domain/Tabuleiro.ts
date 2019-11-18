@@ -8,6 +8,7 @@ import { DefinidorCores } from './DefinidorCores'
 import { InstanciadorPecas } from './InstanciadorPecas'
 import { ItemTabuleiro } from './ItemTabuleiro'
 import { Peca } from './peca/Peca'
+import axios from 'axios'
 
 
 const initilizarMatriz = (): ItemTabuleiro[][] => {
@@ -24,7 +25,7 @@ const initilizarMatriz = (): ItemTabuleiro[][] => {
 }
 
 export class Tabuleiro {
-  private posicoes: Array<Array<ItemTabuleiro>> = initilizarMatriz()
+  public posicoes: Array<Array<ItemTabuleiro>> = initilizarMatriz()
   public pecaEmMovimento: Peca
 
   public gerarTabuleiroInicial = (): Tabuleiro => {
@@ -66,16 +67,18 @@ export class Tabuleiro {
     const data = new FormData()
 
     data.append('json', conteudo)
-    console.log('conteudo', conteudo)
+    // console.log('conteudo', conteudo)
     const url = 'http://localhost:3000/salvar'
-    await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: data
-    })
+    const response = await axios.post(url, { json: conteudo }, { headers: { 'Content-Type': 'application/json' } })
+    console.log(response)
+    // await fetch(url, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: data
+    // })
   }
 
   public setPecaEmMovimento(peca: Peca): void {
@@ -97,10 +100,10 @@ export class Tabuleiro {
     DOMGenerator.getInstance().refresh()
   }
 
-  private percorrerTabuleiro(callback: Function): void {
+  public percorrerTabuleiro(callback: (item: ItemTabuleiro, posicao?: Posicao) => void): void {
     for (let linha = 0; linha < 8; linha++)
       for (let coluna = 0; coluna < 8; coluna++)
-        callback(this.getItem({ linha, coluna }))
+        callback(this.getItem({ linha, coluna }), { linha, coluna })
   }
 
   public isPosicaoValida = (posicao: Posicao): boolean => {
