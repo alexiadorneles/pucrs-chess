@@ -11,12 +11,44 @@
   <link href="../node_modules/@fortawesome/fontawesome-free/css/fontawesome.css" rel="stylesheet">
   <link href="../node_modules/@fortawesome/fontawesome-free/css/v4-shims.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
   <title>Xadrez</title>
 </head>
 
 <body>
+  <div class="jogador-container">
+    <div class="jogador">
+      <i class="fas fa-user-circle"></i>
+      <div class="jogador1">
+        <a>Jogador 1</a>
+      </div>
+    </div>
+    <div class="jogador">
+      <i class="fas fa-user-circle"></i>
+      <div class="jogadorDois">
+        <a>Jogador 2</a>
+      </div>
+    </div>
+  </div>
   <div id="root"></div>
+  <div class="jogador-container botoes">
+    <div class="jogador">
+      <button id="novoJogo" class="jogador1">
+        <a>Novo Jogo</a>
+      </button>
+    </div>
+    <div class="jogador">
+      <button id="salvarJogo" class="jogadorDois">
+        <a>Salvar Jogo</a>
+      </button>
+    </div>
+    <div class="jogador">
+      <button id="carregarJogo" class="jogadorDois">
+        <a>Carregar Jogo</a>
+      </button>
+    </div>
+  </div>
+  <input style="display: none;" type="file" id="input-file">
 </body>
 
 <script src="bundle.js"></script>

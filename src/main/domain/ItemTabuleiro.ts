@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { Cor } from '../definitions/Cor'
 import { Posicao } from '../definitions/Movimento'
 import { Peca } from './peca/Peca'
@@ -37,6 +38,11 @@ export class ItemTabuleiro {
           this.tabuleiro.moverPeca(this)
         }
       } else {
+        if (this.tabuleiro.isPecaEmMovimento()) {
+          if (!_.isEqual(this.peca, this.tabuleiro.pecaEmMovimento)) {
+            this.tabuleiro.moverPeca(this)
+          }
+        }
         this.setDestaque(false)
       }
     }
@@ -62,8 +68,13 @@ export class ItemTabuleiro {
     this.isDestacado = isDestacado
     this.atualizarClasse()
     if (this.isDestacado) {
-      this.simularMovimento()
+      if (_.isEqual(this.peca, this.tabuleiro.pecaEmMovimento)) {
+        this.simularMovimento()
+      }
     } else {
+      // if (this.peca.getCor() !== (this.tabuleiro.pecaEmMovimento && this.tabuleiro.pecaEmMovimento.getCor())) {
+      //   this.mover
+      // }
       this.removerDestaques()
     }
   }
@@ -80,7 +91,7 @@ export class ItemTabuleiro {
   private simularMovimento(): void {
     if (this.peca) {
       const posicoes = this.peca.simularMovimento()
-      this.tabuleiro.destacarPosicoes(posicoes, this)
+      this.tabuleiro.destacarPosicoes(posicoes)
     }
   }
 

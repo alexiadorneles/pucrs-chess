@@ -13,6 +13,10 @@ export class DOMGenerator {
     this.tabuleiro = tabuleiro
   }
 
+  public getTabuleiro(): Tabuleiro {
+    return this.tabuleiro
+  }
+
   static getInstance(): DOMGenerator {
     if (!DOMGenerator.instance) {
       DOMGenerator.instance = new DOMGenerator()

@@ -8,6 +8,9 @@ import { DefinidorCores } from './DefinidorCores'
 import { InstanciadorPecas } from './InstanciadorPecas'
 import { ItemTabuleiro } from './ItemTabuleiro'
 import { Peca } from './peca/Peca'
+import * as util from 'util' // has no default export
+import { inspect } from 'util' // or directly
+
 
 const initilizarMatriz = (): ItemTabuleiro[][] => {
   const itens = []
@@ -24,7 +27,7 @@ const initilizarMatriz = (): ItemTabuleiro[][] => {
 
 export class Tabuleiro {
   private posicoes: Array<Array<ItemTabuleiro>> = initilizarMatriz()
-  private pecaEmMovimento: Peca
+  public pecaEmMovimento: Peca
 
   public gerarTabuleiroInicial = (): Tabuleiro => {
     const brancas = this.gerarPecas(Cor.BRANCAS)
@@ -35,12 +38,12 @@ export class Tabuleiro {
   }
 
   public getItem({ linha, coluna }: Posicao): ItemTabuleiro | null {
-    const posicaoExiste = coluna < 8 && linha >= 0
+    const posicaoExiste = this.isPosicaoExistente({ linha, coluna })
     return posicaoExiste ? this.posicoes[linha][coluna] : null
   }
 
-  public destacarPosicoes(posicoes: Posicao[], itemEmQuestao: ItemTabuleiro): void {
-    itemEmQuestao.getPeca().simularMovimento().forEach((posicao) => {
+  public destacarPosicoes(posicoes: Posicao[]): void {
+    posicoes.forEach((posicao) => {
       if (this.isPosicaoExistente(posicao) && !this.isPosicaoOcupada(posicao)) {
         this.getItem(posicao).setDestaque(true)
       }
@@ -50,6 +53,32 @@ export class Tabuleiro {
   public removerDestaques(): void {
     const removerDestaque = (item: ItemTabuleiro) => item.removerDestaque()
     this.percorrerTabuleiro(removerDestaque)
+  }
+
+  public salvar = async (): Promise<void> => {
+    this.percorrerTabuleiro((item: ItemTabuleiro) => {
+      item.tabuleiro = null
+      if (item.getPeca()) {
+        item.getPeca().adicionarAoItem(null)
+      }
+    })
+
+
+    const conteudo = JSON.stringify(this)
+    const data = new FormData()
+
+    data.append('json', conteudo)
+    console.log('conteudo', conteudo)
+    console.log('aa', util.inspect(this))
+    const url = 'http://localhost:3000/salvar'
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: data
+    })
   }
 
   public setPecaEmMovimento(peca: Peca): void {
@@ -86,7 +115,10 @@ export class Tabuleiro {
   }
 
   public isPosicaoOcupada(posicao: Posicao): boolean {
-    return Boolean(this.getItem(posicao).getPeca())
+    const peca = this.getItem(posicao).getPeca()
+    const cor = this.pecaEmMovimento && this.pecaEmMovimento.getCor()
+    if (cor && peca) return cor === peca.getCor()
+    return Boolean(peca)
   }
 
   public adicionarItem = (item: ItemTabuleiro) => {

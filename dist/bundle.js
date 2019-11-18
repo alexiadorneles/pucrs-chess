@@ -7,6 +7,9 @@ var DOMGenerator = (function () {
     DOMGenerator.prototype.injetarTabuleiro = function (tabuleiro) {
         this.tabuleiro = tabuleiro;
     };
+    DOMGenerator.prototype.getTabuleiro = function () {
+        return this.tabuleiro;
+    };
     DOMGenerator.getInstance = function () {
         if (!DOMGenerator.instance) {
             DOMGenerator.instance = new DOMGenerator();
@@ -64,81 +67,7 @@ exports.DOMGenerator = DOMGenerator;
 },{}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ExtensorPosicoes = (function () {
-    function ExtensorPosicoes() {
-    }
-    ExtensorPosicoes.extenderVertical = function (posicoes) {
-        return posicoes.reduce(function (agg, _a) {
-            var linha = _a.linha, coluna = _a.coluna;
-            var novasPosicoes = [];
-            for (var i = linha; i < 8; i++) {
-                novasPosicoes.push({ linha: i, coluna: coluna });
-            }
-            return agg.concat(novasPosicoes);
-        }, []);
-    };
-    ExtensorPosicoes.extenderHorizontal = function (posicoes) {
-        return posicoes.reduce(function (agg, _a) {
-            var linha = _a.linha, coluna = _a.coluna;
-            var novasPosicoes = [];
-            for (var i = coluna; i < 8; i++) {
-                novasPosicoes.push({ linha: linha, coluna: i });
-            }
-            return agg.concat(novasPosicoes);
-        }, []);
-    };
-    ExtensorPosicoes.extenderDiagonal = function (posicao) {
-        var offsetColuna = 8 - posicao.coluna;
-        var novaPosicao = { linha: posicao.linha, coluna: posicao.coluna };
-        var novasPosicoes = [];
-        while (novaPosicao.coluna < 8) {
-            var linha = novaPosicao.linha, coluna = novaPosicao.coluna;
-            novaPosicao = { linha: ++linha, coluna: ++coluna };
-            novasPosicoes.push(novaPosicao);
-        }
-        novaPosicao = { linha: posicao.linha, coluna: posicao.coluna };
-        while (novaPosicao.coluna >= 0) {
-            var linha = novaPosicao.linha, coluna = novaPosicao.coluna;
-            novaPosicao = { linha: ++linha, coluna: --coluna };
-            novasPosicoes.push(novaPosicao);
-        }
-        novaPosicao = { linha: posicao.linha, coluna: posicao.coluna };
-        while (novaPosicao.coluna < 8) {
-            var linha = novaPosicao.linha, coluna = novaPosicao.coluna;
-            novaPosicao = { linha: --linha, coluna: ++coluna };
-            novasPosicoes.push(novaPosicao);
-        }
-        novaPosicao = { linha: posicao.linha, coluna: posicao.coluna };
-        while (novaPosicao.coluna >= 0) {
-            var linha = novaPosicao.linha, coluna = novaPosicao.coluna;
-            novaPosicao = { linha: --linha, coluna: --coluna };
-            novasPosicoes.push(novaPosicao);
-        }
-        return novasPosicoes;
-    };
-    ExtensorPosicoes.extenderL = function (posicoes) {
-        return posicoes.reduce(function (agg, _a) {
-            var linha = _a.linha, coluna = _a.coluna;
-            var novasPosicoes = [];
-            novasPosicoes.push({ linha: linha + 2, coluna: coluna + 1 });
-            novasPosicoes.push({ linha: linha - 2, coluna: coluna + 1 });
-            novasPosicoes.push({ linha: linha - 2, coluna: coluna - 1 });
-            novasPosicoes.push({ linha: linha + 2, coluna: coluna - 1 });
-            novasPosicoes.push({ linha: linha + 1, coluna: coluna + 2 });
-            novasPosicoes.push({ linha: linha + 1, coluna: coluna - 2 });
-            novasPosicoes.push({ linha: linha - 1, coluna: coluna + 2 });
-            novasPosicoes.push({ linha: linha - 1, coluna: coluna - 2 });
-            return agg.concat(novasPosicoes);
-        }, []);
-    };
-    return ExtensorPosicoes;
-}());
-exports.ExtensorPosicoes = ExtensorPosicoes;
-
-},{}],3:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var TipoPeca_1 = require("../definitions/TipoPeca");
+var TipoPeca_1 = require("./TipoPeca");
 var posicaoPeoesBrancos = [
     { linha: 1, coluna: 0 },
     { linha: 1, coluna: 1 },
@@ -247,7 +176,7 @@ exports.MapPosicaoPecasPretas = new Map([
     [TipoPeca_1.TipoPeca.REI, posicaoReiPreto],
 ]);
 
-},{"../definitions/TipoPeca":4}],4:[function(require,module,exports){
+},{"./TipoPeca":3}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TipoPeca;
@@ -261,7 +190,7 @@ var TipoPeca;
     TipoPeca["VAZIO"] = "";
 })(TipoPeca = exports.TipoPeca || (exports.TipoPeca = {}));
 
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var DefinidorCores;
@@ -276,19 +205,19 @@ var DefinidorCores;
     DefinidorCores.definir = definir;
 })(DefinidorCores = exports.DefinidorCores || (exports.DefinidorCores = {}));
 
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var TipoPeca_1 = require("../definitions/TipoPeca");
 var PosicoesIniciais_1 = require("../definitions/PosicoesIniciais");
-var ItemTabuleiro_1 = require("../domain/ItemTabuleiro");
+var TipoPeca_1 = require("../definitions/TipoPeca");
 var DefinidorCores_1 = require("./DefinidorCores");
-var Cavalo_1 = require("../domain/peca/Cavalo");
+var ItemTabuleiro_1 = require("./ItemTabuleiro");
+var Bispo_1 = require("./peca/Bispo");
+var Cavalo_1 = require("./peca/Cavalo");
 var Peao_1 = require("./peca/Peao");
-var Bispo_1 = require("../domain/peca/Bispo");
-var Rainha_1 = require("../domain/peca/Rainha");
-var Rei_1 = require("../domain/peca/Rei");
-var Torre_1 = require("../domain/peca/Torre");
+var Rainha_1 = require("./peca/Rainha");
+var Rei_1 = require("./peca/Rei");
+var Torre_1 = require("./peca/Torre");
 var InstanciadorTipoMap = new Map([
     [TipoPeca_1.TipoPeca.PEAO, Peao_1.Peao],
     [TipoPeca_1.TipoPeca.CAVALO, Cavalo_1.Cavalo],
@@ -312,9 +241,13 @@ var InstanciadorPecas;
     InstanciadorPecas.instanciar = instanciar;
 })(InstanciadorPecas = exports.InstanciadorPecas || (exports.InstanciadorPecas = {}));
 
-},{"../definitions/PosicoesIniciais":3,"../definitions/TipoPeca":4,"../domain/ItemTabuleiro":7,"../domain/peca/Bispo":14,"../domain/peca/Cavalo":15,"../domain/peca/Rainha":18,"../domain/peca/Rei":19,"../domain/peca/Torre":20,"./DefinidorCores":5,"./peca/Peao":16}],7:[function(require,module,exports){
+},{"../definitions/PosicoesIniciais":2,"../definitions/TipoPeca":3,"./DefinidorCores":4,"./ItemTabuleiro":6,"./peca/Bispo":14,"./peca/Cavalo":15,"./peca/Peao":16,"./peca/Rainha":18,"./peca/Rei":19,"./peca/Torre":20}],6:[function(require,module,exports){
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __importDefault(require("lodash"));
 var ItemTabuleiro = (function () {
     function ItemTabuleiro(posicao, cor) {
         var _this = this;
@@ -334,6 +267,11 @@ var ItemTabuleiro = (function () {
                     }
                 }
                 else {
+                    if (_this.tabuleiro.isPecaEmMovimento()) {
+                        if (!lodash_1.default.isEqual(_this.peca, _this.tabuleiro.pecaEmMovimento)) {
+                            _this.tabuleiro.moverPeca(_this);
+                        }
+                    }
                     _this.setDestaque(false);
                 }
             }
@@ -360,11 +298,16 @@ var ItemTabuleiro = (function () {
     ItemTabuleiro.prototype.getPosicao = function () {
         return this.posicao;
     };
+    ItemTabuleiro.prototype.getTabuleiro = function () {
+        return this.tabuleiro;
+    };
     ItemTabuleiro.prototype.setDestaque = function (isDestacado) {
         this.isDestacado = isDestacado;
         this.atualizarClasse();
         if (this.isDestacado) {
-            this.simularMovimento();
+            if (lodash_1.default.isEqual(this.peca, this.tabuleiro.pecaEmMovimento)) {
+                this.simularMovimento();
+            }
         }
         else {
             this.removerDestaques();
@@ -379,8 +322,8 @@ var ItemTabuleiro = (function () {
     };
     ItemTabuleiro.prototype.simularMovimento = function () {
         if (this.peca) {
-            var posicoes = this.peca.simularMovimento(this.tabuleiro);
-            this.tabuleiro.destacarPosicoes(posicoes, this);
+            var posicoes = this.peca.simularMovimento();
+            this.tabuleiro.destacarPosicoes(posicoes);
         }
     };
     ItemTabuleiro.prototype.atualizarClasse = function () {
@@ -395,19 +338,79 @@ var ItemTabuleiro = (function () {
 }());
 exports.ItemTabuleiro = ItemTabuleiro;
 
+},{"lodash":22}],7:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var ModificadorImpl = (function () {
+    function ModificadorImpl(quantidade, apply) {
+        this.quantidade = quantidade;
+        this.apply = apply;
+        this.quantidade = quantidade;
+        this.apply = apply.bind(this, quantidade);
+    }
+    ModificadorImpl.soma = function (quantidade, propriedade) { return propriedade + quantidade; };
+    ModificadorImpl.subtracao = function (quantidade, propriedade) { return propriedade - quantidade; };
+    return ModificadorImpl;
+}());
+exports.ModificadorImpl = ModificadorImpl;
+
 },{}],8:[function(require,module,exports){
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var ItemTabuleiro_1 = require("./ItemTabuleiro");
-var InstanciadorPecas_1 = require("../domain/InstanciadorPecas");
-var TipoPeca_1 = require("../definitions/TipoPeca");
-var PosicoesIniciais_1 = require("../definitions/PosicoesIniciais");
-var DefinidorCores_1 = require("../domain/DefinidorCores");
-var DOMGenerator_1 = require("../DOMGenerator");
 var lodash_1 = __importDefault(require("lodash"));
+var PosicoesIniciais_1 = require("../definitions/PosicoesIniciais");
+var TipoPeca_1 = require("../definitions/TipoPeca");
+var DOMGenerator_1 = require("../DOMGenerator");
+var DefinidorCores_1 = require("./DefinidorCores");
+var InstanciadorPecas_1 = require("./InstanciadorPecas");
+var ItemTabuleiro_1 = require("./ItemTabuleiro");
+var util = __importStar(require("util"));
 var initilizarMatriz = function () {
     var itens = [];
     itens[0] = [];
@@ -431,6 +434,40 @@ var Tabuleiro = (function () {
             brancas.concat(pretas).concat(vazias).forEach(_this.adicionarItem);
             return _this;
         };
+        this.salvar = function () { return __awaiter(_this, void 0, void 0, function () {
+            var conteudo, data, url;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.percorrerTabuleiro(function (item) {
+                            item.tabuleiro = null;
+                            if (item.getPeca()) {
+                                item.getPeca().adicionarAoItem(null);
+                            }
+                        });
+                        conteudo = JSON.stringify(this);
+                        data = new FormData();
+                        data.append('json', conteudo);
+                        console.log('conteudo', conteudo);
+                        console.log('aa', util.inspect(this));
+                        url = 'http://localhost:3000/salvar';
+                        return [4, fetch(url, {
+                                method: 'POST',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: data
+                            })];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        }); };
+        this.isPosicaoValida = function (posicao) {
+            return _this.isPosicaoExistente(posicao) && !_this.isPosicaoOcupada(posicao);
+        };
         this.adicionarItem = function (item) {
             var _a = item.getPosicao(), linha = _a.linha, coluna = _a.coluna;
             _this.posicoes[linha][coluna] = item;
@@ -439,12 +476,12 @@ var Tabuleiro = (function () {
     }
     Tabuleiro.prototype.getItem = function (_a) {
         var linha = _a.linha, coluna = _a.coluna;
-        var posicaoExiste = coluna < 8 && linha >= 0;
+        var posicaoExiste = this.isPosicaoExistente({ linha: linha, coluna: coluna });
         return posicaoExiste ? this.posicoes[linha][coluna] : null;
     };
-    Tabuleiro.prototype.destacarPosicoes = function (posicoes, itemEmQuestao) {
+    Tabuleiro.prototype.destacarPosicoes = function (posicoes) {
         var _this = this;
-        itemEmQuestao.getPeca().simularMovimento(this).forEach(function (posicao) {
+        posicoes.forEach(function (posicao) {
             if (_this.isPosicaoExistente(posicao) && !_this.isPosicaoOcupada(posicao)) {
                 _this.getItem(posicao).setDestaque(true);
             }
@@ -479,10 +516,11 @@ var Tabuleiro = (function () {
         return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8);
     };
     Tabuleiro.prototype.isPosicaoOcupada = function (posicao) {
-        if (this.isPosicaoExistente(posicao)) {
-            return Boolean(this.getItem(posicao).getPeca());
-        }
-        return false;
+        var peca = this.getItem(posicao).getPeca();
+        var cor = this.pecaEmMovimento && this.pecaEmMovimento.getCor();
+        if (cor && peca)
+            return cor === peca.getCor();
+        return Boolean(peca);
     };
     Tabuleiro.prototype.gerarPecas = function (cor) {
         return Object.values(TipoPeca_1.TipoPeca)
@@ -496,19 +534,8 @@ var Tabuleiro = (function () {
 }());
 exports.Tabuleiro = Tabuleiro;
 
-},{"../DOMGenerator":1,"../definitions/PosicoesIniciais":3,"../definitions/TipoPeca":4,"../domain/DefinidorCores":5,"../domain/InstanciadorPecas":6,"./ItemTabuleiro":7,"lodash":22}],9:[function(require,module,exports){
+},{"../DOMGenerator":1,"../definitions/PosicoesIniciais":2,"../definitions/TipoPeca":3,"./DefinidorCores":4,"./InstanciadorPecas":5,"./ItemTabuleiro":6,"lodash":22,"util":26}],9:[function(require,module,exports){
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var Movimento = (function () {
     function Movimento(tipo) {
@@ -517,27 +544,16 @@ var Movimento = (function () {
     Movimento.prototype.getTipo = function () {
         return this.tipo;
     };
-    Movimento.prototype.simularMovimento = function (posicaoAtual, peca) {
-        var _this = this;
-        var novasPosicoesFrente = peca.getCor() === "white"
-            ? this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaFrente(offset, posicaoAtual); })
-            : this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaTras(offset, posicaoAtual); });
-        var novasPosicoesTras = peca.getCor() === "white"
-            ? this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaTras(offset, posicaoAtual); })
-            : this.offsetMovimentos.map(function (offset) { return _this.aplicarOffsetParaFrente(offset, posicaoAtual); });
-        return peca.isVaiPraTras() ? novasPosicoesFrente.concat(novasPosicoesTras) : novasPosicoesFrente;
+    Movimento.prototype.simularMovimento = function (posicao, peca) {
+        return [];
     };
-    Movimento.prototype.aplicarOffsetParaFrente = function (offset, posicao) {
-        var novaPosicao = __assign({}, posicao);
-        novaPosicao.coluna = posicao.coluna + offset.coluna;
-        novaPosicao.linha = posicao.linha + offset.linha;
-        return novaPosicao;
-    };
-    Movimento.prototype.aplicarOffsetParaTras = function (offset, posicao) {
-        var novaPosicao = __assign({}, posicao);
-        novaPosicao.coluna = posicao.coluna - offset.coluna;
-        novaPosicao.linha = posicao.linha - offset.linha;
-        return novaPosicao;
+    Movimento.prototype.criarNovaPosicaoBaseadaEmOffset = function (_a, _b) {
+        var linha = _a.linha, coluna = _a.coluna;
+        var modificadorColuna = _b.modificadorColuna, modificadorLinha = _b.modificadorLinha;
+        return {
+            linha: modificadorLinha.apply(linha),
+            coluna: modificadorColuna.apply(coluna),
+        };
     };
     return Movimento;
 }());
@@ -560,18 +576,112 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Movimento_1 = require("./Movimento");
+var ModificadorImpl_1 = require("../ModificadorImpl");
 var MovimentoDiagonal = (function (_super) {
     __extends(MovimentoDiagonal, _super);
     function MovimentoDiagonal() {
         var _this = _super.call(this, 2) || this;
-        _this.offsetMovimentos = [{ coluna: 1, linha: 1 }];
+        _this.offsetMovimentos = [
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+            },
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+            },
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+            },
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+            },
+        ];
         return _this;
     }
+    MovimentoDiagonal.prototype.simularMovimento = function (_a, peca) {
+        var linha = _a.linha, coluna = _a.coluna;
+        var isPosicaoOcupada = false;
+        var movimentoLinha = linha + 1;
+        var movimentoColuna = coluna - 1;
+        var posicoes = [];
+        var tabuleiro = peca.getTabuleiro();
+        while (!isPosicaoOcupada) {
+            var proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna };
+            if (!tabuleiro.isPosicaoValida(proximaPosicao))
+                break;
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
+            }
+            else {
+                movimentoLinha = movimentoLinha + 1;
+                movimentoColuna = movimentoColuna - 1;
+            }
+        }
+        isPosicaoOcupada = false;
+        movimentoLinha = linha - 1;
+        movimentoColuna = coluna + 1;
+        while (!isPosicaoOcupada) {
+            var proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna };
+            if (!tabuleiro.isPosicaoValida(proximaPosicao))
+                break;
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
+            }
+            if (movimentoLinha <= 0 || movimentoColuna >= 7)
+                break;
+            else {
+                movimentoLinha = movimentoLinha - 1;
+                movimentoColuna = movimentoColuna + 1;
+            }
+        }
+        isPosicaoOcupada = false;
+        movimentoLinha = linha + 1;
+        movimentoColuna = coluna + 1;
+        while (!isPosicaoOcupada) {
+            var proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna };
+            if (!tabuleiro.isPosicaoValida(proximaPosicao))
+                break;
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
+            }
+            if (movimentoLinha >= 7 || movimentoColuna >= 7)
+                break;
+            else {
+                movimentoLinha = movimentoLinha + 1;
+                movimentoColuna = movimentoColuna + 1;
+            }
+        }
+        isPosicaoOcupada = false;
+        movimentoLinha = linha - 1;
+        movimentoColuna = coluna - 1;
+        while (!isPosicaoOcupada) {
+            var proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna };
+            if (!tabuleiro.isPosicaoValida(proximaPosicao))
+                break;
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
+            }
+            if (movimentoLinha <= 0 || movimentoColuna <= 0)
+                break;
+            else {
+                movimentoLinha = movimentoLinha - 1;
+                movimentoColuna = movimentoColuna - 1;
+            }
+        }
+        return posicoes;
+    };
     return MovimentoDiagonal;
 }(Movimento_1.Movimento));
 exports.MovimentoDiagonal = MovimentoDiagonal;
 
-},{"./Movimento":9}],11:[function(require,module,exports){
+},{"../ModificadorImpl":7,"./Movimento":9}],11:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -588,18 +698,60 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Movimento_1 = require("./Movimento");
+var ModificadorImpl_1 = require("../ModificadorImpl");
 var MovimentoHorizontal = (function (_super) {
     __extends(MovimentoHorizontal, _super);
     function MovimentoHorizontal() {
         var _this = _super.call(this, 0) || this;
-        _this.offsetMovimentos = [{ coluna: 1, linha: 0 }];
+        _this.offsetMovimentos = [
+            {
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(0, ModificadorImpl_1.ModificadorImpl.soma),
+            },
+            {
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(0, ModificadorImpl_1.ModificadorImpl.soma),
+            },
+        ];
         return _this;
     }
+    MovimentoHorizontal.prototype.simularMovimento = function (_a, peca) {
+        var linha = _a.linha, coluna = _a.coluna;
+        var isPosicaoOcupada = false;
+        var offset = coluna + 1;
+        var posicoes = [];
+        var tabuleiro = peca.getTabuleiro();
+        while (!isPosicaoOcupada) {
+            var proximaPosicao = { linha: linha, coluna: offset };
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
+            }
+            if (offset >= 7)
+                break;
+            else
+                offset = offset + 1;
+        }
+        isPosicaoOcupada = false;
+        offset = coluna - 1;
+        while (!isPosicaoOcupada) {
+            var proximaPosicao = { linha: linha, coluna: offset };
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
+            }
+            if (offset <= 0)
+                break;
+            else
+                offset = offset - 1;
+        }
+        return posicoes;
+    };
     return MovimentoHorizontal;
 }(Movimento_1.Movimento));
 exports.MovimentoHorizontal = MovimentoHorizontal;
 
-},{"./Movimento":9}],12:[function(require,module,exports){
+},{"../ModificadorImpl":7,"./Movimento":9}],12:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -616,21 +768,58 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Movimento_1 = require("./Movimento");
+var ModificadorImpl_1 = require("../ModificadorImpl");
 var MovimentoL = (function (_super) {
     __extends(MovimentoL, _super);
     function MovimentoL() {
         var _this = _super.call(this, 3) || this;
         _this.offsetMovimentos = [
-            { coluna: 2, linha: 1 },
-            { coluna: 1, linha: 2 },
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.soma),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+            },
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.soma),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+            },
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.subtracao),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+            },
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.subtracao),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+            },
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.soma),
+            },
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.soma),
+            },
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.subtracao),
+            },
+            {
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.subtracao),
+            },
         ];
         return _this;
     }
+    MovimentoL.prototype.simularMovimento = function (posicao, peca) {
+        var _this = this;
+        return this.offsetMovimentos
+            .map(function (offset) { return _this.criarNovaPosicaoBaseadaEmOffset(posicao, offset); })
+            .filter(function (posicao) { return peca.getTabuleiro().isPosicaoValida(posicao); });
+    };
     return MovimentoL;
 }(Movimento_1.Movimento));
 exports.MovimentoL = MovimentoL;
 
-},{"./Movimento":9}],13:[function(require,module,exports){
+},{"../ModificadorImpl":7,"./Movimento":9}],13:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -647,18 +836,60 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Movimento_1 = require("./Movimento");
+var ModificadorImpl_1 = require("../ModificadorImpl");
 var MovimentoVertical = (function (_super) {
     __extends(MovimentoVertical, _super);
     function MovimentoVertical() {
         var _this = _super.call(this, 1) || this;
-        _this.offsetMovimentos = [{ coluna: 0, linha: 1 }];
+        _this.offsetMovimentos = [
+            {
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(0, ModificadorImpl_1.ModificadorImpl.soma),
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+            },
+            {
+                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(0, ModificadorImpl_1.ModificadorImpl.subtracao),
+                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+            }
+        ];
         return _this;
     }
+    MovimentoVertical.prototype.simularMovimento = function (_a, peca) {
+        var linha = _a.linha, coluna = _a.coluna;
+        var isPosicaoOcupada = false;
+        var offset = linha + 1;
+        var posicoes = [];
+        var tabuleiro = peca.getTabuleiro();
+        while (!isPosicaoOcupada) {
+            var proximaPosicao = { linha: offset, coluna: coluna };
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
+            }
+            if (offset >= 7)
+                break;
+            else
+                offset = offset + 1;
+        }
+        isPosicaoOcupada = false;
+        offset = linha - 1;
+        while (!isPosicaoOcupada) {
+            var proximaPosicao = { linha: offset, coluna: coluna };
+            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
+            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
+                posicoes.push(proximaPosicao);
+            }
+            if (offset <= 0)
+                break;
+            else
+                offset = offset - 1;
+        }
+        return posicoes;
+    };
     return MovimentoVertical;
 }(Movimento_1.Movimento));
 exports.MovimentoVertical = MovimentoVertical;
 
-},{"./Movimento":9}],14:[function(require,module,exports){
+},{"../ModificadorImpl":7,"./Movimento":9}],14:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -674,9 +905,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Peca_1 = require("./Peca");
 var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
+var Peca_1 = require("./Peca");
 var Bispo = (function (_super) {
     __extends(Bispo, _super);
     function Bispo(cor) {
@@ -689,7 +920,7 @@ var Bispo = (function (_super) {
 }(Peca_1.Peca));
 exports.Bispo = Bispo;
 
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"./Peca":17}],15:[function(require,module,exports){
+},{"../../definitions/TipoPeca":3,"../movimento/MovimentoDiagonal":10,"./Peca":17}],15:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -705,10 +936,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Peca_1 = require("./Peca");
 var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoL_1 = require("../movimento/MovimentoL");
-var ExtensorPosicoes_1 = require("../../ExtensorPosicoes");
+var Peca_1 = require("./Peca");
 var Cavalo = (function (_super) {
     __extends(Cavalo, _super);
     function Cavalo(cor) {
@@ -717,18 +947,11 @@ var Cavalo = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.CAVALO, cor, movimentos, true) || this;
         return _this;
     }
-    Cavalo.prototype.podeMover = function (posicao, ocupada) {
-        return true;
-    };
-    Cavalo.prototype.simularMovimento = function () {
-        var posicao = this.getItemTabuleiro().getPosicao();
-        return ExtensorPosicoes_1.ExtensorPosicoes.extenderL([posicao]);
-    };
     return Cavalo;
 }(Peca_1.Peca));
 exports.Cavalo = Cavalo;
 
-},{"../../ExtensorPosicoes":2,"../../definitions/TipoPeca":4,"../movimento/MovimentoL":12,"./Peca":17}],16:[function(require,module,exports){
+},{"../../definitions/TipoPeca":3,"../movimento/MovimentoL":12,"./Peca":17}],16:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -743,10 +966,25 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var Peca_1 = require("./Peca");
+var lodash_1 = __importDefault(require("lodash"));
 var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
+var Peca_1 = require("./Peca");
 var Peao = (function (_super) {
     __extends(Peao, _super);
     function Peao(cor) {
@@ -755,18 +993,17 @@ var Peao = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.PEAO, cor, movimentos, false) || this;
         return _this;
     }
-    Peao.prototype.simularMovimento = function (tabuleiro) {
-        var _this = this;
-        var posicaoPeca = this.itemTabuleiro.getPosicao();
-        return this.movimentos
-            .map(function (movimento) { return movimento.simularMovimento(posicaoPeca, _this); })
-            .reduce(function (aggregation, movimento) { return aggregation.concat(movimento); }, []);
+    Peao.prototype.simularMovimento = function () {
+        var posicaoAtual = this.itemTabuleiro.getPosicao();
+        var novaPosicao = __assign({}, posicaoAtual);
+        novaPosicao.linha = this.cor === "white" ? ++posicaoAtual.linha : --posicaoAtual.linha;
+        return lodash_1.default.castArray(novaPosicao);
     };
     return Peao;
 }(Peca_1.Peca));
 exports.Peao = Peao;
 
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoVertical":13,"./Peca":17}],17:[function(require,module,exports){
+},{"../../definitions/TipoPeca":3,"../movimento/MovimentoVertical":13,"./Peca":17,"lodash":22}],17:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -775,137 +1012,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
 var Peca = (function () {
     function Peca(tipo, cor, movimentos, vaiPraTras) {
-        this.calculatePossibleMoviment = function (_a, tabuleiro, tipoMovimento) {
-            var linha = _a.linha, coluna = _a.coluna;
-            var moviments = [];
-            var movimentoColuna;
-            var movimentoLinha;
-            if (tipoMovimento == 0) {
-                var hasPiece = false;
-                movimentoColuna = coluna + 1;
-                while (!hasPiece) {
-                    var nextMoviment = { linha: linha, coluna: movimentoColuna };
-                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
-                    if (!hasPiece) {
-                        moviments.push(nextMoviment);
-                    }
-                    if (movimentoColuna >= 7)
-                        break;
-                    else
-                        movimentoColuna = movimentoColuna + 1;
-                }
-                hasPiece = false;
-                movimentoColuna = coluna - 1;
-                while (!hasPiece) {
-                    var nextMoviment = { linha: linha, coluna: movimentoColuna };
-                    hasPiece = tabuleiro.isPosicaoOcupada({ linha: linha, coluna: movimentoColuna });
-                    if (!hasPiece) {
-                        moviments.push(nextMoviment);
-                    }
-                    if (movimentoColuna <= 0)
-                        break;
-                    else
-                        movimentoColuna = movimentoColuna - 1;
-                }
-                return moviments;
-            }
-            else if (tipoMovimento == 1) {
-                var hasPiece = false;
-                movimentoLinha = linha + 1;
-                while (!hasPiece) {
-                    var nextMoviment = { linha: movimentoLinha, coluna: coluna };
-                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
-                    if (!hasPiece) {
-                        moviments.push(nextMoviment);
-                    }
-                    if (movimentoLinha >= 7)
-                        break;
-                    else
-                        movimentoLinha = movimentoLinha + 1;
-                }
-                hasPiece = false;
-                movimentoLinha = linha - 1;
-                while (!hasPiece) {
-                    var nextMoviment = { linha: movimentoLinha, coluna: coluna };
-                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
-                    if (!hasPiece) {
-                        moviments.push(nextMoviment);
-                    }
-                    if (movimentoLinha <= 0)
-                        break;
-                    else
-                        movimentoLinha = movimentoLinha - 1;
-                }
-                return moviments;
-            }
-            else {
-                var hasPiece = false;
-                movimentoLinha = linha + 1;
-                movimentoColuna = coluna - 1;
-                while (!hasPiece) {
-                    var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
-                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
-                    if (!hasPiece) {
-                        moviments.push(nextMoviment);
-                    }
-                    if (movimentoLinha >= 7 || movimentoColuna <= 0)
-                        break;
-                    else {
-                        movimentoLinha = movimentoLinha + 1;
-                        movimentoColuna = movimentoColuna - 1;
-                    }
-                }
-                hasPiece = false;
-                movimentoLinha = linha - 1;
-                movimentoColuna = coluna + 1;
-                while (!hasPiece) {
-                    var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
-                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
-                    if (!hasPiece) {
-                        moviments.push(nextMoviment);
-                    }
-                    if (movimentoLinha <= 0 || movimentoColuna >= 7)
-                        break;
-                    else {
-                        movimentoLinha = movimentoLinha - 1;
-                        movimentoColuna = movimentoColuna + 1;
-                    }
-                }
-                hasPiece = false;
-                movimentoLinha = linha + 1;
-                movimentoColuna = coluna + 1;
-                while (!hasPiece) {
-                    var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
-                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
-                    if (!hasPiece) {
-                        moviments.push(nextMoviment);
-                    }
-                    if (movimentoLinha >= 7 || movimentoColuna >= 7)
-                        break;
-                    else {
-                        movimentoLinha = movimentoLinha + 1;
-                        movimentoColuna = movimentoColuna + 1;
-                    }
-                }
-                hasPiece = false;
-                movimentoLinha = linha - 1;
-                movimentoColuna = coluna - 1;
-                while (!hasPiece) {
-                    var nextMoviment = { linha: movimentoLinha, coluna: movimentoColuna };
-                    hasPiece = tabuleiro.isPosicaoOcupada(nextMoviment);
-                    if (!hasPiece) {
-                        moviments.push(nextMoviment);
-                    }
-                    if (movimentoLinha <= 0 || movimentoColuna <= 0)
-                        break;
-                    else {
-                        movimentoLinha = movimentoLinha - 1;
-                        movimentoColuna = movimentoColuna - 1;
-                    }
-                }
-                return moviments;
-            }
-        };
         this.tipo = tipo;
         this.cor = cor;
         this.movimentos = movimentos;
@@ -917,15 +1023,14 @@ var Peca = (function () {
     Peca.prototype.getItemTabuleiro = function () {
         return this.itemTabuleiro;
     };
-    Peca.prototype.podeMover = function (posicao, ocupada) {
-        var isPosicaoOcupadaPorEstaPeca = lodash_1.default.isEqual(posicao, this.getItemTabuleiro().getPosicao());
-        return ocupada ? isPosicaoOcupadaPorEstaPeca : true;
+    Peca.prototype.getTabuleiro = function () {
+        return this.itemTabuleiro.getTabuleiro();
     };
-    Peca.prototype.simularMovimento = function (tabuleiro) {
+    Peca.prototype.simularMovimento = function () {
         var _this = this;
-        return lodash_1.default.flatten(this.movimentos.map(function (moviment) {
-            return _this.calculatePossibleMoviment(_this.getItemTabuleiro().getPosicao(), tabuleiro, moviment.getTipo());
-        }));
+        var posicaoAtual = this.getItemTabuleiro().getPosicao();
+        var posicoes = this.movimentos.map(function (movimento) { return movimento.simularMovimento(posicaoAtual, _this); });
+        return lodash_1.default.flatten(posicoes);
     };
     Peca.prototype.adicionarAoItem = function (item) {
         this.itemTabuleiro = item;
@@ -973,7 +1078,7 @@ var Rainha = (function (_super) {
 }(Peca_1.Peca));
 exports.Rainha = Rainha;
 
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":17}],19:[function(require,module,exports){
+},{"../../definitions/TipoPeca":3,"../movimento/MovimentoDiagonal":10,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":17}],19:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -989,11 +1094,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Peca_1 = require("./Peca");
-var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
-var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
-var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
 var TipoPeca_1 = require("../../definitions/TipoPeca");
+var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
+var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
+var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
+var Peca_1 = require("./Peca");
 var Rei = (function (_super) {
     __extends(Rei, _super);
     function Rei(cor) {
@@ -1002,18 +1107,11 @@ var Rei = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.REI, cor, movimentos, true) || this;
         return _this;
     }
-    Rei.prototype.simularMovimento = function (tabuleiro) {
-        var _this = this;
-        var posicaoPeca = this.itemTabuleiro.getPosicao();
-        return this.movimentos
-            .map(function (movimento) { return movimento.simularMovimento(posicaoPeca, _this); })
-            .reduce(function (aggregation, movimento) { return aggregation.concat(movimento); }, []);
-    };
     return Rei;
 }(Peca_1.Peca));
 exports.Rei = Rei;
 
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":10,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":17}],20:[function(require,module,exports){
+},{"../../definitions/TipoPeca":3,"../movimento/MovimentoDiagonal":10,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":17}],20:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1029,10 +1127,10 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Peca_1 = require("./Peca");
-var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
-var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
 var TipoPeca_1 = require("../../definitions/TipoPeca");
+var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
+var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
+var Peca_1 = require("./Peca");
 var Torre = (function (_super) {
     __extends(Torre, _super);
     function Torre(cor) {
@@ -1045,14 +1143,31 @@ var Torre = (function (_super) {
 }(Peca_1.Peca));
 exports.Torre = Torre;
 
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":17}],21:[function(require,module,exports){
+},{"../../definitions/TipoPeca":3,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":17}],21:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Tabuleiro_1 = require("./domain/Tabuleiro");
 var DOMGenerator_1 = require("./DOMGenerator");
 var tabuleiroInicial = new Tabuleiro_1.Tabuleiro().gerarTabuleiroInicial();
 DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial);
-DOMGenerator_1.DOMGenerator.getInstance().refresh();
+var novoJogo = function (event) {
+    DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial);
+    DOMGenerator_1.DOMGenerator.getInstance().refresh();
+};
+var carregarJogo = function () {
+    fetch('http://localhost:3000/carregar')
+        .then(function (response) { return response.json(); })
+        .then(function (tabuleiro) {
+        DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiro);
+        DOMGenerator_1.DOMGenerator.getInstance().refresh();
+    });
+};
+var novoJogoButton = document.getElementById('novoJogo');
+var carregarJogoButton = document.getElementById('carregarJogo');
+var salvarJogoButton = document.getElementById('salvarJogo');
+novoJogoButton.addEventListener('click', novoJogo);
+carregarJogoButton.addEventListener('click', carregarJogo);
+salvarJogoButton.addEventListener('click', DOMGenerator_1.DOMGenerator.getInstance().getTabuleiro().salvar);
 
 },{"./DOMGenerator":1,"./domain/Tabuleiro":8}],22:[function(require,module,exports){
 (function (global){
@@ -18170,4 +18285,812 @@ DOMGenerator_1.DOMGenerator.getInstance().refresh();
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[21]);
+},{}],23:[function(require,module,exports){
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+},{}],24:[function(require,module,exports){
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    var TempCtor = function () {}
+    TempCtor.prototype = superCtor.prototype
+    ctor.prototype = new TempCtor()
+    ctor.prototype.constructor = ctor
+  }
+}
+
+},{}],25:[function(require,module,exports){
+module.exports = function isBuffer(arg) {
+  return arg && typeof arg === 'object'
+    && typeof arg.copy === 'function'
+    && typeof arg.fill === 'function'
+    && typeof arg.readUInt8 === 'function';
+}
+},{}],26:[function(require,module,exports){
+(function (process,global){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+var formatRegExp = /%[sdj%]/g;
+exports.format = function(f) {
+  if (!isString(f)) {
+    var objects = [];
+    for (var i = 0; i < arguments.length; i++) {
+      objects.push(inspect(arguments[i]));
+    }
+    return objects.join(' ');
+  }
+
+  var i = 1;
+  var args = arguments;
+  var len = args.length;
+  var str = String(f).replace(formatRegExp, function(x) {
+    if (x === '%%') return '%';
+    if (i >= len) return x;
+    switch (x) {
+      case '%s': return String(args[i++]);
+      case '%d': return Number(args[i++]);
+      case '%j':
+        try {
+          return JSON.stringify(args[i++]);
+        } catch (_) {
+          return '[Circular]';
+        }
+      default:
+        return x;
+    }
+  });
+  for (var x = args[i]; i < len; x = args[++i]) {
+    if (isNull(x) || !isObject(x)) {
+      str += ' ' + x;
+    } else {
+      str += ' ' + inspect(x);
+    }
+  }
+  return str;
+};
+
+
+// Mark that a method should not be used.
+// Returns a modified function which warns once by default.
+// If --no-deprecation is set, then it is a no-op.
+exports.deprecate = function(fn, msg) {
+  // Allow for deprecating things in the process of starting up.
+  if (isUndefined(global.process)) {
+    return function() {
+      return exports.deprecate(fn, msg).apply(this, arguments);
+    };
+  }
+
+  if (process.noDeprecation === true) {
+    return fn;
+  }
+
+  var warned = false;
+  function deprecated() {
+    if (!warned) {
+      if (process.throwDeprecation) {
+        throw new Error(msg);
+      } else if (process.traceDeprecation) {
+        console.trace(msg);
+      } else {
+        console.error(msg);
+      }
+      warned = true;
+    }
+    return fn.apply(this, arguments);
+  }
+
+  return deprecated;
+};
+
+
+var debugs = {};
+var debugEnviron;
+exports.debuglog = function(set) {
+  if (isUndefined(debugEnviron))
+    debugEnviron = process.env.NODE_DEBUG || '';
+  set = set.toUpperCase();
+  if (!debugs[set]) {
+    if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
+      var pid = process.pid;
+      debugs[set] = function() {
+        var msg = exports.format.apply(exports, arguments);
+        console.error('%s %d: %s', set, pid, msg);
+      };
+    } else {
+      debugs[set] = function() {};
+    }
+  }
+  return debugs[set];
+};
+
+
+/**
+ * Echos the value of a value. Trys to print the value out
+ * in the best way possible given the different types.
+ *
+ * @param {Object} obj The object to print out.
+ * @param {Object} opts Optional options object that alters the output.
+ */
+/* legacy: obj, showHidden, depth, colors*/
+function inspect(obj, opts) {
+  // default options
+  var ctx = {
+    seen: [],
+    stylize: stylizeNoColor
+  };
+  // legacy...
+  if (arguments.length >= 3) ctx.depth = arguments[2];
+  if (arguments.length >= 4) ctx.colors = arguments[3];
+  if (isBoolean(opts)) {
+    // legacy...
+    ctx.showHidden = opts;
+  } else if (opts) {
+    // got an "options" object
+    exports._extend(ctx, opts);
+  }
+  // set default options
+  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
+  if (isUndefined(ctx.depth)) ctx.depth = 2;
+  if (isUndefined(ctx.colors)) ctx.colors = false;
+  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
+  if (ctx.colors) ctx.stylize = stylizeWithColor;
+  return formatValue(ctx, obj, ctx.depth);
+}
+exports.inspect = inspect;
+
+
+// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
+inspect.colors = {
+  'bold' : [1, 22],
+  'italic' : [3, 23],
+  'underline' : [4, 24],
+  'inverse' : [7, 27],
+  'white' : [37, 39],
+  'grey' : [90, 39],
+  'black' : [30, 39],
+  'blue' : [34, 39],
+  'cyan' : [36, 39],
+  'green' : [32, 39],
+  'magenta' : [35, 39],
+  'red' : [31, 39],
+  'yellow' : [33, 39]
+};
+
+// Don't use 'blue' not visible on cmd.exe
+inspect.styles = {
+  'special': 'cyan',
+  'number': 'yellow',
+  'boolean': 'yellow',
+  'undefined': 'grey',
+  'null': 'bold',
+  'string': 'green',
+  'date': 'magenta',
+  // "name": intentionally not styling
+  'regexp': 'red'
+};
+
+
+function stylizeWithColor(str, styleType) {
+  var style = inspect.styles[styleType];
+
+  if (style) {
+    return '\u001b[' + inspect.colors[style][0] + 'm' + str +
+           '\u001b[' + inspect.colors[style][1] + 'm';
+  } else {
+    return str;
+  }
+}
+
+
+function stylizeNoColor(str, styleType) {
+  return str;
+}
+
+
+function arrayToHash(array) {
+  var hash = {};
+
+  array.forEach(function(val, idx) {
+    hash[val] = true;
+  });
+
+  return hash;
+}
+
+
+function formatValue(ctx, value, recurseTimes) {
+  // Provide a hook for user-specified inspect functions.
+  // Check that value is an object with an inspect function on it
+  if (ctx.customInspect &&
+      value &&
+      isFunction(value.inspect) &&
+      // Filter out the util module, it's inspect function is special
+      value.inspect !== exports.inspect &&
+      // Also filter out any prototype objects using the circular check.
+      !(value.constructor && value.constructor.prototype === value)) {
+    var ret = value.inspect(recurseTimes, ctx);
+    if (!isString(ret)) {
+      ret = formatValue(ctx, ret, recurseTimes);
+    }
+    return ret;
+  }
+
+  // Primitive types cannot have properties
+  var primitive = formatPrimitive(ctx, value);
+  if (primitive) {
+    return primitive;
+  }
+
+  // Look up the keys of the object.
+  var keys = Object.keys(value);
+  var visibleKeys = arrayToHash(keys);
+
+  if (ctx.showHidden) {
+    keys = Object.getOwnPropertyNames(value);
+  }
+
+  // IE doesn't make error fields non-enumerable
+  // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
+  if (isError(value)
+      && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
+    return formatError(value);
+  }
+
+  // Some type of object without properties can be shortcutted.
+  if (keys.length === 0) {
+    if (isFunction(value)) {
+      var name = value.name ? ': ' + value.name : '';
+      return ctx.stylize('[Function' + name + ']', 'special');
+    }
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    }
+    if (isDate(value)) {
+      return ctx.stylize(Date.prototype.toString.call(value), 'date');
+    }
+    if (isError(value)) {
+      return formatError(value);
+    }
+  }
+
+  var base = '', array = false, braces = ['{', '}'];
+
+  // Make Array say that they are Array
+  if (isArray(value)) {
+    array = true;
+    braces = ['[', ']'];
+  }
+
+  // Make functions say that they are functions
+  if (isFunction(value)) {
+    var n = value.name ? ': ' + value.name : '';
+    base = ' [Function' + n + ']';
+  }
+
+  // Make RegExps say that they are RegExps
+  if (isRegExp(value)) {
+    base = ' ' + RegExp.prototype.toString.call(value);
+  }
+
+  // Make dates with properties first say the date
+  if (isDate(value)) {
+    base = ' ' + Date.prototype.toUTCString.call(value);
+  }
+
+  // Make error with message first say the error
+  if (isError(value)) {
+    base = ' ' + formatError(value);
+  }
+
+  if (keys.length === 0 && (!array || value.length == 0)) {
+    return braces[0] + base + braces[1];
+  }
+
+  if (recurseTimes < 0) {
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    } else {
+      return ctx.stylize('[Object]', 'special');
+    }
+  }
+
+  ctx.seen.push(value);
+
+  var output;
+  if (array) {
+    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
+  } else {
+    output = keys.map(function(key) {
+      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
+    });
+  }
+
+  ctx.seen.pop();
+
+  return reduceToSingleString(output, base, braces);
+}
+
+
+function formatPrimitive(ctx, value) {
+  if (isUndefined(value))
+    return ctx.stylize('undefined', 'undefined');
+  if (isString(value)) {
+    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '')
+                                             .replace(/'/g, "\\'")
+                                             .replace(/\\"/g, '"') + '\'';
+    return ctx.stylize(simple, 'string');
+  }
+  if (isNumber(value))
+    return ctx.stylize('' + value, 'number');
+  if (isBoolean(value))
+    return ctx.stylize('' + value, 'boolean');
+  // For some reason typeof null is "object", so special case here.
+  if (isNull(value))
+    return ctx.stylize('null', 'null');
+}
+
+
+function formatError(value) {
+  return '[' + Error.prototype.toString.call(value) + ']';
+}
+
+
+function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
+  var output = [];
+  for (var i = 0, l = value.length; i < l; ++i) {
+    if (hasOwnProperty(value, String(i))) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          String(i), true));
+    } else {
+      output.push('');
+    }
+  }
+  keys.forEach(function(key) {
+    if (!key.match(/^\d+$/)) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          key, true));
+    }
+  });
+  return output;
+}
+
+
+function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
+  var name, str, desc;
+  desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
+  if (desc.get) {
+    if (desc.set) {
+      str = ctx.stylize('[Getter/Setter]', 'special');
+    } else {
+      str = ctx.stylize('[Getter]', 'special');
+    }
+  } else {
+    if (desc.set) {
+      str = ctx.stylize('[Setter]', 'special');
+    }
+  }
+  if (!hasOwnProperty(visibleKeys, key)) {
+    name = '[' + key + ']';
+  }
+  if (!str) {
+    if (ctx.seen.indexOf(desc.value) < 0) {
+      if (isNull(recurseTimes)) {
+        str = formatValue(ctx, desc.value, null);
+      } else {
+        str = formatValue(ctx, desc.value, recurseTimes - 1);
+      }
+      if (str.indexOf('\n') > -1) {
+        if (array) {
+          str = str.split('\n').map(function(line) {
+            return '  ' + line;
+          }).join('\n').substr(2);
+        } else {
+          str = '\n' + str.split('\n').map(function(line) {
+            return '   ' + line;
+          }).join('\n');
+        }
+      }
+    } else {
+      str = ctx.stylize('[Circular]', 'special');
+    }
+  }
+  if (isUndefined(name)) {
+    if (array && key.match(/^\d+$/)) {
+      return str;
+    }
+    name = JSON.stringify('' + key);
+    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
+      name = name.substr(1, name.length - 2);
+      name = ctx.stylize(name, 'name');
+    } else {
+      name = name.replace(/'/g, "\\'")
+                 .replace(/\\"/g, '"')
+                 .replace(/(^"|"$)/g, "'");
+      name = ctx.stylize(name, 'string');
+    }
+  }
+
+  return name + ': ' + str;
+}
+
+
+function reduceToSingleString(output, base, braces) {
+  var numLinesEst = 0;
+  var length = output.reduce(function(prev, cur) {
+    numLinesEst++;
+    if (cur.indexOf('\n') >= 0) numLinesEst++;
+    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
+  }, 0);
+
+  if (length > 60) {
+    return braces[0] +
+           (base === '' ? '' : base + '\n ') +
+           ' ' +
+           output.join(',\n  ') +
+           ' ' +
+           braces[1];
+  }
+
+  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
+}
+
+
+// NOTE: These type checking functions intentionally don't use `instanceof`
+// because it is fragile and can be easily faked with `Object.create()`.
+function isArray(ar) {
+  return Array.isArray(ar);
+}
+exports.isArray = isArray;
+
+function isBoolean(arg) {
+  return typeof arg === 'boolean';
+}
+exports.isBoolean = isBoolean;
+
+function isNull(arg) {
+  return arg === null;
+}
+exports.isNull = isNull;
+
+function isNullOrUndefined(arg) {
+  return arg == null;
+}
+exports.isNullOrUndefined = isNullOrUndefined;
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+exports.isNumber = isNumber;
+
+function isString(arg) {
+  return typeof arg === 'string';
+}
+exports.isString = isString;
+
+function isSymbol(arg) {
+  return typeof arg === 'symbol';
+}
+exports.isSymbol = isSymbol;
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+exports.isUndefined = isUndefined;
+
+function isRegExp(re) {
+  return isObject(re) && objectToString(re) === '[object RegExp]';
+}
+exports.isRegExp = isRegExp;
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+exports.isObject = isObject;
+
+function isDate(d) {
+  return isObject(d) && objectToString(d) === '[object Date]';
+}
+exports.isDate = isDate;
+
+function isError(e) {
+  return isObject(e) &&
+      (objectToString(e) === '[object Error]' || e instanceof Error);
+}
+exports.isError = isError;
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+exports.isFunction = isFunction;
+
+function isPrimitive(arg) {
+  return arg === null ||
+         typeof arg === 'boolean' ||
+         typeof arg === 'number' ||
+         typeof arg === 'string' ||
+         typeof arg === 'symbol' ||  // ES6 symbol
+         typeof arg === 'undefined';
+}
+exports.isPrimitive = isPrimitive;
+
+exports.isBuffer = require('./support/isBuffer');
+
+function objectToString(o) {
+  return Object.prototype.toString.call(o);
+}
+
+
+function pad(n) {
+  return n < 10 ? '0' + n.toString(10) : n.toString(10);
+}
+
+
+var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+              'Oct', 'Nov', 'Dec'];
+
+// 26 Feb 16:19:34
+function timestamp() {
+  var d = new Date();
+  var time = [pad(d.getHours()),
+              pad(d.getMinutes()),
+              pad(d.getSeconds())].join(':');
+  return [d.getDate(), months[d.getMonth()], time].join(' ');
+}
+
+
+// log is just a thin wrapper to console.log that prepends a timestamp
+exports.log = function() {
+  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
+};
+
+
+/**
+ * Inherit the prototype methods from one constructor into another.
+ *
+ * The Function.prototype.inherits from lang.js rewritten as a standalone
+ * function (not on Function.prototype). NOTE: If this file is to be loaded
+ * during bootstrapping this function needs to be rewritten using some native
+ * functions as prototype setup using normal JavaScript does not work as
+ * expected during bootstrapping (see mirror.js in r114903).
+ *
+ * @param {function} ctor Constructor function which needs to inherit the
+ *     prototype.
+ * @param {function} superCtor Constructor function to inherit prototype from.
+ */
+exports.inherits = require('inherits');
+
+exports._extend = function(origin, add) {
+  // Don't do anything if add isn't an object
+  if (!add || !isObject(add)) return origin;
+
+  var keys = Object.keys(add);
+  var i = keys.length;
+  while (i--) {
+    origin[keys[i]] = add[keys[i]];
+  }
+  return origin;
+};
+
+function hasOwnProperty(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./support/isBuffer":25,"_process":23,"inherits":24}]},{},[21]);

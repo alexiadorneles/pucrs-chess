@@ -34,11 +34,11 @@ export class MovimentoDiagonal extends Movimento {
 
     while (!isPosicaoOcupada) {
       const proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna }
+      if (!tabuleiro.isPosicaoValida(proximaPosicao)) break
       isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao)
       if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
         posicoes.push(proximaPosicao)
       }
-      if (movimentoLinha >= 7 || movimentoColuna <= 0) break
       else {
         movimentoLinha = movimentoLinha + 1
         movimentoColuna = movimentoColuna - 1
@@ -50,6 +50,7 @@ export class MovimentoDiagonal extends Movimento {
     movimentoColuna = coluna + 1
     while (!isPosicaoOcupada) {
       const proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna }
+      if (!tabuleiro.isPosicaoValida(proximaPosicao)) break
       isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao)
       if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
         posicoes.push(proximaPosicao)
@@ -66,6 +67,7 @@ export class MovimentoDiagonal extends Movimento {
     movimentoColuna = coluna + 1
     while (!isPosicaoOcupada) {
       const proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna }
+      if (!tabuleiro.isPosicaoValida(proximaPosicao)) break
       isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao)
       if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
         posicoes.push(proximaPosicao)
@@ -82,6 +84,7 @@ export class MovimentoDiagonal extends Movimento {
     movimentoColuna = coluna - 1
     while (!isPosicaoOcupada) {
       const proximaPosicao = { linha: movimentoLinha, coluna: movimentoColuna }
+      if (!tabuleiro.isPosicaoValida(proximaPosicao)) break
       isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao)
       if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
         posicoes.push(proximaPosicao)

@@ -15,6 +15,12 @@
     "outDir": "./dist",
     "rootDir": "./src/",
     "sourceMap": false,
-    "lib": ["es6", "dom", "es2017", "es7"],
+    "lib": [
+      "es6",
+      "dom",
+      "es2017",
+      "es7"
+    ],
+    "resolveJsonModule": true
   }
 }
