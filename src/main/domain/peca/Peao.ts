@@ -13,8 +13,12 @@ export class Peao extends Peca {
 
   public simularMovimento(): Posicao[] {
     const posicaoAtual = this.itemTabuleiro.getPosicao()
-    const novaPosicao = { ...posicaoAtual }
-    novaPosicao.linha = this.cor === Cor.BRANCAS ? ++posicaoAtual.linha : --posicaoAtual.linha
+    const novaPosicao = this.getNovaPosicaoByCor(posicaoAtual)
     return _.castArray(novaPosicao)
+  }
+
+  private getNovaPosicaoByCor({ linha, coluna }: Posicao): Posicao {
+    const novaLinha = this.cor === Cor.BRANCAS ? ++linha : --linha
+    return { linha: novaLinha, coluna }
   }
 }

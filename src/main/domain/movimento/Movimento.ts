@@ -1,5 +1,6 @@
+import _ from 'lodash'
 import { OffsetMovimento, Posicao, TipoMovimento } from '../../definitions/Movimento'
-import { Peca } from '../peca/Peca'
+import { Tabuleiro } from '../Tabuleiro'
 
 export abstract class Movimento {
   constructor(private tipo: TipoMovimento) { }
@@ -9,21 +10,22 @@ export abstract class Movimento {
     return this.tipo
   }
 
-  public simularMovimento(posicao: Posicao, peca: Peca): Posicao[] {
-    // let isPosicaoOcupada = false
-    // const posicoes: Posicao[] = []
-    // const tabuleiro = peca.getTabuleiro()
-    // let proximaPosicao = { ...posicao }
-    // this.offsetMovimentos.forEach(offset => {
-    //   while (!isPosicaoOcupada) {
-    //     proximaPosicao = this.criarNovaPosicaoBaseadaEmOffset(proximaPosicao, offset)
-    //     isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao)
-    //     if (!tabuleiro.isPosicaoValida(proximaPosicao)) break
-    //     if (!isPosicaoOcupada) posicoes.push(proximaPosicao)
-    //   }
-    // })
-    // return posicoes
-    return []
+  public simularMovimento(posicao: Posicao, tabuleiro: Tabuleiro): Posicao[] {
+    const bindedGetter: () => Posicao[] = this.getPosicoesValidasPorOffset.bind(this, posicao, tabuleiro)
+    const posicoes = this.offsetMovimentos.map(bindedGetter)
+    return _.flatten(posicoes)
+  }
+
+  private getPosicoesValidasPorOffset(posicaoInicial: Posicao,tabuleiro: Tabuleiro,offset: OffsetMovimento): Posicao[] {
+    let isPosicaoValida = true
+    let posicao = { ...posicaoInicial }
+    const posicoes = []
+    while (isPosicaoValida) {
+      posicao = this.criarNovaPosicaoBaseadaEmOffset(posicao, offset)
+      isPosicaoValida = tabuleiro.isPosicaoValida(posicao)
+      if (isPosicaoValida) posicoes.push(posicao)
+    }
+    return posicoes
   }
 
   protected criarNovaPosicaoBaseadaEmOffset(

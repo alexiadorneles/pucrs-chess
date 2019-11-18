@@ -1,7 +1,7 @@
-import { Movimento } from './Movimento'
-import { TipoMovimento, OffsetMovimento, Posicao } from '../../definitions/Movimento'
+import { OffsetMovimento, Posicao, TipoMovimento } from '../../definitions/Movimento'
 import { ModificadorImpl } from '../ModificadorImpl'
-import { Peca } from '../peca/Peca'
+import { Tabuleiro } from '../Tabuleiro'
+import { Movimento } from './Movimento'
 
 export class MovimentoL extends Movimento {
   constructor() { super(TipoMovimento.L) }
@@ -40,9 +40,9 @@ export class MovimentoL extends Movimento {
     },
   ]
 
-  public simularMovimento(posicao: Posicao, peca: Peca): Posicao[] {
+  public simularMovimento(posicao: Posicao, tabuleiro: Tabuleiro): Posicao[] {
     return this.offsetMovimentos
       .map(offset => this.criarNovaPosicaoBaseadaEmOffset(posicao, offset))
-      .filter(posicao => peca.getTabuleiro().isPosicaoValida(posicao))
+      .filter(posicao => tabuleiro.isPosicaoValida(posicao))
   }
 }

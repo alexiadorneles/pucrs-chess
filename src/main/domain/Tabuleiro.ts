@@ -8,8 +8,6 @@ import { DefinidorCores } from './DefinidorCores'
 import { InstanciadorPecas } from './InstanciadorPecas'
 import { ItemTabuleiro } from './ItemTabuleiro'
 import { Peca } from './peca/Peca'
-import * as util from 'util' // has no default export
-import { inspect } from 'util' // or directly
 
 
 const initilizarMatriz = (): ItemTabuleiro[][] => {
@@ -57,7 +55,7 @@ export class Tabuleiro {
 
   public salvar = async (): Promise<void> => {
     this.percorrerTabuleiro((item: ItemTabuleiro) => {
-      item.tabuleiro = null
+      item.setTabuleiro(null)
       if (item.getPeca()) {
         item.getPeca().adicionarAoItem(null)
       }
@@ -69,7 +67,6 @@ export class Tabuleiro {
 
     data.append('json', conteudo)
     console.log('conteudo', conteudo)
-    console.log('aa', util.inspect(this))
     const url = 'http://localhost:3000/salvar'
     await fetch(url, {
       method: 'POST',

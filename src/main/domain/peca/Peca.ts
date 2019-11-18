@@ -34,7 +34,7 @@ export abstract class Peca {
 
   public simularMovimento(): Posicao[] {
     const posicaoAtual = this.getItemTabuleiro().getPosicao()
-    const posicoes = this.movimentos.map(movimento => movimento.simularMovimento(posicaoAtual, this))
+    const posicoes = this.movimentos.map(movimento => movimento.simularMovimento(posicaoAtual, this.getTabuleiro()))
     return _.flatten(posicoes)
   }
 

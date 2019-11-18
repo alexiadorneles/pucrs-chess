@@ -1,10 +1,8 @@
 import { Cor } from '../../definitions/Cor'
-import { Posicao } from '../../definitions/Movimento'
 import { TipoPeca } from '../../definitions/TipoPeca'
 import { MovimentoDiagonal } from '../movimento/MovimentoDiagonal'
 import { MovimentoHorizontal } from '../movimento/MovimentoHorizontal'
 import { MovimentoVertical } from '../movimento/MovimentoVertical'
-import { Tabuleiro } from '../Tabuleiro'
 import { Peca } from './Peca'
 
 export class Rei extends Peca {

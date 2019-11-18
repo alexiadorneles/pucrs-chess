@@ -26,6 +26,10 @@ export class ItemTabuleiro {
     this.tabuleiro = tabuleiro
   }
 
+  public setTabuleiro(tabuleiro: Tabuleiro): void {
+    this.tabuleiro = tabuleiro
+  }
+
   public onClick = (event: Event) => {
     if (!this.isDestacado) {
       if (this.peca) {
