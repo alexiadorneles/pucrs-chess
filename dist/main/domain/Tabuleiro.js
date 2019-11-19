@@ -75,7 +75,6 @@ var Tabuleiro = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('Tabuleiro::salvar');
                         this.percorrerTabuleiro(function (item) {
                             item.setTabuleiro(null);
                             if (item.getPeca()) {
@@ -118,7 +117,8 @@ var Tabuleiro = (function () {
         this.percorrerTabuleiro(removerDestaque);
     };
     Tabuleiro.prototype.isBloqueadaPorOponente = function (posicao, posicaoInicial) {
-        var corBloqueante = this.isPosicaoExistente(posicao) && this.isPosicaoOcupada(posicao).getCor();
+        var bloqueante = this.isPosicaoExistente(posicao) && this.isPosicaoOcupada(posicao);
+        var corBloqueante = bloqueante && this.isPosicaoOcupada(posicao).getCor();
         var corBloqueada = this.getItem(posicaoInicial).getPeca().getCor();
         return (corBloqueante) && (corBloqueada !== corBloqueante);
     };

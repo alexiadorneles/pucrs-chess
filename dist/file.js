@@ -14,7 +14,6 @@ var carregarTabuleiro = function (req, res) {
     res.end(arquivo.toString());
 };
 var escreverJSON = function (req, res) {
-    console.log(new Date(), '    Saving Board...');
     var body = req.body;
     var json = body.json;
     fs_1.default.writeFileSync(PASTA_LOCAL + "/src/tabuleiro.json", json);

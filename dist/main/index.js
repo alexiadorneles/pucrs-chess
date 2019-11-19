@@ -66,7 +66,6 @@ var criarModelMovimento = function (carregado) {
     return Object.assign(movimento, carregado);
 };
 var tabuleiroInicial = new Tabuleiro_1.Tabuleiro().gerarTabuleiroInicial();
-DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial);
 var novoJogo = function (event) {
     DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial);
     DOMGenerator_1.DOMGenerator.getInstance().refresh();
@@ -89,7 +88,6 @@ var carregarJogo = function () { return __awaiter(void 0, void 0, void 0, functi
                     tabuleiro.posicoes[linha][coluna] = itemModel;
                     itemModel.adicionarAoTabuleiro(tabuleiro);
                 });
-                console.log('Tabuleiro::carregarJogo');
                 DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiro);
                 DOMGenerator_1.DOMGenerator.getInstance().refresh();
                 return [2];
@@ -101,4 +99,4 @@ var carregarJogoButton = document.getElementById('carregarJogo');
 var salvarJogoButton = document.getElementById('salvarJogo');
 novoJogoButton.addEventListener('click', novoJogo);
 carregarJogoButton.addEventListener('click', carregarJogo);
-salvarJogoButton.addEventListener('click', DOMGenerator_1.DOMGenerator.getInstance().getTabuleiro().salvar);
+salvarJogoButton.addEventListener('click', function () { return DOMGenerator_1.DOMGenerator.getInstance().getTabuleiro().salvar(); });

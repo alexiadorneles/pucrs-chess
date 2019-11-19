@@ -5,7 +5,6 @@ var DOMGenerator = (function () {
     function DOMGenerator() {
     }
     DOMGenerator.prototype.injetarTabuleiro = function (tabuleiro) {
-        console.log('DOMGenerator::injetarTabuleiro', tabuleiro);
         this.tabuleiro = tabuleiro;
     };
     DOMGenerator.prototype.getTabuleiro = function () {
@@ -447,7 +446,6 @@ var Tabuleiro = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('Tabuleiro::salvar');
                         this.percorrerTabuleiro(function (item) {
                             item.setTabuleiro(null);
                             if (item.getPeca()) {
@@ -490,7 +488,8 @@ var Tabuleiro = (function () {
         this.percorrerTabuleiro(removerDestaque);
     };
     Tabuleiro.prototype.isBloqueadaPorOponente = function (posicao, posicaoInicial) {
-        var corBloqueante = this.isPosicaoExistente(posicao) && this.isPosicaoOcupada(posicao).getCor();
+        var bloqueante = this.isPosicaoExistente(posicao) && this.isPosicaoOcupada(posicao);
+        var corBloqueante = bloqueante && this.isPosicaoOcupada(posicao).getCor();
         var corBloqueada = this.getItem(posicaoInicial).getPeca().getCor();
         return (corBloqueante) && (corBloqueada !== corBloqueante);
     };
@@ -866,6 +865,24 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -885,12 +902,26 @@ var Peao = (function (_super) {
     Peao.prototype.simularMovimento = function () {
         var posicaoAtual = this.itemTabuleiro.getPosicao();
         var novaPosicao = this.getNovaPosicaoByCor(posicaoAtual);
-        return lodash_1.default.castArray(novaPosicao);
+        var possiveisAtaques = this.getAtaqueByCor(posicaoAtual);
+        return lodash_1.default.compact(__spreadArrays([novaPosicao], possiveisAtaques));
     };
     Peao.prototype.getNovaPosicaoByCor = function (_a) {
         var linha = _a.linha, coluna = _a.coluna;
         var novaLinha = this.cor === "white" ? ++linha : --linha;
-        return { linha: novaLinha, coluna: coluna };
+        var novaPosicao = { linha: novaLinha, coluna: coluna };
+        var isOcupada = this.getTabuleiro().isPosicaoOcupada(novaPosicao);
+        return !isOcupada && novaPosicao || null;
+    };
+    Peao.prototype.getAtaqueByCor = function (posicaoAtual) {
+        var _this = this;
+        var clone = __assign({}, posicaoAtual);
+        var novaLinha = this.cor === "white" ? ++clone.linha : --clone.linha;
+        var novaPosicao = { linha: novaLinha, coluna: clone.coluna };
+        var linha = novaPosicao.linha, coluna = novaPosicao.coluna;
+        var diagonalDireita = { linha: linha, coluna: coluna + 1 };
+        var diagonalEsquerda = { linha: linha, coluna: coluna - 1 };
+        var ataques = [diagonalDireita, diagonalEsquerda];
+        return ataques.filter(function (posicao) { return _this.getTabuleiro().isBloqueadaPorOponente(posicao, posicaoAtual); });
     };
     return Peao;
 }(Peca_1.Peca));
@@ -1129,7 +1160,6 @@ var criarModelMovimento = function (carregado) {
     return Object.assign(movimento, carregado);
 };
 var tabuleiroInicial = new Tabuleiro_1.Tabuleiro().gerarTabuleiroInicial();
-DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial);
 var novoJogo = function (event) {
     DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial);
     DOMGenerator_1.DOMGenerator.getInstance().refresh();
@@ -1152,7 +1182,6 @@ var carregarJogo = function () { return __awaiter(void 0, void 0, void 0, functi
                     tabuleiro.posicoes[linha][coluna] = itemModel;
                     itemModel.adicionarAoTabuleiro(tabuleiro);
                 });
-                console.log('Tabuleiro::carregarJogo');
                 DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiro);
                 DOMGenerator_1.DOMGenerator.getInstance().refresh();
                 return [2];
@@ -1164,7 +1193,7 @@ var carregarJogoButton = document.getElementById('carregarJogo');
 var salvarJogoButton = document.getElementById('salvarJogo');
 novoJogoButton.addEventListener('click', novoJogo);
 carregarJogoButton.addEventListener('click', carregarJogo);
-salvarJogoButton.addEventListener('click', DOMGenerator_1.DOMGenerator.getInstance().getTabuleiro().salvar);
+salvarJogoButton.addEventListener('click', function () { return DOMGenerator_1.DOMGenerator.getInstance().getTabuleiro().salvar(); });
 
 },{"./DOMGenerator":1,"./domain/InstanciadorPecas":5,"./domain/ItemTabuleiro":6,"./domain/Tabuleiro":8,"axios":22}],22:[function(require,module,exports){
 module.exports = require('./lib/axios');

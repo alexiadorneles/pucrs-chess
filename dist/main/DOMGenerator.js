@@ -4,7 +4,6 @@ var DOMGenerator = (function () {
     function DOMGenerator() {
     }
     DOMGenerator.prototype.injetarTabuleiro = function (tabuleiro) {
-        console.log('DOMGenerator::injetarTabuleiro', tabuleiro);
         this.tabuleiro = tabuleiro;
     };
     DOMGenerator.prototype.getTabuleiro = function () {
