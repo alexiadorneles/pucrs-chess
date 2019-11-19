@@ -48,6 +48,7 @@ var DOMGenerator = (function () {
         quadrado.addEventListener('click', item.onClick);
         item.atribuirElemento(quadrado);
         var iconePeca = this.criarIconePeca(item.getPeca());
+        iconePeca.addEventListener('click', item.onClick);
         div.appendChild(iconePeca);
         div.appendChild(quadrado);
         return div;

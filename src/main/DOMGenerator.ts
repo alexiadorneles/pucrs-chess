@@ -61,6 +61,7 @@ export class DOMGenerator {
     item.atribuirElemento(quadrado)
 
     const iconePeca = this.criarIconePeca(item.getPeca())
+    iconePeca.addEventListener('click', item.onClick)
 
     div.appendChild(iconePeca)
     div.appendChild(quadrado)
