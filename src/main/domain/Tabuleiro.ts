@@ -68,7 +68,8 @@ export class Tabuleiro {
   }
 
   public isBloqueadaPorOponente(posicao: Posicao, posicaoInicial: Posicao): boolean {
-    const corBloqueante = this.isPosicaoExistente(posicao) && this.isPosicaoOcupada(posicao).getCor()
+    const bloqueante = this.isPosicaoExistente(posicao) && this.isPosicaoOcupada(posicao)
+    const corBloqueante = bloqueante && this.isPosicaoOcupada(posicao).getCor()
     const corBloqueada = this.getItem(posicaoInicial).getPeca().getCor()
     return (corBloqueante) && (corBloqueada !== corBloqueante)
   }
@@ -108,9 +109,6 @@ export class Tabuleiro {
 
   public isPosicaoOcupada(posicao: Posicao): Peca | null {
     return this.isPosicaoExistente(posicao) ? this.getItem(posicao).getPeca() : null
-    // const cor = this.pecaEmMovimento && this.pecaEmMovimento.getCor()
-    // if (cor && peca) return cor === peca.getCor()
-    // return peca
   }
 
   public adicionarItem = (item: ItemTabuleiro) => {
