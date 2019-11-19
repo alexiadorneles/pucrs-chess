@@ -4,7 +4,7 @@ import { Tabuleiro } from '../Tabuleiro'
 
 export abstract class Movimento {
   constructor(private tipo: TipoMovimento) { }
-  protected offsetMovimentos: OffsetMovimento[]
+  public abstract getOffsetMovimentos(): OffsetMovimento[]
 
   public getTipo(): TipoMovimento {
     return this.tipo
@@ -12,20 +12,33 @@ export abstract class Movimento {
 
   public simularMovimento(posicao: Posicao, tabuleiro: Tabuleiro): Posicao[] {
     const bindedGetter: () => Posicao[] = this.getPosicoesValidasPorOffset.bind(this, posicao, tabuleiro)
-    const posicoes = this.offsetMovimentos.map(bindedGetter)
+    const posicoes = this.getOffsetMovimentos().map(bindedGetter)
     return _.flatten(posicoes)
   }
 
-  private getPosicoesValidasPorOffset(posicaoInicial: Posicao,tabuleiro: Tabuleiro,offset: OffsetMovimento): Posicao[] {
+  private getPosicoesValidasPorOffset(posicaoInicial: Posicao, tabuleiro: Tabuleiro, offset: OffsetMovimento): Posicao[] {
     let isPosicaoValida = true
     let posicao = { ...posicaoInicial }
     const posicoes = []
     while (isPosicaoValida) {
       posicao = this.criarNovaPosicaoBaseadaEmOffset(posicao, offset)
       isPosicaoValida = tabuleiro.isPosicaoValida(posicao)
-      if (isPosicaoValida) posicoes.push(posicao)
+      if (isPosicaoValida) {
+        posicoes.push(posicao)
+      } else if (
+        tabuleiro.isPosicaoExistente(posicao) &&
+        this.isBloqueadaPorOponente(tabuleiro, posicao, posicaoInicial)
+      ) {
+        posicoes.push(posicao)
+      }
     }
     return posicoes
+  }
+
+  private isBloqueadaPorOponente(tabuleiro: Tabuleiro, posicao: Posicao, posicaoInicial: Posicao): boolean {
+    const corBloqueante = tabuleiro.isPosicaoOcupada(posicao).getCor()
+    const corBloqueada = tabuleiro.getItem(posicaoInicial).getPeca().getCor()
+    return corBloqueada !== corBloqueante
   }
 
   protected criarNovaPosicaoBaseadaEmOffset(

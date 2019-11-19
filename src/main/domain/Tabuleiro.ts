@@ -1,3 +1,4 @@
+import axios from 'axios'
 import _ from 'lodash'
 import { Cor } from '../definitions/Cor'
 import { Posicao } from '../definitions/Movimento'
@@ -8,7 +9,6 @@ import { DefinidorCores } from './DefinidorCores'
 import { InstanciadorPecas } from './InstanciadorPecas'
 import { ItemTabuleiro } from './ItemTabuleiro'
 import { Peca } from './peca/Peca'
-import axios from 'axios'
 
 
 const initilizarMatriz = (): ItemTabuleiro[][] => {
@@ -42,11 +42,9 @@ export class Tabuleiro {
   }
 
   public destacarPosicoes(posicoes: Posicao[]): void {
-    posicoes.forEach((posicao) => {
-      if (this.isPosicaoExistente(posicao) && !this.isPosicaoOcupada(posicao)) {
-        this.getItem(posicao).setDestaque(true)
-      }
-    })
+    posicoes.forEach((posicao) =>
+      this.getItem(posicao).setDestaque(true)
+    )
   }
 
   public removerDestaques(): void {
@@ -61,24 +59,11 @@ export class Tabuleiro {
         item.getPeca().adicionarAoItem(null)
       }
     })
-
-
     const conteudo = JSON.stringify(this)
-    const data = new FormData()
-
-    data.append('json', conteudo)
-    // console.log('conteudo', conteudo)
     const url = 'http://localhost:3000/salvar'
-    const response = await axios.post(url, { json: conteudo }, { headers: { 'Content-Type': 'application/json' } })
-    console.log(response)
-    // await fetch(url, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: data
-    // })
+    const config = { headers: { 'Content-Type': 'application/json' } }
+    const data = { json: conteudo }
+    await axios.post(url, data, config)
   }
 
   public setPecaEmMovimento(peca: Peca): void {
@@ -114,11 +99,11 @@ export class Tabuleiro {
     return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8)
   }
 
-  public isPosicaoOcupada(posicao: Posicao): boolean {
-    const peca = this.getItem(posicao).getPeca()
-    const cor = this.pecaEmMovimento && this.pecaEmMovimento.getCor()
-    if (cor && peca) return cor === peca.getCor()
-    return Boolean(peca)
+  public isPosicaoOcupada(posicao: Posicao): Peca | null {
+    return this.isPosicaoExistente(posicao) ? this.getItem(posicao).getPeca() : null
+    // const cor = this.pecaEmMovimento && this.pecaEmMovimento.getCor()
+    // if (cor && peca) return cor === peca.getCor()
+    // return peca
   }
 
   public adicionarItem = (item: ItemTabuleiro) => {

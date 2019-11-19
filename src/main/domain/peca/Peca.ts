@@ -20,6 +20,14 @@ export abstract class Peca {
     this.vaiPraTras = vaiPraTras
   }
 
+  public getMovimentos(): Movimento[] {
+    return this.movimentos
+  }
+
+  public setMovimentos(movimentos: Movimento[]): void {
+    this.movimentos = movimentos
+  }
+
   public isVaiPraTras(): boolean {
     return this.vaiPraTras
   }

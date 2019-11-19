@@ -3,8 +3,10 @@ import { DOMGenerator } from './DOMGenerator'
 import axios from 'axios'
 import { ItemTabuleiro } from './domain/ItemTabuleiro'
 import { Peca } from './domain/peca/Peca'
-import { InstanciadorTipoMap } from './domain/InstanciadorPecas'
-import { Posicao } from './definitions/Movimento'
+import { InstanciadorTipoMap, InstanciadorMovimentoMap } from './domain/InstanciadorPecas'
+import { Posicao, OffsetMovimento } from './definitions/Movimento'
+import { Movimento } from './domain/movimento/Movimento'
+import { ModificadorImpl } from './domain/ModificadorImpl'
 
 const criarModelTabuleiro = (carregado: Tabuleiro) => {
   const tabuleiro = new Tabuleiro()
@@ -19,7 +21,16 @@ const criarModelItem = (carregado: any): ItemTabuleiro => {
 const criarModelPeca = (carregado: any): Peca => {
   const clazz = InstanciadorTipoMap.get(carregado.tipo)
   const peca = new clazz(carregado.cor)
-  return Object.assign(peca, carregado)
+  const model: Peca = Object.assign(peca, carregado)
+  const movimentos = model.getMovimentos().map(mov => criarModelMovimento(mov))
+  model.setMovimentos(movimentos)
+  return model
+}
+
+const criarModelMovimento = (carregado: any) => {
+  const clazz = InstanciadorMovimentoMap[carregado.tipo]
+  const movimento: Movimento = new clazz()
+  return Object.assign(movimento, carregado)
 }
 
 const tabuleiroInicial = new Tabuleiro().gerarTabuleiroInicial()
