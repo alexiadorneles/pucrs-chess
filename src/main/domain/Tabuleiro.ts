@@ -53,7 +53,6 @@ export class Tabuleiro {
   }
 
   public salvar = async (): Promise<void> => {
-    console.log('Tabuleiro::salvar')
     this.percorrerTabuleiro((item: ItemTabuleiro) => {
       item.setTabuleiro(null)
       if (item.getPeca()) {

@@ -34,8 +34,6 @@ const criarModelMovimento = (carregado: any) => {
 }
 
 const tabuleiroInicial = new Tabuleiro().gerarTabuleiroInicial()
-DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial)
-
 const novoJogo = (event: MouseEvent) => {
   DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial)
   DOMGenerator.getInstance().refresh()
@@ -54,7 +52,6 @@ const carregarJogo = async () => {
     tabuleiro.posicoes[linha][coluna] = itemModel
     itemModel.adicionarAoTabuleiro(tabuleiro)
   })
-  console.log('Tabuleiro::carregarJogo');
 
   DOMGenerator.getInstance().injetarTabuleiro(tabuleiro)
   DOMGenerator.getInstance().refresh()
@@ -66,4 +63,4 @@ const salvarJogoButton = document.getElementById('salvarJogo')
 
 novoJogoButton.addEventListener('click', novoJogo)
 carregarJogoButton.addEventListener('click', carregarJogo)
-salvarJogoButton.addEventListener('click', DOMGenerator.getInstance().getTabuleiro().salvar)
+salvarJogoButton.addEventListener('click', () => DOMGenerator.getInstance().getTabuleiro().salvar())

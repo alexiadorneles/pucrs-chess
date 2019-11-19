@@ -13,7 +13,6 @@ const carregarTabuleiro = (req: Request, res: Response) => {
 }
 
 const escreverJSON = (req: Request, res: Response) => {
-  console.log(new Date(), '    Saving Board...')
   const body = req.body
   const { json } = body
   fs.writeFileSync(`${PASTA_LOCAL}/src/tabuleiro.json`, json)

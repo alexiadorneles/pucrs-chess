@@ -76,9 +76,6 @@ export class ItemTabuleiro {
         this.simularMovimento()
       }
     } else {
-      // if (this.peca.getCor() !== (this.tabuleiro.pecaEmMovimento && this.tabuleiro.pecaEmMovimento.getCor())) {
-      //   this.mover
-      // }
       this.removerDestaques()
     }
   }
