@@ -25,23 +25,14 @@ export abstract class Movimento {
       isPosicaoValida = tabuleiro.isPosicaoValida(posicao)
       if (isPosicaoValida) {
         posicoes.push(posicao)
-      } else if (
-        tabuleiro.isPosicaoExistente(posicao) &&
-        this.isBloqueadaPorOponente(tabuleiro, posicao, posicaoInicial)
-      ) {
+      } else if (tabuleiro.isBloqueadaPorOponente(posicao, posicaoInicial)) {
         posicoes.push(posicao)
       }
     }
     return posicoes
   }
 
-  private isBloqueadaPorOponente(tabuleiro: Tabuleiro, posicao: Posicao, posicaoInicial: Posicao): boolean {
-    const corBloqueante = tabuleiro.isPosicaoOcupada(posicao).getCor()
-    const corBloqueada = tabuleiro.getItem(posicaoInicial).getPeca().getCor()
-    return corBloqueada !== corBloqueante
-  }
-
-  protected criarNovaPosicaoBaseadaEmOffset(
+  public criarNovaPosicaoBaseadaEmOffset(
     { linha, coluna }: Posicao,
     { modificadorColuna, modificadorLinha }: OffsetMovimento
   ): Posicao {

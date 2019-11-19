@@ -26,12 +26,16 @@ context('Rainha', function () {
         });
     });
     describe('ao chamar simularMovimento', function () {
+        beforeEach(function () { return sinon_1.default.restore(); });
         it('quando posição inicial e tabuleiro limpo deve retornar muitas opções ', function () {
             var tabuleiro = new Tabuleiro_1.Tabuleiro();
-            sinon_1.default.replace(tabuleiro, 'getItem', function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, "white"); });
             var rainha = new Rainha_1.Rainha("white");
-            var item = new ItemTabuleiro_1.ItemTabuleiro({ linha: 0, coluna: 3 }, "black");
+            var posicaoRainha = { linha: 0, coluna: 3 };
+            var item = new ItemTabuleiro_1.ItemTabuleiro(posicaoRainha, "black");
             item.atribuirPeca(rainha);
+            sinon_1.default.replace(tabuleiro, 'getItem', function (posicao) {
+                return lodash_1.default.isEqual(posicaoRainha, posicao) ? item : new ItemTabuleiro_1.ItemTabuleiro(posicao, "white");
+            });
             tabuleiro.adicionarItem(item);
             var esperado = [
                 { linha: 0, coluna: 0 },
@@ -62,10 +66,13 @@ context('Rainha', function () {
         });
         it('quando caminho livre deve retornar todos possíveis', function () {
             var tabuleiro = new Tabuleiro_1.Tabuleiro();
-            sinon_1.default.replace(tabuleiro, 'getItem', function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, "white"); });
+            var posicaoRainha = { linha: 3, coluna: 3 };
             var rainha = new Rainha_1.Rainha("white");
-            var item = new ItemTabuleiro_1.ItemTabuleiro({ linha: 3, coluna: 3 }, "black");
+            var item = new ItemTabuleiro_1.ItemTabuleiro(posicaoRainha, "black");
             item.atribuirPeca(rainha);
+            sinon_1.default.replace(tabuleiro, 'getItem', function (posicao) {
+                return lodash_1.default.isEqual(posicaoRainha, posicao) ? item : new ItemTabuleiro_1.ItemTabuleiro(posicao, "white");
+            });
             tabuleiro.adicionarItem(item);
             var esperado = [
                 { linha: 2, coluna: 3 },

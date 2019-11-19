@@ -11,6 +11,12 @@ var Peca = (function () {
         this.movimentos = movimentos;
         this.vaiPraTras = vaiPraTras;
     }
+    Peca.prototype.getMovimentos = function () {
+        return this.movimentos;
+    };
+    Peca.prototype.setMovimentos = function (movimentos) {
+        this.movimentos = movimentos;
+    };
     Peca.prototype.isVaiPraTras = function () {
         return this.vaiPraTras;
     };
@@ -23,7 +29,7 @@ var Peca = (function () {
     Peca.prototype.simularMovimento = function () {
         var _this = this;
         var posicaoAtual = this.getItemTabuleiro().getPosicao();
-        var posicoes = this.movimentos.map(function (movimento) { return movimento.simularMovimento(posicaoAtual, _this); });
+        var posicoes = this.movimentos.map(function (movimento) { return movimento.simularMovimento(posicaoAtual, _this.getTabuleiro()); });
         return lodash_1.default.flatten(posicoes);
     };
     Peca.prototype.adicionarAoItem = function (item) {

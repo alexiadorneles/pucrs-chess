@@ -10,6 +10,7 @@ export class DOMGenerator {
   }
 
   public injetarTabuleiro(tabuleiro: Tabuleiro): void {
+    console.log('DOMGenerator::injetarTabuleiro', tabuleiro)
     this.tabuleiro = tabuleiro
   }
 

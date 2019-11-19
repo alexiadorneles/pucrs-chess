@@ -3,26 +3,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
-var fs_1 = __importDefault(require("fs"));
 var cors_1 = __importDefault(require("cors"));
+var express_1 = __importDefault(require("express"));
+var fs_1 = __importDefault(require("fs"));
+var PASTA_LOCAL = process.cwd();
 var carregarTabuleiro = function (req, res) {
-    var a = process.cwd();
-    console.log(a);
-    var file = fs_1.default.readFileSync(process.cwd() + "/src/tabuleiro.json");
-    console.log(file.toString());
-    res.send(file.toString());
-    res.end(file.toString());
+    var arquivo = fs_1.default.readFileSync(PASTA_LOCAL + "/src/tabuleiro.json");
+    res.send(arquivo.toString());
+    res.end(arquivo.toString());
 };
 var escreverJSON = function (req, res) {
-    console.dir('body', req.body);
-    fs_1.default.writeFile(process.cwd() + "/src/tabuleiro.json", req.body, function (err) {
-        if (err) {
-            return console.log(err);
-        }
-        console.log('The file was saved!');
-    });
+    console.log(new Date(), '    Saving Board...');
+    var body = req.body;
+    var json = body.json;
+    fs_1.default.writeFileSync(PASTA_LOCAL + "/src/tabuleiro.json", json);
 };
 var app = express_1.default();
 app.options('*', cors_1.default());
@@ -35,7 +30,6 @@ app.get('/', function (req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype');
-    res.setHeader('Access-Control-Allow-Credentials', true);
     res.send('cors problem fixed:)');
 });
 app.get('/carregar', carregarTabuleiro);

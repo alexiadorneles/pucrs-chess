@@ -53,6 +53,7 @@ export class Tabuleiro {
   }
 
   public salvar = async (): Promise<void> => {
+    console.log('Tabuleiro::salvar')
     this.percorrerTabuleiro((item: ItemTabuleiro) => {
       item.setTabuleiro(null)
       if (item.getPeca()) {
@@ -64,6 +65,12 @@ export class Tabuleiro {
     const config = { headers: { 'Content-Type': 'application/json' } }
     const data = { json: conteudo }
     await axios.post(url, data, config)
+  }
+
+  public isBloqueadaPorOponente(posicao: Posicao, posicaoInicial: Posicao): boolean {
+    const corBloqueante = this.isPosicaoExistente(posicao) && this.isPosicaoOcupada(posicao).getCor()
+    const corBloqueada = this.getItem(posicaoInicial).getPeca().getCor()
+    return (corBloqueante) && (corBloqueada !== corBloqueante)
   }
 
   public setPecaEmMovimento(peca: Peca): void {

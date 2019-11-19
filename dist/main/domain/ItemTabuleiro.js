@@ -45,6 +45,9 @@ var ItemTabuleiro = (function () {
     ItemTabuleiro.prototype.adicionarAoTabuleiro = function (tabuleiro) {
         this.tabuleiro = tabuleiro;
     };
+    ItemTabuleiro.prototype.setTabuleiro = function (tabuleiro) {
+        this.tabuleiro = tabuleiro;
+    };
     ItemTabuleiro.prototype.getCor = function () {
         return this.cor;
     };

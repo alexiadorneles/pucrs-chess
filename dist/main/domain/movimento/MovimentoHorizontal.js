@@ -13,13 +13,15 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Movimento_1 = require("./Movimento");
 var ModificadorImpl_1 = require("../ModificadorImpl");
+var Movimento_1 = require("./Movimento");
 var MovimentoHorizontal = (function (_super) {
     __extends(MovimentoHorizontal, _super);
     function MovimentoHorizontal() {
-        var _this = _super.call(this, 0) || this;
-        _this.offsetMovimentos = [
+        return _super.call(this, 0) || this;
+    }
+    MovimentoHorizontal.prototype.getOffsetMovimentos = function () {
+        return [
             {
                 modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
                 modificadorLinha: new ModificadorImpl_1.ModificadorImpl(0, ModificadorImpl_1.ModificadorImpl.soma),
@@ -29,39 +31,6 @@ var MovimentoHorizontal = (function (_super) {
                 modificadorLinha: new ModificadorImpl_1.ModificadorImpl(0, ModificadorImpl_1.ModificadorImpl.soma),
             },
         ];
-        return _this;
-    }
-    MovimentoHorizontal.prototype.simularMovimento = function (_a, peca) {
-        var linha = _a.linha, coluna = _a.coluna;
-        var isPosicaoOcupada = false;
-        var offset = coluna + 1;
-        var posicoes = [];
-        var tabuleiro = peca.getTabuleiro();
-        while (!isPosicaoOcupada) {
-            var proximaPosicao = { linha: linha, coluna: offset };
-            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
-            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
-                posicoes.push(proximaPosicao);
-            }
-            if (offset >= 7)
-                break;
-            else
-                offset = offset + 1;
-        }
-        isPosicaoOcupada = false;
-        offset = coluna - 1;
-        while (!isPosicaoOcupada) {
-            var proximaPosicao = { linha: linha, coluna: offset };
-            isPosicaoOcupada = tabuleiro.isPosicaoOcupada(proximaPosicao);
-            if (!isPosicaoOcupada && tabuleiro.isPosicaoExistente(proximaPosicao)) {
-                posicoes.push(proximaPosicao);
-            }
-            if (offset <= 0)
-                break;
-            else
-                offset = offset - 1;
-        }
-        return posicoes;
     };
     return MovimentoHorizontal;
 }(Movimento_1.Movimento));

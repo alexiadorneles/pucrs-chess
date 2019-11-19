@@ -27,13 +27,17 @@ context('Rainha', () => {
     })
   })
   describe('ao chamar simularMovimento', () => {
+    beforeEach(() => sinon.restore())
     it('quando posição inicial e tabuleiro limpo deve retornar muitas opções ', () => {
       // arrange
       const tabuleiro = new Tabuleiro()
-      sinon.replace(tabuleiro, 'getItem', (posicao) => new ItemTabuleiro(posicao, Cor.BRANCAS))
       const rainha = new Rainha(Cor.BRANCAS)
-      const item = new ItemTabuleiro({ linha: 0, coluna: 3 }, Cor.PRETAS)
+      const posicaoRainha = { linha: 0, coluna: 3 }
+      const item = new ItemTabuleiro(posicaoRainha, Cor.PRETAS)
       item.atribuirPeca(rainha)
+      sinon.replace(tabuleiro, 'getItem', (posicao) => {
+        return _.isEqual(posicaoRainha, posicao) ? item : new ItemTabuleiro(posicao, Cor.BRANCAS)
+      })
       tabuleiro.adicionarItem(item)
       // act
       const esperado = [
@@ -71,10 +75,13 @@ context('Rainha', () => {
     it('quando caminho livre deve retornar todos possíveis', () => {
       // arrange
       const tabuleiro = new Tabuleiro()
-      sinon.replace(tabuleiro, 'getItem', (posicao) => new ItemTabuleiro(posicao, Cor.BRANCAS))
+      const posicaoRainha = { linha: 3, coluna: 3 }
       const rainha = new Rainha(Cor.BRANCAS)
-      const item = new ItemTabuleiro({ linha: 3, coluna: 3 }, Cor.PRETAS)
+      const item = new ItemTabuleiro(posicaoRainha, Cor.PRETAS)
       item.atribuirPeca(rainha)
+      sinon.replace(tabuleiro, 'getItem', (posicao) => {
+        return _.isEqual(posicaoRainha, posicao) ? item : new ItemTabuleiro(posicao, Cor.BRANCAS)
+      })
       tabuleiro.adicionarItem(item)
       // act
       const esperado = [

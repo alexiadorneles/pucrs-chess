@@ -12,7 +12,11 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __importDefault(require("lodash"));
 var TipoPeca_1 = require("../../definitions/TipoPeca");
 var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
 var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
@@ -26,6 +30,20 @@ var Rei = (function (_super) {
         _this = _super.call(this, TipoPeca_1.TipoPeca.REI, cor, movimentos, true) || this;
         return _this;
     }
+    Rei.prototype.simularMovimento = function () {
+        var posicaoInicial = this.getItemTabuleiro().getPosicao();
+        var tabuleiro = this.getTabuleiro();
+        var posicoes = this.movimentos.map(function (movimento) {
+            return movimento.getOffsetMovimentos()
+                .map(function (offset) { return movimento.criarNovaPosicaoBaseadaEmOffset(posicaoInicial, offset); })
+                .filter(function (posicao) { return tabuleiro.isPosicaoExistente(posicao); })
+                .filter(function (posicao) {
+                return !tabuleiro.isPosicaoOcupada(posicao) ||
+                    tabuleiro.isBloqueadaPorOponente(posicao, posicaoInicial);
+            });
+        });
+        return lodash_1.default.flatten(posicoes);
+    };
     return Rei;
 }(Peca_1.Peca));
 exports.Rei = Rei;

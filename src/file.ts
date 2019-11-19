@@ -1,24 +1,22 @@
-import express from 'express'
 import bodyParser from 'body-parser'
-import fs from 'fs'
-import { Request, Response } from 'express-serve-static-core'
 import cors from 'cors'
+import express from 'express'
+import { Request, Response } from 'express-serve-static-core'
+import fs from 'fs'
+
+const PASTA_LOCAL = process.cwd()
 
 const carregarTabuleiro = (req: Request, res: Response) => {
-  const a = process.cwd()
-  console.log(a)
-
-  const file = fs.readFileSync(`${process.cwd()}/src/tabuleiro.json`)
-  console.log(file.toString())
-  res.send(file.toString())
-  res.end(file.toString())
+  const arquivo = fs.readFileSync(`${PASTA_LOCAL}/src/tabuleiro.json`)
+  res.send(arquivo.toString())
+  res.end(arquivo.toString())
 }
 
 const escreverJSON = (req: Request, res: Response) => {
+  console.log(new Date(), '    Saving Board...')
   const body = req.body
   const { json } = body
-  console.log(`${process.cwd()}/src/tabuleiro.json`)
-  fs.writeFileSync(`${process.cwd()}/src/tabuleiro.json`, json)
+  fs.writeFileSync(`${PASTA_LOCAL}/src/tabuleiro.json`, json)
 }
 
 const app = express()
@@ -28,10 +26,10 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.listen(3000, () => console.log(`Express server is listening`))
 app.get('/', (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Type', 'application/json')
   res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE') // If needed
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype') // If needed
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype')
   res.send('cors problem fixed:)')
 })
 app.get('/carregar', carregarTabuleiro)

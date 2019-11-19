@@ -38,14 +38,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+var axios_1 = __importDefault(require("axios"));
 var lodash_1 = __importDefault(require("lodash"));
 var PosicoesIniciais_1 = require("../definitions/PosicoesIniciais");
 var TipoPeca_1 = require("../definitions/TipoPeca");
@@ -53,7 +47,6 @@ var DOMGenerator_1 = require("../DOMGenerator");
 var DefinidorCores_1 = require("./DefinidorCores");
 var InstanciadorPecas_1 = require("./InstanciadorPecas");
 var ItemTabuleiro_1 = require("./ItemTabuleiro");
-var util = __importStar(require("util"));
 var initilizarMatriz = function () {
     var itens = [];
     itens[0] = [];
@@ -78,30 +71,22 @@ var Tabuleiro = (function () {
             return _this;
         };
         this.salvar = function () { return __awaiter(_this, void 0, void 0, function () {
-            var conteudo, data, url;
+            var conteudo, url, config, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        console.log('Tabuleiro::salvar');
                         this.percorrerTabuleiro(function (item) {
-                            item.tabuleiro = null;
+                            item.setTabuleiro(null);
                             if (item.getPeca()) {
                                 item.getPeca().adicionarAoItem(null);
                             }
                         });
                         conteudo = JSON.stringify(this);
-                        data = new FormData();
-                        data.append('json', conteudo);
-                        console.log('conteudo', conteudo);
-                        console.log('aa', util.inspect(this));
                         url = 'http://localhost:3000/salvar';
-                        return [4, fetch(url, {
-                                method: 'POST',
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json'
-                                },
-                                body: data
-                            })];
+                        config = { headers: { 'Content-Type': 'application/json' } };
+                        data = { json: conteudo };
+                        return [4, axios_1.default.post(url, data, config)];
                     case 1:
                         _a.sent();
                         return [2];
@@ -125,14 +110,17 @@ var Tabuleiro = (function () {
     Tabuleiro.prototype.destacarPosicoes = function (posicoes) {
         var _this = this;
         posicoes.forEach(function (posicao) {
-            if (_this.isPosicaoExistente(posicao) && !_this.isPosicaoOcupada(posicao)) {
-                _this.getItem(posicao).setDestaque(true);
-            }
+            return _this.getItem(posicao).setDestaque(true);
         });
     };
     Tabuleiro.prototype.removerDestaques = function () {
         var removerDestaque = function (item) { return item.removerDestaque(); };
         this.percorrerTabuleiro(removerDestaque);
+    };
+    Tabuleiro.prototype.isBloqueadaPorOponente = function (posicao, posicaoInicial) {
+        var corBloqueante = this.isPosicaoExistente(posicao) && this.isPosicaoOcupada(posicao).getCor();
+        var corBloqueada = this.getItem(posicaoInicial).getPeca().getCor();
+        return (corBloqueante) && (corBloqueada !== corBloqueante);
     };
     Tabuleiro.prototype.setPecaEmMovimento = function (peca) {
         if (this.pecaEmMovimento && !lodash_1.default.isEqual(this.pecaEmMovimento, peca)) {
@@ -153,17 +141,13 @@ var Tabuleiro = (function () {
     Tabuleiro.prototype.percorrerTabuleiro = function (callback) {
         for (var linha = 0; linha < 8; linha++)
             for (var coluna = 0; coluna < 8; coluna++)
-                callback(this.getItem({ linha: linha, coluna: coluna }));
+                callback(this.getItem({ linha: linha, coluna: coluna }), { linha: linha, coluna: coluna });
     };
     Tabuleiro.prototype.isPosicaoExistente = function (posicao) {
         return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8);
     };
     Tabuleiro.prototype.isPosicaoOcupada = function (posicao) {
-        var peca = this.getItem(posicao).getPeca();
-        var cor = this.pecaEmMovimento && this.pecaEmMovimento.getCor();
-        if (cor && peca)
-            return cor === peca.getCor();
-        return Boolean(peca);
+        return this.isPosicaoExistente(posicao) ? this.getItem(posicao).getPeca() : null;
     };
     Tabuleiro.prototype.gerarPecas = function (cor) {
         return Object.values(TipoPeca_1.TipoPeca)

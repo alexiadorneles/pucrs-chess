@@ -13,13 +13,15 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Movimento_1 = require("./Movimento");
 var ModificadorImpl_1 = require("../ModificadorImpl");
+var Movimento_1 = require("./Movimento");
 var MovimentoL = (function (_super) {
     __extends(MovimentoL, _super);
     function MovimentoL() {
-        var _this = _super.call(this, 3) || this;
-        _this.offsetMovimentos = [
+        return _super.call(this, 3) || this;
+    }
+    MovimentoL.prototype.getOffsetMovimentos = function () {
+        return [
             {
                 modificadorLinha: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.soma),
                 modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
@@ -53,13 +55,16 @@ var MovimentoL = (function (_super) {
                 modificadorColuna: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.subtracao),
             },
         ];
-        return _this;
-    }
-    MovimentoL.prototype.simularMovimento = function (posicao, peca) {
+    };
+    MovimentoL.prototype.simularMovimento = function (posicaoInicial, tabuleiro) {
         var _this = this;
-        return this.offsetMovimentos
-            .map(function (offset) { return _this.criarNovaPosicaoBaseadaEmOffset(posicao, offset); })
-            .filter(function (posicao) { return peca.getTabuleiro().isPosicaoValida(posicao); });
+        return this.getOffsetMovimentos()
+            .map(function (offset) { return _this.criarNovaPosicaoBaseadaEmOffset(posicaoInicial, offset); })
+            .filter(function (posicao) { return tabuleiro.isPosicaoExistente(posicao); })
+            .filter(function (posicao) {
+            return !tabuleiro.isPosicaoOcupada(posicao) ||
+                tabuleiro.isBloqueadaPorOponente(posicao, posicaoInicial);
+        });
     };
     return MovimentoL;
 }(Movimento_1.Movimento));

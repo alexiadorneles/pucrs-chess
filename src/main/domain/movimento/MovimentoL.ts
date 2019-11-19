@@ -42,9 +42,13 @@ export class MovimentoL extends Movimento {
     ]
   }
 
-  public simularMovimento(posicao: Posicao, tabuleiro: Tabuleiro): Posicao[] {
+  public simularMovimento(posicaoInicial: Posicao, tabuleiro: Tabuleiro): Posicao[] {
     return this.getOffsetMovimentos()
-      .map(offset => this.criarNovaPosicaoBaseadaEmOffset(posicao, offset))
-      .filter(posicao => tabuleiro.isPosicaoValida(posicao))
+      .map(offset => this.criarNovaPosicaoBaseadaEmOffset(posicaoInicial, offset))
+      .filter(posicao => tabuleiro.isPosicaoExistente(posicao))
+      .filter(posicao =>
+        !tabuleiro.isPosicaoOcupada(posicao) ||
+        tabuleiro.isBloqueadaPorOponente(posicao, posicaoInicial)
+      )
   }
 }

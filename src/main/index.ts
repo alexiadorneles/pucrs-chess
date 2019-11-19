@@ -54,6 +54,7 @@ const carregarJogo = async () => {
     tabuleiro.posicoes[linha][coluna] = itemModel
     itemModel.adicionarAoTabuleiro(tabuleiro)
   })
+  console.log('Tabuleiro::carregarJogo');
 
   DOMGenerator.getInstance().injetarTabuleiro(tabuleiro)
   DOMGenerator.getInstance().refresh()

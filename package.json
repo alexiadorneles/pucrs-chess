@@ -6,6 +6,7 @@
   "scripts": {
     "build": "npm run build-ts && npm run lint",
     "test": "mocha -r ts-node/register src/test/**/*.spec.ts",
+    "test:js": "mocha -r ts-node/register dist/test/**/*.spec.js",
     "build:watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "generate-bundle": "browserify dist/main/index.js -o dist/bundle.js"
