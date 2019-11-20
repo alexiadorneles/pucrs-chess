@@ -54,7 +54,7 @@ var Peao = (function (_super) {
     };
     Peao.prototype.getNovaPosicaoByCor = function (_a) {
         var linha = _a.linha, coluna = _a.coluna;
-        var novaLinha = this.cor === "white" ? ++linha : --linha;
+        var novaLinha = this.cor === "grey" ? ++linha : --linha;
         var novaPosicao = { linha: novaLinha, coluna: coluna };
         var isOcupada = this.getTabuleiro().isPosicaoOcupada(novaPosicao);
         return !isOcupada && novaPosicao || null;
@@ -62,7 +62,7 @@ var Peao = (function (_super) {
     Peao.prototype.getAtaqueByCor = function (posicaoAtual) {
         var _this = this;
         var clone = __assign({}, posicaoAtual);
-        var novaLinha = this.cor === "white" ? ++clone.linha : --clone.linha;
+        var novaLinha = this.cor === "grey" ? ++clone.linha : --clone.linha;
         var novaPosicao = { linha: novaLinha, coluna: clone.coluna };
         var linha = novaPosicao.linha, coluna = novaPosicao.coluna;
         var diagonalDireita = { linha: linha, coluna: coluna + 1 };

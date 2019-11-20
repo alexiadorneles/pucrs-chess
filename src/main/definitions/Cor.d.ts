@@ -1,6 +1,6 @@
 export const enum Cor {
   BRANCAS = 'white',
   PRETAS = 'black',
-  VERDES = 'green',
+  CINZA = 'grey',
   ROSA = 'rosa',
 }

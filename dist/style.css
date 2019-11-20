@@ -1,133 +1,139 @@
-@import url('../node_modules/@fortawesome/fontawesome-free/css/all.min.css');
-@import url('../node_modules/@fortawesome/fontawesome-free/css/all.css');
-@import url('../node_modules/@fortawesome/fontawesome-free/css/brands.css');
-@import url('../node_modules/@fortawesome/fontawesome-free/css/fontawesome.css');
-@import url('../node_modules/@fortawesome/fontawesome-free/css/v4-shims.css');
+@import url("../node_modules/@fortawesome/fontawesome-free/css/all.min.css");
+@import url("../node_modules/@fortawesome/fontawesome-free/css/all.css");
+@import url("../node_modules/@fortawesome/fontawesome-free/css/brands.css");
+@import url("../node_modules/@fortawesome/fontawesome-free/css/fontawesome.css");
+@import url("../node_modules/@fortawesome/fontawesome-free/css/v4-shims.css");
 
 body {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	height: 100%;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
   flex-direction: column;
+  background-color: #ffc0cba6;
 }
 
 .xadrez-linha {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
 }
 
 .black {
-  color: black;
+	color: black;
+	color: #E91E63;
 }
 
 .white {
-  color: white;
 }
 
-.green {
-  color: green;
+.grey {
+	color: grey;
+	color: white;
 }
 
 .xadrez-quadrado {
-  position: relative;
-  font-size: 35px;
+	position: relative;
+	font-size: 35px;
 }
 
 .peca {
-  position: absolute;
-  z-index: 999;
+	position: absolute;
+	z-index: 999;
 }
 
 .container {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.destaque {
-  color: red;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .rosa {
-  color: #f0da5e;
+	color: #f08080;
 }
 
 .botoes {
-  margin-top: 20px;
+	margin-top: 20px;
 }
 
 button {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 #root {
-  margin-top: 30px;
+	margin-top: 30px;
+	border: 1px solid #f7758c;
 }
 
 .fa-user-circle {
-  margin-right: 5px;
-  font-size: 30px;
+	margin-right: 5px;
+	font-size: 30px;
 }
 
 .jogador-container {
-  width: 100%;
-  padding: 10px;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
+	width: 100%;
+	padding: 10px;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
 }
 
 .jogador {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .jogador1 {
-  height: 30px;
-  width: 150px;
-  background-image: linear-gradient(#F08080, #d6334e);
-  border: 1px solid #1f1214;
-  box-shadow: inset rgb(0.003, 0.001, 0.002);
-  border-radius: 50px;
-  text-align: center;
+	height: 30px;
+	width: 150px;
+	border: 1px solid #1f1214;
+	box-shadow: inset rgb(0.003, 0.001, 0.002);
+	border-radius: 50px;
+	text-align: center;
+  background-color: transparent;
 }
 
 .jogador1 a {
   color: black;
-  font-size: 18px;
-  font-family: 'Poppins', sans-serif;
+	font-size: 18px;
+	font-family: "Poppins", sans-serif;
   text-align: center;
+  background-color: transparent;
 }
 
 .jogador1:hover {
-  box-shadow: inset 170px 0 0 1px #F08080;
-  transition: 1s;
+  box-shadow: inset 170px 0 0 1px #f08080;
+	transition: 1s;
 }
 
 .jogadorDois {
   height: 30px;
-  width: 150px;
-  background-image: linear-gradient(#F08080, #d6334e);
-  border: 1px solid #1f1214;
-  box-shadow: inset rgb(0.003, 0.001, 0.002);
-  border-radius: 50px;
-  text-align: center;
+	width: 150px;
+	border: 1px solid #1f1214;
+	box-shadow: inset rgb(0.003, 0.001, 0.002);
+	border-radius: 50px;
+	text-align: center;
+  background-color: transparent;
 }
 
 .jogadorDois a {
   color: black;
-  font-size: 18px;
-  font-family: 'Poppins', sans-serif;
-  text-align: center;
+	font-size: 18px;
+	font-family: "Poppins", sans-serif;
+  background-color: transparent;
+	text-align: center;
 }
 
 .jogadorDois:hover {
-  box-shadow: inset 170px 0 0 1px #F08080;
-  transition: 1s;
+  box-shadow: inset 170px 0 0 1px #f08080;
+	transition: 1s;
+}
+
+.destaque {
+	color: red;
+	color: #a5a5a5;
 }

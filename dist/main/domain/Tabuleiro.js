@@ -64,8 +64,8 @@ var Tabuleiro = (function () {
         var _this = this;
         this.posicoes = initilizarMatriz();
         this.gerarTabuleiroInicial = function () {
-            var brancas = _this.gerarPecas("white");
-            var pretas = _this.gerarPecas("rosa");
+            var brancas = _this.gerarPecas("black");
+            var pretas = _this.gerarPecas("grey");
             var vazias = _this.gerarPecasVazias();
             brancas.concat(pretas).concat(vazias).forEach(_this.adicionarItem);
             return _this;
@@ -155,7 +155,7 @@ var Tabuleiro = (function () {
             .reduce(function (agg, tipo) { return agg.concat(InstanciadorPecas_1.InstanciadorPecas.instanciar(tipo, cor)); }, []);
     };
     Tabuleiro.prototype.gerarPecasVazias = function () {
-        return PosicoesIniciais_1.MapPosicaoPecasBrancas.get(TipoPeca_1.TipoPeca.VAZIO).map(function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.DefinidorCores.definir(posicao)); });
+        return PosicoesIniciais_1.MapPosicaoPecasBrancas.get(TipoPeca_1.TipoPeca.VAZIO).map(function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.DefinidorCores.definirCorDoItem(posicao)); });
     };
     return Tabuleiro;
 }());

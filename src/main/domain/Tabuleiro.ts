@@ -29,8 +29,8 @@ export class Tabuleiro {
   public pecaEmMovimento: Peca
 
   public gerarTabuleiroInicial = (): Tabuleiro => {
-    const brancas = this.gerarPecas(Cor.BRANCAS)
-    const pretas = this.gerarPecas(Cor.ROSA)
+    const brancas = this.gerarPecas(Cor.PRETAS)
+    const pretas = this.gerarPecas(Cor.CINZA)
     const vazias = this.gerarPecasVazias()
     brancas.concat(pretas).concat(vazias).forEach(this.adicionarItem)
     return this
@@ -123,6 +123,6 @@ export class Tabuleiro {
   }
 
   private gerarPecasVazias(): ItemTabuleiro[] {
-    return MapPosicaoPecasBrancas.get(TipoPeca.VAZIO).map(posicao => new ItemTabuleiro(posicao, DefinidorCores.definir(posicao)))
+    return MapPosicaoPecasBrancas.get(TipoPeca.VAZIO).map(posicao => new ItemTabuleiro(posicao, DefinidorCores.definirCorDoItem(posicao)))
   }
 }

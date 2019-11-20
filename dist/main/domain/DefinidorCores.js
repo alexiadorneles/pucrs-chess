@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var DefinidorCores;
 (function (DefinidorCores) {
-    function definir(_a) {
+    function definirCorDoItem(_a) {
         var linha = _a.linha, coluna = _a.coluna;
-        var cor = linha % 2 === 0 ? "green" : "black";
+        var cor = linha % 2 === 0 ? "white" : "rosa";
         var pares = cor;
-        var impares = cor == "green" ? "black" : "green";
+        var impares = cor == "rosa" ? "white" : "rosa";
         return coluna % 2 === 0 ? pares : impares;
     }
-    DefinidorCores.definir = definir;
+    DefinidorCores.definirCorDoItem = definirCorDoItem;
 })(DefinidorCores = exports.DefinidorCores || (exports.DefinidorCores = {}));

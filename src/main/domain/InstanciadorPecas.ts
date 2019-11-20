@@ -34,10 +34,10 @@ export const InstanciadorMovimentoMap = {
 
 export namespace InstanciadorPecas {
   export function instanciar(tipo: TipoPeca, corPeca: Cor): ItemTabuleiro[] {
-    const map = corPeca === Cor.BRANCAS ? MapPosicaoPecasBrancas : MapPosicaoPecasPretas
+    const map = corPeca === Cor.CINZA ? MapPosicaoPecasBrancas : MapPosicaoPecasPretas
     return map.get(tipo).map(posicao => {
       const clazz = InstanciadorTipoMap.get(tipo)
-      const item = new ItemTabuleiro(posicao, DefinidorCores.definir(posicao))
+      const item = new ItemTabuleiro(posicao, DefinidorCores.definirCorDoItem(posicao))
       const peca = new clazz(corPeca)
       item.atribuirPeca(peca)
       return item

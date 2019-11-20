@@ -196,14 +196,14 @@ var TipoPeca;
 Object.defineProperty(exports, "__esModule", { value: true });
 var DefinidorCores;
 (function (DefinidorCores) {
-    function definir(_a) {
+    function definirCorDoItem(_a) {
         var linha = _a.linha, coluna = _a.coluna;
-        var cor = linha % 2 === 0 ? "green" : "black";
+        var cor = linha % 2 === 0 ? "white" : "rosa";
         var pares = cor;
-        var impares = cor == "green" ? "black" : "green";
+        var impares = cor == "rosa" ? "white" : "rosa";
         return coluna % 2 === 0 ? pares : impares;
     }
-    DefinidorCores.definir = definir;
+    DefinidorCores.definirCorDoItem = definirCorDoItem;
 })(DefinidorCores = exports.DefinidorCores || (exports.DefinidorCores = {}));
 
 },{}],5:[function(require,module,exports){
@@ -241,10 +241,10 @@ exports.InstanciadorMovimentoMap = (_a = {},
 var InstanciadorPecas;
 (function (InstanciadorPecas) {
     function instanciar(tipo, corPeca) {
-        var map = corPeca === "white" ? PosicoesIniciais_1.MapPosicaoPecasBrancas : PosicoesIniciais_1.MapPosicaoPecasPretas;
+        var map = corPeca === "grey" ? PosicoesIniciais_1.MapPosicaoPecasBrancas : PosicoesIniciais_1.MapPosicaoPecasPretas;
         return map.get(tipo).map(function (posicao) {
             var clazz = exports.InstanciadorTipoMap.get(tipo);
-            var item = new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.DefinidorCores.definir(posicao));
+            var item = new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.DefinidorCores.definirCorDoItem(posicao));
             var peca = new clazz(corPeca);
             item.atribuirPeca(peca);
             return item;
@@ -436,8 +436,8 @@ var Tabuleiro = (function () {
         var _this = this;
         this.posicoes = initilizarMatriz();
         this.gerarTabuleiroInicial = function () {
-            var brancas = _this.gerarPecas("white");
-            var pretas = _this.gerarPecas("rosa");
+            var brancas = _this.gerarPecas("black");
+            var pretas = _this.gerarPecas("grey");
             var vazias = _this.gerarPecasVazias();
             brancas.concat(pretas).concat(vazias).forEach(_this.adicionarItem);
             return _this;
@@ -527,7 +527,7 @@ var Tabuleiro = (function () {
             .reduce(function (agg, tipo) { return agg.concat(InstanciadorPecas_1.InstanciadorPecas.instanciar(tipo, cor)); }, []);
     };
     Tabuleiro.prototype.gerarPecasVazias = function () {
-        return PosicoesIniciais_1.MapPosicaoPecasBrancas.get(TipoPeca_1.TipoPeca.VAZIO).map(function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.DefinidorCores.definir(posicao)); });
+        return PosicoesIniciais_1.MapPosicaoPecasBrancas.get(TipoPeca_1.TipoPeca.VAZIO).map(function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.DefinidorCores.definirCorDoItem(posicao)); });
     };
     return Tabuleiro;
 }());
@@ -908,7 +908,7 @@ var Peao = (function (_super) {
     };
     Peao.prototype.getNovaPosicaoByCor = function (_a) {
         var linha = _a.linha, coluna = _a.coluna;
-        var novaLinha = this.cor === "white" ? ++linha : --linha;
+        var novaLinha = this.cor === "grey" ? ++linha : --linha;
         var novaPosicao = { linha: novaLinha, coluna: coluna };
         var isOcupada = this.getTabuleiro().isPosicaoOcupada(novaPosicao);
         return !isOcupada && novaPosicao || null;
@@ -916,7 +916,7 @@ var Peao = (function (_super) {
     Peao.prototype.getAtaqueByCor = function (posicaoAtual) {
         var _this = this;
         var clone = __assign({}, posicaoAtual);
-        var novaLinha = this.cor === "white" ? ++clone.linha : --clone.linha;
+        var novaLinha = this.cor === "grey" ? ++clone.linha : --clone.linha;
         var novaPosicao = { linha: novaLinha, coluna: clone.coluna };
         var linha = novaPosicao.linha, coluna = novaPosicao.coluna;
         var diagonalDireita = { linha: linha, coluna: coluna + 1 };

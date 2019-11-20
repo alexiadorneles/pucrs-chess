@@ -19,7 +19,7 @@ export class Peao extends Peca {
   }
 
   private getNovaPosicaoByCor({ linha, coluna }: Posicao): Posicao | null {
-    const novaLinha = this.cor === Cor.BRANCAS ? ++linha : --linha
+    const novaLinha = this.cor === Cor.CINZA ? ++linha : --linha
     const novaPosicao = { linha: novaLinha, coluna }
     const isOcupada = this.getTabuleiro().isPosicaoOcupada(novaPosicao)
     return !isOcupada && novaPosicao || null
@@ -27,7 +27,7 @@ export class Peao extends Peca {
 
   private getAtaqueByCor(posicaoAtual: Posicao): Posicao[] {
     const clone = { ...posicaoAtual }
-    const novaLinha = this.cor === Cor.BRANCAS ? ++clone.linha : --clone.linha
+    const novaLinha = this.cor === Cor.CINZA ? ++clone.linha : --clone.linha
     const novaPosicao = { linha: novaLinha, coluna: clone.coluna }
     const { linha, coluna } = novaPosicao
     const diagonalDireita = { linha, coluna: coluna + 1 }
