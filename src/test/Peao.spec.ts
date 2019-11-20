@@ -1,5 +1,7 @@
 import { expect } from 'chai'
+import _ from 'lodash'
 import 'mocha'
+import sinon from 'sinon'
 import { Cor } from '../main/definitions/Cor'
 import { ItemTabuleiro } from '../main/domain/ItemTabuleiro'
 import { Peao } from '../main/domain/peca/Peao'
@@ -21,8 +23,12 @@ context('Peao', () => {
     it('quando caminho livre deve retornar posição atual e uma para frente', () => {
       // arrange
       const tabuleiro = new Tabuleiro()
-      const peao = new Peao(Cor.BRANCAS)
-      const item = new ItemTabuleiro({ linha: 1, coluna: 2 }, Cor.PRETAS)
+      const posicaoPeao = { linha: 1, coluna: 2 }
+      sinon.replace(tabuleiro, 'getItem', (posicao) => {
+        return _.isEqual(posicaoPeao, posicao) ? item : new ItemTabuleiro(posicao, Cor.CINZA)
+      })
+      const peao = new Peao(Cor.CINZA)
+      const item = new ItemTabuleiro(posicaoPeao, Cor.PRETAS)
       item.atribuirPeca(peao)
       tabuleiro.adicionarItem(item)
       // act
