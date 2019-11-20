@@ -9,6 +9,7 @@
     "test:js": "mocha -r ts-node/register dist/test/**/*.spec.js",
     "build:watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
+    "prepare": "npm run generate-bundle && node dist/file.js",
     "generate-bundle": "browserify dist/main/index.js -o dist/bundle.js"
   },
   "author": "alexiadorneles",
