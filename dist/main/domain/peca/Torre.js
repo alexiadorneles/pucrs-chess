@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var TipoPeca_1 = require("../../definitions/TipoPeca");
+var PieceKind_1 = require("../../definitions/PieceKind");
 var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
 var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
 var Peca_1 = require("./Peca");
@@ -22,7 +22,7 @@ var Torre = (function (_super) {
     function Torre(cor) {
         var _this = this;
         var movimentos = [new MovimentoVertical_1.MovimentoVertical(), new MovimentoHorizontal_1.MovimentoHorizontal()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.TORRE, cor, movimentos, true) || this;
+        _this = _super.call(this, PieceKind_1.PieceKind.TOWER, cor, movimentos, true) || this;
         return _this;
     }
     return Torre;

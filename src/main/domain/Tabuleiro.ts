@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { Color } from '../definitions/Color'
 import { Position } from '../definitions/Movement'
 import { WhitePiecesPositionMap } from '../definitions/InitialPositions'
-import { TipoPeca } from '../definitions/TipoPeca'
+import { PieceKind } from '../definitions/PieceKind'
 import { DOMGenerator } from '../DOMGenerator'
 import { ColorAdapter } from './DefinidorCores'
 import { PieceBuilder } from './PieceBuilder'
@@ -117,12 +117,12 @@ export class Tabuleiro {
   }
 
   private gerarPecas(cor: Color): ItemTabuleiro[] {
-    return (Object as any).values(TipoPeca)
+    return (Object as any).values(PieceKind)
       .filter((value: string) => !!value)
-      .reduce((agg: ItemTabuleiro[], tipo: TipoPeca) => agg.concat(PieceBuilder.build(tipo, cor)), [])
+      .reduce((agg: ItemTabuleiro[], tipo: PieceKind) => agg.concat(PieceBuilder.build(tipo, cor)), [])
   }
 
   private gerarPecasVazias(): ItemTabuleiro[] {
-    return WhitePiecesPositionMap.get(TipoPeca.VAZIO).map(posicao => new ItemTabuleiro(posicao, ColorAdapter.defineItemColor(posicao)))
+    return WhitePiecesPositionMap.get(PieceKind.EMPTY).map(posicao => new ItemTabuleiro(posicao, ColorAdapter.defineItemColor(posicao)))
   }
 }

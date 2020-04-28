@@ -1,7 +1,7 @@
 import { Color } from '../definitions/Color'
 import { WhitePiecesPositionMap, BlackPiecesPositionMap } from '../definitions/InitialPositions'
 import { MovementKind } from '../definitions/Movement'
-import { TipoPeca } from '../definitions/TipoPeca'
+import { PieceKind } from '../definitions/PieceKind'
 import { ColorAdapter } from './DefinidorCores'
 import { ItemTabuleiro } from './ItemTabuleiro'
 import { MovimentoDiagonal } from './movimento/MovimentoDiagonal'
@@ -16,13 +16,13 @@ import { Rainha } from './peca/Rainha'
 import { Rei } from './peca/Rei'
 import { Torre } from './peca/Torre'
 
-export const PieceBuilderMap: Map<TipoPeca, new (color: Color) => Peca> = new Map([
-  [TipoPeca.PEAO, Peao],
-  [TipoPeca.CAVALO, Cavalo],
-  [TipoPeca.BISPO, Bispo],
-  [TipoPeca.RAINHA, Rainha],
-  [TipoPeca.REI, Rei],
-  [TipoPeca.TORRE, Torre],
+export const PieceBuilderMap: Map<PieceKind, new (color: Color) => Peca> = new Map([
+  [PieceKind.PAWN, Peao],
+  [PieceKind.KNIGHT, Cavalo],
+  [PieceKind.BISHOP, Bispo],
+  [PieceKind.QUEEN, Rainha],
+  [PieceKind.KING, Rei],
+  [PieceKind.TOWER, Torre],
 ])
 
 export const MovementBuilderMap = {
@@ -33,7 +33,7 @@ export const MovementBuilderMap = {
 }
 
 export namespace PieceBuilder {
-  export function build(kind: TipoPeca, pieceColor: Color): ItemTabuleiro[] {
+  export function build(kind: PieceKind, pieceColor: Color): ItemTabuleiro[] {
     const map = pieceColor === Color.GREY ? WhitePiecesPositionMap : BlackPiecesPositionMap
     return map.get(kind).map(position => {
       const clazz = PieceBuilderMap.get(kind)

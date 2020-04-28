@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 var lodash_1 = __importDefault(require("lodash"));
 var InitialPositions_1 = require("../definitions/InitialPositions");
-var TipoPeca_1 = require("../definitions/TipoPeca");
+var PieceKind_1 = require("../definitions/PieceKind");
 var DOMGenerator_1 = require("../DOMGenerator");
 var DefinidorCores_1 = require("./DefinidorCores");
 var PieceBuilder_1 = require("./PieceBuilder");
@@ -150,12 +150,12 @@ var Tabuleiro = (function () {
         return this.isPosicaoExistente(posicao) ? this.getItem(posicao).getPeca() : null;
     };
     Tabuleiro.prototype.gerarPecas = function (cor) {
-        return Object.values(TipoPeca_1.TipoPeca)
+        return Object.values(PieceKind_1.PieceKind)
             .filter(function (value) { return !!value; })
             .reduce(function (agg, tipo) { return agg.concat(PieceBuilder_1.PieceBuilder.build(tipo, cor)); }, []);
     };
     Tabuleiro.prototype.gerarPecasVazias = function () {
-        return InitialPositions_1.WhitePiecesPositionMap.get(TipoPeca_1.TipoPeca.VAZIO).map(function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.ColorAdapter.defineItemColor(posicao)); });
+        return InitialPositions_1.WhitePiecesPositionMap.get(PieceKind_1.PieceKind.EMPTY).map(function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.ColorAdapter.defineItemColor(posicao)); });
     };
     return Tabuleiro;
 }());

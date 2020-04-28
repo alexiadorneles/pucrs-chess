@@ -2,7 +2,7 @@
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 var InitialPositions_1 = require("../definitions/InitialPositions");
-var TipoPeca_1 = require("../definitions/TipoPeca");
+var PieceKind_1 = require("../definitions/PieceKind");
 var DefinidorCores_1 = require("./DefinidorCores");
 var ItemTabuleiro_1 = require("./ItemTabuleiro");
 var MovimentoDiagonal_1 = require("./movimento/MovimentoDiagonal");
@@ -16,12 +16,12 @@ var Rainha_1 = require("./peca/Rainha");
 var Rei_1 = require("./peca/Rei");
 var Torre_1 = require("./peca/Torre");
 exports.PieceBuilderMap = new Map([
-    [TipoPeca_1.TipoPeca.PEAO, Peao_1.Peao],
-    [TipoPeca_1.TipoPeca.CAVALO, Cavalo_1.Cavalo],
-    [TipoPeca_1.TipoPeca.BISPO, Bispo_1.Bispo],
-    [TipoPeca_1.TipoPeca.RAINHA, Rainha_1.Rainha],
-    [TipoPeca_1.TipoPeca.REI, Rei_1.Rei],
-    [TipoPeca_1.TipoPeca.TORRE, Torre_1.Torre],
+    [PieceKind_1.PieceKind.PAWN, Peao_1.Peao],
+    [PieceKind_1.PieceKind.KNIGHT, Cavalo_1.Cavalo],
+    [PieceKind_1.PieceKind.BISHOP, Bispo_1.Bispo],
+    [PieceKind_1.PieceKind.QUEEN, Rainha_1.Rainha],
+    [PieceKind_1.PieceKind.KING, Rei_1.Rei],
+    [PieceKind_1.PieceKind.TOWER, Torre_1.Torre],
 ]);
 exports.MovementBuilderMap = (_a = {},
     _a[2] = MovimentoDiagonal_1.MovimentoDiagonal,

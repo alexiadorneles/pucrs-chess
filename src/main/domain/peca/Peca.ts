@@ -2,18 +2,18 @@ import _ from 'lodash'
 import { Tabuleiro } from 'main/domain/Tabuleiro'
 import { Color } from '../../definitions/Color'
 import { Position, MovementKind } from '../../definitions/Movement'
-import { TipoPeca } from '../../definitions/TipoPeca'
+import { PieceKind } from '../../definitions/PieceKind'
 import { ItemTabuleiro } from '../ItemTabuleiro'
 import { Movimento } from '../movimento/Movimento'
 
 export abstract class Peca {
   protected itemTabuleiro: ItemTabuleiro
-  protected tipo: TipoPeca
+  protected tipo: PieceKind
   protected movimentos: Movimento[]
   protected cor: Color
   protected vaiPraTras: boolean
 
-  constructor(tipo: TipoPeca, cor: Color, movimentos: Movimento[], vaiPraTras: boolean) {
+  constructor(tipo: PieceKind, cor: Color, movimentos: Movimento[], vaiPraTras: boolean) {
     this.tipo = tipo
     this.cor = cor
     this.movimentos = movimentos
@@ -54,7 +54,7 @@ export abstract class Peca {
     return this.cor
   }
 
-  public getTipo(): TipoPeca {
+  public getTipo(): PieceKind {
     return this.tipo
   }
 }

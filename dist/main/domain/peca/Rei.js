@@ -17,7 +17,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var TipoPeca_1 = require("../../definitions/TipoPeca");
+var PieceKind_1 = require("../../definitions/PieceKind");
 var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
 var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
 var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
@@ -27,7 +27,7 @@ var Rei = (function (_super) {
     function Rei(cor) {
         var _this = this;
         var movimentos = [new MovimentoVertical_1.MovimentoVertical(), new MovimentoHorizontal_1.MovimentoHorizontal(), new MovimentoDiagonal_1.MovimentoDiagonal()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.REI, cor, movimentos, true) || this;
+        _this = _super.call(this, PieceKind_1.PieceKind.KING, cor, movimentos, true) || this;
         return _this;
     }
     Rei.prototype.simularMovimento = function () {

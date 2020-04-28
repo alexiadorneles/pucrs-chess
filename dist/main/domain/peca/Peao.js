@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var TipoPeca_1 = require("../../definitions/TipoPeca");
+var PieceKind_1 = require("../../definitions/PieceKind");
 var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
 var Peca_1 = require("./Peca");
 var Peao = (function (_super) {
@@ -43,7 +43,7 @@ var Peao = (function (_super) {
     function Peao(cor) {
         var _this = this;
         var movimentos = [new MovimentoVertical_1.MovimentoVertical()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.PEAO, cor, movimentos, false) || this;
+        _this = _super.call(this, PieceKind_1.PieceKind.PAWN, cor, movimentos, false) || this;
         return _this;
     }
     Peao.prototype.simularMovimento = function () {

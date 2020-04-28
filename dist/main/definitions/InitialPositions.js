@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var TipoPeca_1 = require("./TipoPeca");
+var PieceKind_1 = require("./PieceKind");
 var whitePawnPosition = [
     { line: 1, column: 0 },
     { line: 1, column: 1 },
@@ -60,13 +60,13 @@ var emptySpace = [
     { line: 5, column: 7 },
 ];
 exports.WhitePiecesPositionMap = new Map([
-    [TipoPeca_1.TipoPeca.PEAO, whitePawnPosition],
-    [TipoPeca_1.TipoPeca.TORRE, whiteTowerPosition],
-    [TipoPeca_1.TipoPeca.CAVALO, whiteKnightPosition],
-    [TipoPeca_1.TipoPeca.BISPO, whiteBishopPosition],
-    [TipoPeca_1.TipoPeca.RAINHA, whiteQueenPosition],
-    [TipoPeca_1.TipoPeca.REI, whiteKingPosition],
-    [TipoPeca_1.TipoPeca.VAZIO, emptySpace],
+    [PieceKind_1.PieceKind.PAWN, whitePawnPosition],
+    [PieceKind_1.PieceKind.TOWER, whiteTowerPosition],
+    [PieceKind_1.PieceKind.KNIGHT, whiteKnightPosition],
+    [PieceKind_1.PieceKind.BISHOP, whiteBishopPosition],
+    [PieceKind_1.PieceKind.QUEEN, whiteQueenPosition],
+    [PieceKind_1.PieceKind.KING, whiteKingPosition],
+    [PieceKind_1.PieceKind.EMPTY, emptySpace],
 ]);
 var blackPawnPosition = [
     { line: 6, column: 0 },
@@ -93,10 +93,10 @@ var blackBishopsPosition = [
 var blackQueenPosition = [{ line: 7, column: 3 }];
 var blackKingPosition = [{ line: 7, column: 4 }];
 exports.BlackPiecesPositionMap = new Map([
-    [TipoPeca_1.TipoPeca.PEAO, blackPawnPosition],
-    [TipoPeca_1.TipoPeca.TORRE, blackTowerPosition],
-    [TipoPeca_1.TipoPeca.CAVALO, blackKnightPosition],
-    [TipoPeca_1.TipoPeca.BISPO, blackBishopsPosition],
-    [TipoPeca_1.TipoPeca.RAINHA, blackQueenPosition],
-    [TipoPeca_1.TipoPeca.REI, blackKingPosition],
+    [PieceKind_1.PieceKind.PAWN, blackPawnPosition],
+    [PieceKind_1.PieceKind.TOWER, blackTowerPosition],
+    [PieceKind_1.PieceKind.KNIGHT, blackKnightPosition],
+    [PieceKind_1.PieceKind.BISHOP, blackBishopsPosition],
+    [PieceKind_1.PieceKind.QUEEN, blackQueenPosition],
+    [PieceKind_1.PieceKind.KING, blackKingPosition],
 ]);
