@@ -41,11 +41,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 var lodash_1 = __importDefault(require("lodash"));
-var PosicoesIniciais_1 = require("../definitions/PosicoesIniciais");
+var InitialPositions_1 = require("../definitions/InitialPositions");
 var TipoPeca_1 = require("../definitions/TipoPeca");
 var DOMGenerator_1 = require("../DOMGenerator");
 var DefinidorCores_1 = require("./DefinidorCores");
-var InstanciadorPecas_1 = require("./InstanciadorPecas");
+var PieceBuilder_1 = require("./PieceBuilder");
 var ItemTabuleiro_1 = require("./ItemTabuleiro");
 var initilizarMatriz = function () {
     var itens = [];
@@ -152,10 +152,10 @@ var Tabuleiro = (function () {
     Tabuleiro.prototype.gerarPecas = function (cor) {
         return Object.values(TipoPeca_1.TipoPeca)
             .filter(function (value) { return !!value; })
-            .reduce(function (agg, tipo) { return agg.concat(InstanciadorPecas_1.InstanciadorPecas.instanciar(tipo, cor)); }, []);
+            .reduce(function (agg, tipo) { return agg.concat(PieceBuilder_1.PieceBuilder.build(tipo, cor)); }, []);
     };
     Tabuleiro.prototype.gerarPecasVazias = function () {
-        return PosicoesIniciais_1.MapPosicaoPecasBrancas.get(TipoPeca_1.TipoPeca.VAZIO).map(function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.ColorAdapter.defineItemColor(posicao)); });
+        return InitialPositions_1.MapPosicaoPecasBrancas.get(TipoPeca_1.TipoPeca.VAZIO).map(function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.ColorAdapter.defineItemColor(posicao)); });
     };
     return Tabuleiro;
 }());

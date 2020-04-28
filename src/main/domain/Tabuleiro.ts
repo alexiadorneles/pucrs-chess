@@ -2,11 +2,11 @@ import axios from 'axios'
 import _ from 'lodash'
 import { Color } from '../definitions/Color'
 import { Position } from '../definitions/Movement'
-import { MapPosicaoPecasBrancas } from '../definitions/PosicoesIniciais'
+import { MapPosicaoPecasBrancas } from '../definitions/InitialPositions'
 import { TipoPeca } from '../definitions/TipoPeca'
 import { DOMGenerator } from '../DOMGenerator'
 import { ColorAdapter } from './DefinidorCores'
-import { InstanciadorPecas } from './InstanciadorPecas'
+import { PieceBuilder } from './PieceBuilder'
 import { ItemTabuleiro } from './ItemTabuleiro'
 import { Peca } from './peca/Peca'
 
@@ -119,7 +119,7 @@ export class Tabuleiro {
   private gerarPecas(cor: Color): ItemTabuleiro[] {
     return (Object as any).values(TipoPeca)
       .filter((value: string) => !!value)
-      .reduce((agg: ItemTabuleiro[], tipo: TipoPeca) => agg.concat(InstanciadorPecas.instanciar(tipo, cor)), [])
+      .reduce((agg: ItemTabuleiro[], tipo: TipoPeca) => agg.concat(PieceBuilder.build(tipo, cor)), [])
   }
 
   private gerarPecasVazias(): ItemTabuleiro[] {

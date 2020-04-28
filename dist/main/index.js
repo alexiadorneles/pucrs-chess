@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
-var InstanciadorPecas_1 = require("./domain/InstanciadorPecas");
+var PieceBuilder_1 = require("./domain/PieceBuilder");
 var ItemTabuleiro_1 = require("./domain/ItemTabuleiro");
 var Tabuleiro_1 = require("./domain/Tabuleiro");
 var DOMGenerator_1 = require("./DOMGenerator");
@@ -54,7 +54,7 @@ var buildModelItem = function (loaded) {
     return Object.assign(boardItem, loaded);
 };
 var buildModelPiece = function (loaded) {
-    var clazz = InstanciadorPecas_1.InstanciadorTipoMap.get(loaded.tipo);
+    var clazz = PieceBuilder_1.PieceBuilderMap.get(loaded.tipo);
     var piece = new clazz(loaded.cor);
     var model = Object.assign(piece, loaded);
     var movements = model.getMovimentos().map(function (mov) { return buildMovementModel(mov); });
@@ -62,7 +62,7 @@ var buildModelPiece = function (loaded) {
     return model;
 };
 var buildMovementModel = function (loaded) {
-    var clazz = InstanciadorPecas_1.InstanciadorMovimentoMap[loaded.tipo];
+    var clazz = PieceBuilder_1.MovementBuilderMap[loaded.tipo];
     var movement = new clazz();
     return Object.assign(movement, loaded);
 };

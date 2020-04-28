@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Position } from './definitions/Movement'
-import { InstanciadorMovimentoMap, InstanciadorTipoMap } from './domain/InstanciadorPecas'
+import { MovementBuilderMap, PieceBuilderMap } from './domain/PieceBuilder'
 import { ItemTabuleiro } from './domain/ItemTabuleiro'
 import { Movimento } from './domain/movimento/Movimento'
 import { Peca } from './domain/peca/Peca'
@@ -21,7 +21,7 @@ const buildModelItem = (loaded: JSONObject): ItemTabuleiro => {
 }
 
 const buildModelPiece = (loaded: JSONObject): Peca => {
-  const clazz = InstanciadorTipoMap.get(loaded.tipo)
+  const clazz = PieceBuilderMap.get(loaded.tipo)
   const piece = new clazz(loaded.cor)
   const model: Peca = Object.assign(piece, loaded)
   const movements = model.getMovimentos().map(mov => buildMovementModel(mov))
@@ -30,7 +30,7 @@ const buildModelPiece = (loaded: JSONObject): Peca => {
 }
 
 const buildMovementModel = (loaded: JSONObject) => {
-  const clazz = InstanciadorMovimentoMap[loaded.tipo]
+  const clazz = MovementBuilderMap[loaded.tipo]
   const movement: Movimento = new clazz()
   return Object.assign(movement, loaded)
 }
