@@ -4,18 +4,17 @@ import express from 'express'
 import { Request, Response } from 'express-serve-static-core'
 import fs from 'fs'
 
-const PASTA_LOCAL = process.cwd()
+const LOCAL_FOLDER = process.cwd()
 
-const carregarTabuleiro = (req: Request, res: Response) => {
-  const arquivo = fs.readFileSync(`${PASTA_LOCAL}/src/tabuleiro.json`)
-  res.send(arquivo.toString())
-  res.end(arquivo.toString())
+const loadBoard = (req: Request, res: Response) => {
+  const file = fs.readFileSync(`${LOCAL_FOLDER}/src/board.json`)
+  res.send(file.toString())
+  res.end(file.toString())
 }
 
-const escreverJSON = (req: Request, res: Response) => {
-  const body = req.body
-  const { json } = body
-  fs.writeFileSync(`${PASTA_LOCAL}/src/tabuleiro.json`, json)
+const writeJSON = (req: Request, res: Response) => {
+  const { json } = req.body
+  fs.writeFileSync(`${LOCAL_FOLDER}/src/board.json`, json)
 }
 
 const app = express()
@@ -23,13 +22,12 @@ app.options('*', cors())
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.listen(3000, () => console.log(`Express server is listening`))
+app.listen(9090, () => console.log(`Express server is listening`))
 app.get('/', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype')
-  res.send('cors problem fixed:)')
 })
-app.get('/carregar', carregarTabuleiro)
-app.post('/salvar', escreverJSON)
+app.get('/load', loadBoard)
+app.post('/save', writeJSON)

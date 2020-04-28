@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run build-ts && npm run lint",
+    "build-ts": "tsc",
     "test": "mocha -r ts-node/register src/test/**/*.spec.ts",
     "test:js": "mocha -r ts-node/register dist/test/**/*.spec.js",
     "build:watch": "tsc -w",

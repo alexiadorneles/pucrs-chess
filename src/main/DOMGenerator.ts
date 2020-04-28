@@ -4,17 +4,16 @@ import { Peca } from './domain/peca/Peca'
 
 export class DOMGenerator {
   private static instance: DOMGenerator
-  private tabuleiro: Tabuleiro
+  private board: Tabuleiro
 
-  private constructor() {
+  private constructor() {}
+
+  public injectBoard(board: Tabuleiro): void {
+    this.board = board
   }
 
-  public injetarTabuleiro(tabuleiro: Tabuleiro): void {
-    this.tabuleiro = tabuleiro
-  }
-
-  public getTabuleiro(): Tabuleiro {
-    return this.tabuleiro
+  public getBoard(): Tabuleiro {
+    return this.board
   }
 
   static getInstance(): DOMGenerator {
@@ -28,53 +27,51 @@ export class DOMGenerator {
   public refresh(): any {
     const root = document.getElementById('root')
     root.innerHTML = ''
-    const linhas = 8
-    const colunas = 8
-    const elementosLinha = []
-    let elementosColuna = []
-    for (let linha = 0; linha < linhas; linha++) {
-      elementosColuna = []
+    const lines = 8
+    const columns = 8
+    const lineElements = []
+    let columnElements = []
+    for (let line = 0; line < lines; line++) {
+      columnElements = []
 
-      for (let coluna = 0; coluna < colunas; coluna++) {
-        const item = this.tabuleiro.getItem({ linha, coluna })
-        const elemento = this.criarElemento(item)
-        elementosColuna.push(elemento)
+      for (let column = 0; column < columns; column++) {
+        const item = this.board.getItem({ linha: line, coluna: column })
+        const element = this.createElement(item)
+        columnElements.push(element)
       }
 
-      const elementoLinha = document.createElement('div')
-      elementoLinha.setAttribute('class', 'xadrez-linha')
-      elementosColuna.forEach((elementoColuna => elementoLinha.appendChild(elementoColuna)))
-      elementosLinha.push(elementoLinha)
+      const lineElement = document.createElement('div')
+      lineElement.setAttribute('class', 'xadrez-linha')
+      columnElements.forEach(columnElement => lineElement.appendChild(columnElement))
+      lineElements.push(lineElement)
     }
 
-
-    elementosLinha.forEach(elemento => root.appendChild(elemento))
+    lineElements.forEach(element => root.appendChild(element))
   }
 
-  private criarElemento(item: ItemTabuleiro): Element {
+  private createElement(item: ItemTabuleiro): Element {
     const div = document.createElement('div')
     div.setAttribute('class', 'container')
 
-    const quadrado = document.createElement('span')
-    quadrado.setAttribute('class', `fas fa-square-full xadrez-quadrado ${item.getCor()}`)
-    quadrado.addEventListener('click', item.onClick)
-    item.atribuirElemento(quadrado)
+    const square = document.createElement('span')
+    square.setAttribute('class', `fas fa-square-full xadrez-quadrado ${item.getCor()}`)
+    square.addEventListener('click', item.onClick)
+    item.atribuirElemento(square)
 
-    const iconePeca = this.criarIconePeca(item.getPeca())
-    iconePeca.addEventListener('click', item.onClick)
+    const pieceIcon = this.createPieceIcon(item.getPeca())
+    pieceIcon.addEventListener('click', item.onClick)
 
-    div.appendChild(iconePeca)
-    div.appendChild(quadrado)
+    div.appendChild(pieceIcon)
+    div.appendChild(square)
 
     return div
   }
 
-  private criarIconePeca(peca: Peca | undefined): Element {
-    const tipoPeca = peca && peca.getTipo() || ''
-    const corPeca = peca && peca.getCor() || ''
-
-    const iconePeca = document.createElement('i')
-    iconePeca.setAttribute('class', `fas fa-${tipoPeca} peca ${corPeca}`)
-    return iconePeca
+  private createPieceIcon(piece: Peca | undefined): Element {
+    const pieceType = (piece && piece.getTipo()) || ''
+    const pieceColor = (piece && piece.getCor()) || ''
+    const pieceIcon = document.createElement('i')
+    pieceIcon.setAttribute('class', `fas fa-${pieceType} peca ${pieceColor}`)
+    return pieceIcon
   }
 }

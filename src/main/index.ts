@@ -1,66 +1,72 @@
+import axios from 'axios'
+import { Posicao } from './definitions/Movimento'
+import { InstanciadorMovimentoMap, InstanciadorTipoMap } from './domain/InstanciadorPecas'
+import { ItemTabuleiro } from './domain/ItemTabuleiro'
+import { Movimento } from './domain/movimento/Movimento'
+import { Peca } from './domain/peca/Peca'
 import { Tabuleiro } from './domain/Tabuleiro'
 import { DOMGenerator } from './DOMGenerator'
-import axios from 'axios'
-import { ItemTabuleiro } from './domain/ItemTabuleiro'
-import { Peca } from './domain/peca/Peca'
-import { InstanciadorTipoMap, InstanciadorMovimentoMap } from './domain/InstanciadorPecas'
-import { Posicao, OffsetMovimento } from './definitions/Movimento'
-import { Movimento } from './domain/movimento/Movimento'
-import { ModificadorImpl } from './domain/ModificadorImpl'
+import { API } from './config'
 
-const criarModelTabuleiro = (carregado: Tabuleiro) => {
-  const tabuleiro = new Tabuleiro()
-  return Object.assign(tabuleiro, carregado)
+type JSONObject = { [key in string]: any }
+
+const buildBoardModel = (loaded: JSONObject) => {
+  const board = new Tabuleiro()
+  return Object.assign(board, loaded)
 }
 
-const criarModelItem = (carregado: any): ItemTabuleiro => {
-  const itemTabuleiro = new ItemTabuleiro(carregado.posicao, carregado.cor)
-  return Object.assign(itemTabuleiro, carregado)
+const buildModelItem = (loaded: JSONObject): ItemTabuleiro => {
+  const boardItem = new ItemTabuleiro(loaded.posicao, loaded.cor)
+  return Object.assign(boardItem, loaded)
 }
 
-const criarModelPeca = (carregado: any): Peca => {
-  const clazz = InstanciadorTipoMap.get(carregado.tipo)
-  const peca = new clazz(carregado.cor)
-  const model: Peca = Object.assign(peca, carregado)
-  const movimentos = model.getMovimentos().map(mov => criarModelMovimento(mov))
-  model.setMovimentos(movimentos)
+const buildModelPiece = (loaded: JSONObject): Peca => {
+  const clazz = InstanciadorTipoMap.get(loaded.tipo)
+  const piece = new clazz(loaded.cor)
+  const model: Peca = Object.assign(piece, loaded)
+  const movements = model.getMovimentos().map(mov => buildMovementModel(mov))
+  model.setMovimentos(movements)
   return model
 }
 
-const criarModelMovimento = (carregado: any) => {
-  const clazz = InstanciadorMovimentoMap[carregado.tipo]
-  const movimento: Movimento = new clazz()
-  return Object.assign(movimento, carregado)
+const buildMovementModel = (loaded: JSONObject) => {
+  const clazz = InstanciadorMovimentoMap[loaded.tipo]
+  const movement: Movimento = new clazz()
+  return Object.assign(movement, loaded)
 }
 
-const tabuleiroInicial = new Tabuleiro().gerarTabuleiroInicial()
-const novoJogo = (event: MouseEvent) => {
-  DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial)
+const initialBoard = new Tabuleiro().gerarTabuleiroInicial()
+const newGame = () => {
+  DOMGenerator.getInstance().injectBoard(initialBoard)
   DOMGenerator.getInstance().refresh()
 }
 
-const carregarJogo = async () => {
-  const response = await axios.get('http://localhost:3000/carregar')
-  const tabuleiro = criarModelTabuleiro(response.data)
+const loadGame = async () => {
+  const response = await axios.get(API.URL)
+  const board = buildBoardModel(response.data)
 
-  tabuleiro.percorrerTabuleiro((item: any, { linha, coluna }: Posicao) => {
-    const itemModel = criarModelItem(item)
+  board.percorrerTabuleiro((item: JSONObject, { linha, coluna }: Posicao) => {
+    const itemModel = buildModelItem(item)
     if (itemModel.getPeca()) {
-      const pecaModel = criarModelPeca(itemModel.getPeca())
-      itemModel.atribuirPeca(pecaModel)
+      const pieceModel = buildModelPiece(itemModel.getPeca())
+      itemModel.atribuirPeca(pieceModel)
     }
-    tabuleiro.posicoes[linha][coluna] = itemModel
-    itemModel.adicionarAoTabuleiro(tabuleiro)
+    board.posicoes[linha][coluna] = itemModel
+    itemModel.adicionarAoTabuleiro(board)
   })
 
-  DOMGenerator.getInstance().injetarTabuleiro(tabuleiro)
+  DOMGenerator.getInstance().injectBoard(board)
   DOMGenerator.getInstance().refresh()
 }
 
-const novoJogoButton = document.getElementById('novoJogo')
-const carregarJogoButton = document.getElementById('carregarJogo')
-const salvarJogoButton = document.getElementById('salvarJogo')
+const newGameButton = document.getElementById('novoJogo')
+const loadGameButton = document.getElementById('carregarJogo')
+const saveGameButton = document.getElementById('salvarJogo')
 
-novoJogoButton.addEventListener('click', novoJogo)
-carregarJogoButton.addEventListener('click', carregarJogo)
-salvarJogoButton.addEventListener('click', () => DOMGenerator.getInstance().getTabuleiro().salvar())
+newGameButton.addEventListener('click', newGame)
+loadGameButton.addEventListener('click', loadGame)
+saveGameButton.addEventListener('click', () =>
+  DOMGenerator.getInstance()
+    .getBoard()
+    .salvar(),
+)
