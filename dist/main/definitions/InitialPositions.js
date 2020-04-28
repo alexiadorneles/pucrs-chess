@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TipoPeca_1 = require("./TipoPeca");
-var posicaoPeoesBrancos = [
+var whitePawnPosition = [
     { line: 1, column: 0 },
     { line: 1, column: 1 },
     { line: 1, column: 2 },
@@ -11,21 +11,21 @@ var posicaoPeoesBrancos = [
     { line: 1, column: 6 },
     { line: 1, column: 7 },
 ];
-var posicaoTorresBrancas = [
+var whiteTowerPosition = [
     { line: 0, column: 0 },
     { line: 0, column: 7 },
 ];
-var posicaoCavalosBrancos = [
+var whiteKnightPosition = [
     { line: 0, column: 1 },
     { line: 0, column: 6 },
 ];
-var posicaoBisposBrancos = [
+var whiteBishopPosition = [
     { line: 0, column: 2 },
     { line: 0, column: 5 },
 ];
-var posicaoRainha = [{ line: 0, column: 3 }];
-var posicaoRei = [{ line: 0, column: 4 }];
-var vazios = [
+var whiteQueenPosition = [{ line: 0, column: 3 }];
+var whiteKingPosition = [{ line: 0, column: 4 }];
+var emptySpace = [
     { line: 2, column: 0 },
     { line: 2, column: 1 },
     { line: 2, column: 2 },
@@ -59,16 +59,16 @@ var vazios = [
     { line: 5, column: 6 },
     { line: 5, column: 7 },
 ];
-exports.MapPosicaoPecasBrancas = new Map([
-    [TipoPeca_1.TipoPeca.PEAO, posicaoPeoesBrancos],
-    [TipoPeca_1.TipoPeca.TORRE, posicaoTorresBrancas],
-    [TipoPeca_1.TipoPeca.CAVALO, posicaoCavalosBrancos],
-    [TipoPeca_1.TipoPeca.BISPO, posicaoBisposBrancos],
-    [TipoPeca_1.TipoPeca.RAINHA, posicaoRainha],
-    [TipoPeca_1.TipoPeca.REI, posicaoRei],
-    [TipoPeca_1.TipoPeca.VAZIO, vazios],
+exports.WhitePiecesPositionMap = new Map([
+    [TipoPeca_1.TipoPeca.PEAO, whitePawnPosition],
+    [TipoPeca_1.TipoPeca.TORRE, whiteTowerPosition],
+    [TipoPeca_1.TipoPeca.CAVALO, whiteKnightPosition],
+    [TipoPeca_1.TipoPeca.BISPO, whiteBishopPosition],
+    [TipoPeca_1.TipoPeca.RAINHA, whiteQueenPosition],
+    [TipoPeca_1.TipoPeca.REI, whiteKingPosition],
+    [TipoPeca_1.TipoPeca.VAZIO, emptySpace],
 ]);
-var posicaoPeoesPretos = [
+var blackPawnPosition = [
     { line: 6, column: 0 },
     { line: 6, column: 1 },
     { line: 6, column: 2 },
@@ -78,25 +78,25 @@ var posicaoPeoesPretos = [
     { line: 6, column: 6 },
     { line: 6, column: 7 },
 ];
-var posicaoTorresPretos = [
+var blackTowerPosition = [
     { line: 7, column: 0 },
     { line: 7, column: 7 },
 ];
-var posicaoCavalosPretos = [
+var blackKnightPosition = [
     { line: 7, column: 1 },
     { line: 7, column: 6 },
 ];
-var posicaoBisposPretos = [
+var blackBishopsPosition = [
     { line: 7, column: 2 },
     { line: 7, column: 5 },
 ];
-var posicaoRainhaPreto = [{ line: 7, column: 3 }];
-var posicaoReiPreto = [{ line: 7, column: 4 }];
-exports.MapPosicaoPecasPretas = new Map([
-    [TipoPeca_1.TipoPeca.PEAO, posicaoPeoesPretos],
-    [TipoPeca_1.TipoPeca.TORRE, posicaoTorresPretos],
-    [TipoPeca_1.TipoPeca.CAVALO, posicaoCavalosPretos],
-    [TipoPeca_1.TipoPeca.BISPO, posicaoBisposPretos],
-    [TipoPeca_1.TipoPeca.RAINHA, posicaoRainhaPreto],
-    [TipoPeca_1.TipoPeca.REI, posicaoReiPreto],
+var blackQueenPosition = [{ line: 7, column: 3 }];
+var blackKingPosition = [{ line: 7, column: 4 }];
+exports.BlackPiecesPositionMap = new Map([
+    [TipoPeca_1.TipoPeca.PEAO, blackPawnPosition],
+    [TipoPeca_1.TipoPeca.TORRE, blackTowerPosition],
+    [TipoPeca_1.TipoPeca.CAVALO, blackKnightPosition],
+    [TipoPeca_1.TipoPeca.BISPO, blackBishopsPosition],
+    [TipoPeca_1.TipoPeca.RAINHA, blackQueenPosition],
+    [TipoPeca_1.TipoPeca.REI, blackKingPosition],
 ]);

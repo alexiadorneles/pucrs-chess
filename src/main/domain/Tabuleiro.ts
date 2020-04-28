@@ -2,7 +2,7 @@ import axios from 'axios'
 import _ from 'lodash'
 import { Color } from '../definitions/Color'
 import { Position } from '../definitions/Movement'
-import { MapPosicaoPecasBrancas } from '../definitions/InitialPositions'
+import { WhitePiecesPositionMap } from '../definitions/InitialPositions'
 import { TipoPeca } from '../definitions/TipoPeca'
 import { DOMGenerator } from '../DOMGenerator'
 import { ColorAdapter } from './DefinidorCores'
@@ -123,6 +123,6 @@ export class Tabuleiro {
   }
 
   private gerarPecasVazias(): ItemTabuleiro[] {
-    return MapPosicaoPecasBrancas.get(TipoPeca.VAZIO).map(posicao => new ItemTabuleiro(posicao, ColorAdapter.defineItemColor(posicao)))
+    return WhitePiecesPositionMap.get(TipoPeca.VAZIO).map(posicao => new ItemTabuleiro(posicao, ColorAdapter.defineItemColor(posicao)))
   }
 }

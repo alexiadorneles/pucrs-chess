@@ -32,7 +32,7 @@ exports.MovementBuilderMap = (_a = {},
 var PieceBuilder;
 (function (PieceBuilder) {
     function build(kind, pieceColor) {
-        var map = pieceColor === "grey" ? InitialPositions_1.MapPosicaoPecasBrancas : InitialPositions_1.MapPosicaoPecasPretas;
+        var map = pieceColor === "grey" ? InitialPositions_1.WhitePiecesPositionMap : InitialPositions_1.BlackPiecesPositionMap;
         return map.get(kind).map(function (position) {
             var clazz = exports.PieceBuilderMap.get(kind);
             var item = new ItemTabuleiro_1.ItemTabuleiro(position, DefinidorCores_1.ColorAdapter.defineItemColor(position));

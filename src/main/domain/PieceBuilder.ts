@@ -1,5 +1,5 @@
 import { Color } from '../definitions/Color'
-import { MapPosicaoPecasBrancas, MapPosicaoPecasPretas } from '../definitions/InitialPositions'
+import { WhitePiecesPositionMap, BlackPiecesPositionMap } from '../definitions/InitialPositions'
 import { MovementKind } from '../definitions/Movement'
 import { TipoPeca } from '../definitions/TipoPeca'
 import { ColorAdapter } from './DefinidorCores'
@@ -34,7 +34,7 @@ export const MovementBuilderMap = {
 
 export namespace PieceBuilder {
   export function build(kind: TipoPeca, pieceColor: Color): ItemTabuleiro[] {
-    const map = pieceColor === Color.GREY ? MapPosicaoPecasBrancas : MapPosicaoPecasPretas
+    const map = pieceColor === Color.GREY ? WhitePiecesPositionMap : BlackPiecesPositionMap
     return map.get(kind).map(position => {
       const clazz = PieceBuilderMap.get(kind)
       const item = new ItemTabuleiro(position, ColorAdapter.defineItemColor(position))

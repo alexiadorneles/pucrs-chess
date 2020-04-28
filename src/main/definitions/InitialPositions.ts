@@ -1,7 +1,7 @@
 import { Position } from './Movement'
 import { TipoPeca } from './TipoPeca'
 
-const posicaoPeoesBrancos = [
+const whitePawnPosition = [
   { line: 1, column: 0 },
   { line: 1, column: 1 },
   { line: 1, column: 2 },
@@ -12,26 +12,26 @@ const posicaoPeoesBrancos = [
   { line: 1, column: 7 },
 ]
 
-const posicaoTorresBrancas = [
+const whiteTowerPosition = [
   { line: 0, column: 0 },
   { line: 0, column: 7 },
 ]
 
-const posicaoCavalosBrancos = [
+const whiteKnightPosition = [
   { line: 0, column: 1 },
   { line: 0, column: 6 },
 ]
 
-const posicaoBisposBrancos = [
+const whiteBishopPosition = [
   { line: 0, column: 2 },
   { line: 0, column: 5 },
 ]
 
-const posicaoRainha = [{ line: 0, column: 3 }]
+const whiteQueenPosition = [{ line: 0, column: 3 }]
 
-const posicaoRei = [{ line: 0, column: 4 }]
+const whiteKingPosition = [{ line: 0, column: 4 }]
 
-const vazios = [
+const emptySpace = [
   { line: 2, column: 0 },
   { line: 2, column: 1 },
   { line: 2, column: 2 },
@@ -66,17 +66,17 @@ const vazios = [
   { line: 5, column: 7 },
 ]
 
-export const MapPosicaoPecasBrancas: Map<TipoPeca, Position[]> = new Map([
-  [TipoPeca.PEAO, posicaoPeoesBrancos],
-  [TipoPeca.TORRE, posicaoTorresBrancas],
-  [TipoPeca.CAVALO, posicaoCavalosBrancos],
-  [TipoPeca.BISPO, posicaoBisposBrancos],
-  [TipoPeca.RAINHA, posicaoRainha],
-  [TipoPeca.REI, posicaoRei],
-  [TipoPeca.VAZIO, vazios],
+export const WhitePiecesPositionMap: Map<TipoPeca, Position[]> = new Map([
+  [TipoPeca.PEAO, whitePawnPosition],
+  [TipoPeca.TORRE, whiteTowerPosition],
+  [TipoPeca.CAVALO, whiteKnightPosition],
+  [TipoPeca.BISPO, whiteBishopPosition],
+  [TipoPeca.RAINHA, whiteQueenPosition],
+  [TipoPeca.REI, whiteKingPosition],
+  [TipoPeca.VAZIO, emptySpace],
 ])
 
-const posicaoPeoesPretos = [
+const blackPawnPosition = [
   { line: 6, column: 0 },
   { line: 6, column: 1 },
   { line: 6, column: 2 },
@@ -87,30 +87,30 @@ const posicaoPeoesPretos = [
   { line: 6, column: 7 },
 ]
 
-const posicaoTorresPretos = [
+const blackTowerPosition = [
   { line: 7, column: 0 },
   { line: 7, column: 7 },
 ]
 
-const posicaoCavalosPretos = [
+const blackKnightPosition = [
   { line: 7, column: 1 },
   { line: 7, column: 6 },
 ]
 
-const posicaoBisposPretos = [
+const blackBishopsPosition = [
   { line: 7, column: 2 },
   { line: 7, column: 5 },
 ]
 
-const posicaoRainhaPreto = [{ line: 7, column: 3 }]
+const blackQueenPosition = [{ line: 7, column: 3 }]
 
-const posicaoReiPreto = [{ line: 7, column: 4 }]
+const blackKingPosition = [{ line: 7, column: 4 }]
 
-export const MapPosicaoPecasPretas: Map<TipoPeca, Position[]> = new Map([
-  [TipoPeca.PEAO, posicaoPeoesPretos],
-  [TipoPeca.TORRE, posicaoTorresPretos],
-  [TipoPeca.CAVALO, posicaoCavalosPretos],
-  [TipoPeca.BISPO, posicaoBisposPretos],
-  [TipoPeca.RAINHA, posicaoRainhaPreto],
-  [TipoPeca.REI, posicaoReiPreto],
+export const BlackPiecesPositionMap: Map<TipoPeca, Position[]> = new Map([
+  [TipoPeca.PEAO, blackPawnPosition],
+  [TipoPeca.TORRE, blackTowerPosition],
+  [TipoPeca.CAVALO, blackKnightPosition],
+  [TipoPeca.BISPO, blackBishopsPosition],
+  [TipoPeca.RAINHA, blackQueenPosition],
+  [TipoPeca.REI, blackKingPosition],
 ])

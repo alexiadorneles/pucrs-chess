@@ -155,7 +155,7 @@ var Tabuleiro = (function () {
             .reduce(function (agg, tipo) { return agg.concat(PieceBuilder_1.PieceBuilder.build(tipo, cor)); }, []);
     };
     Tabuleiro.prototype.gerarPecasVazias = function () {
-        return InitialPositions_1.MapPosicaoPecasBrancas.get(TipoPeca_1.TipoPeca.VAZIO).map(function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.ColorAdapter.defineItemColor(posicao)); });
+        return InitialPositions_1.WhitePiecesPositionMap.get(TipoPeca_1.TipoPeca.VAZIO).map(function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.ColorAdapter.defineItemColor(posicao)); });
     };
     return Tabuleiro;
 }());
