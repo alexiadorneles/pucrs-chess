@@ -14,13 +14,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var PieceKind_1 = require("../../definitions/PieceKind");
-var MovimentoL_1 = require("../movement/MovimentoL");
+var LMovement_1 = require("../movement/LMovement");
 var Peca_1 = require("./Peca");
 var Cavalo = (function (_super) {
     __extends(Cavalo, _super);
     function Cavalo(cor) {
         var _this = this;
-        var movimentos = [new MovimentoL_1.MovimentoL()];
+        var movimentos = [new LMovement_1.LMovement()];
         _this = _super.call(this, PieceKind_1.PieceKind.KNIGHT, cor, movimentos, true) || this;
         return _this;
     }

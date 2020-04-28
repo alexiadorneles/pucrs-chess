@@ -1,13 +1,13 @@
 import { Color } from '../../definitions/Color'
 import { PieceKind } from '../../definitions/PieceKind'
-import { MovimentoDiagonal } from '../movement/MovimentoDiagonal'
-import { MovimentoHorizontal } from '../movement/MovimentoHorizontal'
-import { MovimentoVertical } from '../movement/MovimentoVertical'
+import { DiagonalMovement } from '../movement/DiagonalMovement'
+import { HorizontalMovement } from '../movement/HorizontalMovement'
+import { VerticalMovement } from '../movement/VerticalMovement'
 import { Peca } from './Peca'
 
 export class Rainha extends Peca {
   constructor(cor: Color) {
-    const movimentos = [new MovimentoVertical(), new MovimentoHorizontal(), new MovimentoDiagonal()]
+    const movimentos = [new VerticalMovement(), new HorizontalMovement(), new DiagonalMovement()]
     super(PieceKind.QUEEN, cor, movimentos, true)
   }
 }

@@ -36,13 +36,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
 var PieceKind_1 = require("../../definitions/PieceKind");
-var MovimentoVertical_1 = require("../movement/MovimentoVertical");
+var VerticalMovement_1 = require("../movement/VerticalMovement");
 var Peca_1 = require("./Peca");
 var Peao = (function (_super) {
     __extends(Peao, _super);
     function Peao(cor) {
         var _this = this;
-        var movimentos = [new MovimentoVertical_1.MovimentoVertical()];
+        var movimentos = [new VerticalMovement_1.VerticalMovement()];
         _this = _super.call(this, PieceKind_1.PieceKind.PAWN, cor, movimentos, false) || this;
         return _this;
     }

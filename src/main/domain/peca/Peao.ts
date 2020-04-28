@@ -2,12 +2,12 @@ import _ from 'lodash'
 import { Color } from '../../definitions/Color'
 import { Position } from '../../definitions/Movement'
 import { PieceKind } from '../../definitions/PieceKind'
-import { MovimentoVertical } from '../movement/MovimentoVertical'
+import { VerticalMovement } from '../movement/VerticalMovement'
 import { Peca } from './Peca'
 
 export class Peao extends Peca {
   constructor(cor: Color) {
-    const movimentos = [new MovimentoVertical()]
+    const movimentos = [new VerticalMovement()]
     super(PieceKind.PAWN, cor, movimentos, false)
   }
 

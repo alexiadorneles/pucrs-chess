@@ -3,8 +3,10 @@ import { ModificadorImpl } from '../ModificadorImpl'
 import { Tabuleiro } from '../Tabuleiro'
 import { Movement } from './Movement'
 
-export class MovimentoL extends Movement {
-  constructor() { super(MovementKind.L) }
+export class LMovement extends Movement {
+  constructor() {
+    super(MovementKind.L)
+  }
   public getMovementOffsets(): MovementOffset[] {
     return [
       {
@@ -42,13 +44,14 @@ export class MovimentoL extends Movement {
     ]
   }
 
-  public executeSimulation(posicaoInicial: Position, tabuleiro: Tabuleiro): Position[] {
+  public executeSimulation(initialPosition: Position, board: Tabuleiro): Position[] {
     return this.getMovementOffsets()
-      .map(offset => this.createNewPositionBasedOnOffset(posicaoInicial, offset))
-      .filter(posicao => tabuleiro.isPosicaoExistente(posicao))
-      .filter(posicao =>
-        !tabuleiro.isPosicaoOcupada(posicao) ||
-        tabuleiro.isBloqueadaPorOponente(posicao, posicaoInicial)
+      .map(offset => this.createNewPositionBasedOnOffset(initialPosition, offset))
+      .filter(position => board.isPosicaoExistente(position))
+      .filter(
+        position =>
+          !board.isPosicaoOcupada(position) ||
+          board.isBloqueadaPorOponente(position, initialPosition),
       )
   }
 }

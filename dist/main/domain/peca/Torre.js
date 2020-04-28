@@ -14,14 +14,14 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var PieceKind_1 = require("../../definitions/PieceKind");
-var MovimentoHorizontal_1 = require("../movement/MovimentoHorizontal");
-var MovimentoVertical_1 = require("../movement/MovimentoVertical");
+var HorizontalMovement_1 = require("../movement/HorizontalMovement");
+var VerticalMovement_1 = require("../movement/VerticalMovement");
 var Peca_1 = require("./Peca");
 var Torre = (function (_super) {
     __extends(Torre, _super);
     function Torre(cor) {
         var _this = this;
-        var movimentos = [new MovimentoVertical_1.MovimentoVertical(), new MovimentoHorizontal_1.MovimentoHorizontal()];
+        var movimentos = [new VerticalMovement_1.VerticalMovement(), new HorizontalMovement_1.HorizontalMovement()];
         _this = _super.call(this, PieceKind_1.PieceKind.TOWER, cor, movimentos, true) || this;
         return _this;
     }

@@ -2,7 +2,7 @@ import { MovementOffset, MovementKind } from '../../definitions/Movement'
 import { ModificadorImpl } from '../ModificadorImpl'
 import { Movement } from './Movement'
 
-export class MovimentoHorizontal extends Movement {
+export class HorizontalMovement extends Movement {
   constructor() { super(MovementKind.HORIZONTAL) }
   public getMovementOffsets(): MovementOffset[] {
     return [

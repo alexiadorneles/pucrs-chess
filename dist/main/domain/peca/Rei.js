@@ -18,15 +18,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
 var PieceKind_1 = require("../../definitions/PieceKind");
-var MovimentoDiagonal_1 = require("../movement/MovimentoDiagonal");
-var MovimentoHorizontal_1 = require("../movement/MovimentoHorizontal");
-var MovimentoVertical_1 = require("../movement/MovimentoVertical");
+var DiagonalMovement_1 = require("../movement/DiagonalMovement");
+var HorizontalMovement_1 = require("../movement/HorizontalMovement");
+var VerticalMovement_1 = require("../movement/VerticalMovement");
 var Peca_1 = require("./Peca");
 var Rei = (function (_super) {
     __extends(Rei, _super);
     function Rei(cor) {
         var _this = this;
-        var movimentos = [new MovimentoVertical_1.MovimentoVertical(), new MovimentoHorizontal_1.MovimentoHorizontal(), new MovimentoDiagonal_1.MovimentoDiagonal()];
+        var movimentos = [new VerticalMovement_1.VerticalMovement(), new HorizontalMovement_1.HorizontalMovement(), new DiagonalMovement_1.DiagonalMovement()];
         _this = _super.call(this, PieceKind_1.PieceKind.KING, cor, movimentos, true) || this;
         return _this;
     }

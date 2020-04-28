@@ -5,10 +5,10 @@ var InitialPositions_1 = require("../definitions/InitialPositions");
 var PieceKind_1 = require("../definitions/PieceKind");
 var DefinidorCores_1 = require("./DefinidorCores");
 var ItemTabuleiro_1 = require("./ItemTabuleiro");
-var MovimentoDiagonal_1 = require("./movement/MovimentoDiagonal");
-var MovimentoHorizontal_1 = require("./movement/MovimentoHorizontal");
-var MovimentoL_1 = require("./movement/MovimentoL");
-var MovimentoVertical_1 = require("./movement/MovimentoVertical");
+var DiagonalMovement_1 = require("./movement/DiagonalMovement");
+var HorizontalMovement_1 = require("./movement/HorizontalMovement");
+var LMovement_1 = require("./movement/LMovement");
+var VerticalMovement_1 = require("./movement/VerticalMovement");
 var Bispo_1 = require("./peca/Bispo");
 var Cavalo_1 = require("./peca/Cavalo");
 var Peao_1 = require("./peca/Peao");
@@ -24,10 +24,10 @@ exports.PieceBuilderMap = new Map([
     [PieceKind_1.PieceKind.TOWER, Torre_1.Torre],
 ]);
 exports.MovementBuilderMap = (_a = {},
-    _a[2] = MovimentoDiagonal_1.MovimentoDiagonal,
-    _a[0] = MovimentoHorizontal_1.MovimentoHorizontal,
-    _a[1] = MovimentoVertical_1.MovimentoVertical,
-    _a[3] = MovimentoL_1.MovimentoL,
+    _a[2] = DiagonalMovement_1.DiagonalMovement,
+    _a[0] = HorizontalMovement_1.HorizontalMovement,
+    _a[1] = VerticalMovement_1.VerticalMovement,
+    _a[3] = LMovement_1.LMovement,
     _a);
 var PieceBuilder;
 (function (PieceBuilder) {

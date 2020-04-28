@@ -4,10 +4,10 @@ import { MovementKind } from '../definitions/Movement'
 import { PieceKind } from '../definitions/PieceKind'
 import { ColorAdapter } from './DefinidorCores'
 import { ItemTabuleiro } from './ItemTabuleiro'
-import { MovimentoDiagonal } from './movement/MovimentoDiagonal'
-import { MovimentoHorizontal } from './movement/MovimentoHorizontal'
-import { MovimentoL } from './movement/MovimentoL'
-import { MovimentoVertical } from './movement/MovimentoVertical'
+import { DiagonalMovement } from './movement/DiagonalMovement'
+import { HorizontalMovement } from './movement/HorizontalMovement'
+import { LMovement } from './movement/LMovement'
+import { VerticalMovement } from './movement/VerticalMovement'
 import { Bispo } from './peca/Bispo'
 import { Cavalo } from './peca/Cavalo'
 import { Peao } from './peca/Peao'
@@ -26,10 +26,10 @@ export const PieceBuilderMap: Map<PieceKind, new (color: Color) => Peca> = new M
 ])
 
 export const MovementBuilderMap = {
-  [MovementKind.DIAGONAL]: MovimentoDiagonal,
-  [MovementKind.HORIZONTAL]: MovimentoHorizontal,
-  [MovementKind.VERTICAL]: MovimentoVertical,
-  [MovementKind.L]: MovimentoL,
+  [MovementKind.DIAGONAL]: DiagonalMovement,
+  [MovementKind.HORIZONTAL]: HorizontalMovement,
+  [MovementKind.VERTICAL]: VerticalMovement,
+  [MovementKind.L]: LMovement,
 }
 
 export namespace PieceBuilder {
