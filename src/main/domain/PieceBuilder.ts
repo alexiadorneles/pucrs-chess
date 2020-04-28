@@ -1,8 +1,8 @@
 import { Color } from '../definitions/Color'
-import { WhitePiecesPositionMap, BlackPiecesPositionMap } from './InitialPositions'
+import { WhitePiecesPositionMap, PinkPiecesPositionMap } from '../constants/InitialPositions'
 import { MovementKind } from '../definitions/Movement'
 import { PieceKind } from '../definitions/PieceKind'
-import { ColorAdapter } from './ColorAdapter'
+import { ColorAdapter } from './adapter/ColorAdapter'
 import { BoardItem } from './board/BoardItem'
 import { DiagonalMovement } from './movement/DiagonalMovement'
 import { HorizontalMovement } from './movement/HorizontalMovement'
@@ -34,7 +34,7 @@ export const MovementBuilderMap = {
 
 export namespace PieceBuilder {
   export function build(kind: PieceKind, pieceColor: Color): BoardItem[] {
-    const map = pieceColor === Color.WHITE ? WhitePiecesPositionMap : BlackPiecesPositionMap
+    const map = pieceColor === Color.WHITE ? WhitePiecesPositionMap : PinkPiecesPositionMap
     return map.get(kind).map(position => {
       const clazz = PieceBuilderMap.get(kind)
       const item = new BoardItem(position, ColorAdapter.defineItemColor(position))

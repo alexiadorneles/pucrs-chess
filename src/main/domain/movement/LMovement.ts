@@ -1,5 +1,5 @@
 import { MovementOffset, Position, MovementKind } from '../../definitions/Movement'
-import { ModifierImpl } from '../ModifierImpl'
+import { MovementAdapter } from '../adapter/MovementAdapter'
 import { Board } from '../board/Board'
 import { Movement } from './Movement'
 
@@ -10,36 +10,36 @@ export class LMovement extends Movement {
   public getMovementOffsets(): MovementOffset[] {
     return [
       {
-        lineModifier: new ModifierImpl(2, ModifierImpl.sum),
-        columnModifier: new ModifierImpl(1, ModifierImpl.sum),
+        lineModifier: new MovementAdapter(2, MovementAdapter.sum),
+        columnModifier: new MovementAdapter(1, MovementAdapter.sum),
       },
       {
-        lineModifier: new ModifierImpl(2, ModifierImpl.sum),
-        columnModifier: new ModifierImpl(1, ModifierImpl.minus),
+        lineModifier: new MovementAdapter(2, MovementAdapter.sum),
+        columnModifier: new MovementAdapter(1, MovementAdapter.minus),
       },
       {
-        lineModifier: new ModifierImpl(2, ModifierImpl.minus),
-        columnModifier: new ModifierImpl(1, ModifierImpl.minus),
+        lineModifier: new MovementAdapter(2, MovementAdapter.minus),
+        columnModifier: new MovementAdapter(1, MovementAdapter.minus),
       },
       {
-        lineModifier: new ModifierImpl(2, ModifierImpl.minus),
-        columnModifier: new ModifierImpl(1, ModifierImpl.sum),
+        lineModifier: new MovementAdapter(2, MovementAdapter.minus),
+        columnModifier: new MovementAdapter(1, MovementAdapter.sum),
       },
       {
-        lineModifier: new ModifierImpl(1, ModifierImpl.sum),
-        columnModifier: new ModifierImpl(2, ModifierImpl.sum),
+        lineModifier: new MovementAdapter(1, MovementAdapter.sum),
+        columnModifier: new MovementAdapter(2, MovementAdapter.sum),
       },
       {
-        lineModifier: new ModifierImpl(1, ModifierImpl.minus),
-        columnModifier: new ModifierImpl(2, ModifierImpl.sum),
+        lineModifier: new MovementAdapter(1, MovementAdapter.minus),
+        columnModifier: new MovementAdapter(2, MovementAdapter.sum),
       },
       {
-        lineModifier: new ModifierImpl(1, ModifierImpl.minus),
-        columnModifier: new ModifierImpl(2, ModifierImpl.minus),
+        lineModifier: new MovementAdapter(1, MovementAdapter.minus),
+        columnModifier: new MovementAdapter(2, MovementAdapter.minus),
       },
       {
-        lineModifier: new ModifierImpl(1, ModifierImpl.sum),
-        columnModifier: new ModifierImpl(2, ModifierImpl.minus),
+        lineModifier: new MovementAdapter(1, MovementAdapter.sum),
+        columnModifier: new MovementAdapter(2, MovementAdapter.minus),
       },
     ]
   }

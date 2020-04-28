@@ -41,13 +41,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 var lodash_1 = __importDefault(require("lodash"));
-var InitialPositions_1 = require("../InitialPositions");
+var InitialPositions_1 = require("../../constants/InitialPositions");
 var PieceKind_1 = require("../../definitions/PieceKind");
 var DOMGenerator_1 = require("../../DOMGenerator");
-var ColorAdapter_1 = require("../ColorAdapter");
+var ColorAdapter_1 = require("../adapter/ColorAdapter");
 var PieceBuilder_1 = require("../PieceBuilder");
 var BoardItem_1 = require("./BoardItem");
-var config_1 = require("../../config");
+var config_1 = require("../../constants/config");
 var initMatrix = function () {
     var matrix = [];
     matrix[0] = [];

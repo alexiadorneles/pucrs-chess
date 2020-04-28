@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ModifierImpl_1 = require("../ModifierImpl");
+var MovementAdapter_1 = require("../adapter/MovementAdapter");
 var Movement_1 = require("./Movement");
 var DiagonalMovement = (function (_super) {
     __extends(DiagonalMovement, _super);
@@ -23,20 +23,20 @@ var DiagonalMovement = (function (_super) {
     DiagonalMovement.prototype.getMovementOffsets = function () {
         return [
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                lineModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
             },
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                lineModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
             },
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                lineModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
             },
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                lineModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
             },
         ];
     };

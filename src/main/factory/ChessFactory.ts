@@ -1,8 +1,8 @@
 import { JSONObject } from '../definitions/JSONObject'
-import { Board } from './board/Board'
-import { BoardItem } from './board/BoardItem'
+import { Board } from '../domain/board/Board'
+import { BoardItem } from '../domain/board/BoardItem'
 import { Position } from '../definitions/Movement'
-import { Piece } from './piece/Piece'
+import { Piece } from '../domain/piece/Piece'
 
 export interface ChessFactory {
   createBoardFromJSON(board: JSONObject): Board

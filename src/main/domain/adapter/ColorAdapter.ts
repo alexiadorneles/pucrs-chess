@@ -1,5 +1,5 @@
-import { Color } from '../definitions/Color'
-import { Position } from '../definitions/Movement'
+import { Color } from '../../definitions/Color'
+import { Position } from '../../definitions/Movement'
 
 export namespace ColorAdapter {
   export function defineItemColor({ line: line, column: column }: Position): Color {

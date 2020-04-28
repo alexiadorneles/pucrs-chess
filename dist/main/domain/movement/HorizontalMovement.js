@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ModifierImpl_1 = require("../ModifierImpl");
+var MovementAdapter_1 = require("../adapter/MovementAdapter");
 var Movement_1 = require("./Movement");
 var HorizontalMovement = (function (_super) {
     __extends(HorizontalMovement, _super);
@@ -23,12 +23,12 @@ var HorizontalMovement = (function (_super) {
     HorizontalMovement.prototype.getMovementOffsets = function () {
         return [
             {
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
-                lineModifier: new ModifierImpl_1.ModifierImpl(0, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
+                lineModifier: new MovementAdapter_1.MovementAdapter(0, MovementAdapter_1.MovementAdapter.sum),
             },
             {
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
-                lineModifier: new ModifierImpl_1.ModifierImpl(0, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
+                lineModifier: new MovementAdapter_1.MovementAdapter(0, MovementAdapter_1.MovementAdapter.sum),
             },
         ];
     };

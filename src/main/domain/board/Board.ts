@@ -2,14 +2,14 @@ import axios from 'axios'
 import _ from 'lodash'
 import { Color } from '../../definitions/Color'
 import { Position } from '../../definitions/Movement'
-import { WhitePiecesPositionMap } from '../InitialPositions'
+import { WhitePiecesPositionMap } from '../../constants/InitialPositions'
 import { PieceKind } from '../../definitions/PieceKind'
 import { DOMGenerator } from '../../DOMGenerator'
-import { ColorAdapter } from '../ColorAdapter'
+import { ColorAdapter } from '../adapter/ColorAdapter'
 import { PieceBuilder } from '../PieceBuilder'
 import { BoardItem } from './BoardItem'
 import { Piece } from '../piece/Piece'
-import { API } from '../../config'
+import { API } from '../../constants/config'
 
 const initMatrix = (): BoardItem[][] => {
   const matrix = []

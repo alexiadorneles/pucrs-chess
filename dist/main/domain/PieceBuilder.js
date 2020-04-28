@@ -1,9 +1,9 @@
 "use strict";
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-var InitialPositions_1 = require("./InitialPositions");
+var InitialPositions_1 = require("../constants/InitialPositions");
 var PieceKind_1 = require("../definitions/PieceKind");
-var ColorAdapter_1 = require("./ColorAdapter");
+var ColorAdapter_1 = require("./adapter/ColorAdapter");
 var BoardItem_1 = require("./board/BoardItem");
 var DiagonalMovement_1 = require("./movement/DiagonalMovement");
 var HorizontalMovement_1 = require("./movement/HorizontalMovement");
@@ -32,7 +32,7 @@ exports.MovementBuilderMap = (_a = {},
 var PieceBuilder;
 (function (PieceBuilder) {
     function build(kind, pieceColor) {
-        var map = pieceColor === "white" ? InitialPositions_1.WhitePiecesPositionMap : InitialPositions_1.BlackPiecesPositionMap;
+        var map = pieceColor === "white" ? InitialPositions_1.WhitePiecesPositionMap : InitialPositions_1.PinkPiecesPositionMap;
         return map.get(kind).map(function (position) {
             var clazz = exports.PieceBuilderMap.get(kind);
             var item = new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position));

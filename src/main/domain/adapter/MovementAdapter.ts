@@ -1,6 +1,6 @@
-import { Modifier } from '../definitions/Movement'
+import { Modifier } from '../../definitions/Movement'
 
-export class ModifierImpl implements Modifier {
+export class MovementAdapter implements Modifier {
   constructor(
     public quantity: number,
     public apply: (quantity: number, property: number) => number,

@@ -106,7 +106,7 @@ const pinkQueenPosition: Position[] = [{ line: 7, column: 3 }]
 
 const pinkKingPosition: Position[] = [{ line: 7, column: 4 }]
 
-export const BlackPiecesPositionMap: Map<PieceKind, Position[]> = new Map([
+export const PinkPiecesPositionMap: Map<PieceKind, Position[]> = new Map([
   [PieceKind.PAWN, pinkPawnPosition],
   [PieceKind.ROOK, pinkRookPosition],
   [PieceKind.KNIGHT, pinkKnightPosition],

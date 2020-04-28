@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Board_1 = require("./board/Board");
 var axios_1 = __importDefault(require("axios"));
-var config_1 = require("../config");
+var config_1 = require("../constants/config");
 var GameStateHandler = (function () {
     function GameStateHandler(chessFactory, domGenerator) {
         this.chessFactory = chessFactory;

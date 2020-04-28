@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var DOMGenerator_1 = require("./DOMGenerator");
+var ChessFactory_1 = require("./factory/ChessFactory");
 var GameStateHandler_1 = require("./domain/GameStateHandler");
-var ChessFactory_1 = require("./domain/ChessFactory");
+var DOMGenerator_1 = require("./DOMGenerator");
 var domGeneratorInstance = DOMGenerator_1.DOMGenerator.getInstance();
 var chessFactory = new ChessFactory_1.ChessFactoryImpl();
 var gameStateHandler = new GameStateHandler_1.GameStateHandler(chessFactory, domGeneratorInstance);

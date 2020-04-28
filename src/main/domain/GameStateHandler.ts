@@ -1,8 +1,8 @@
-import { ChessFactory } from './ChessFactory'
+import { ChessFactory } from '../factory/ChessFactory'
 import { DOMGenerator } from '../DOMGenerator'
 import { Board } from './board/Board'
 import Axios from 'axios'
-import { API } from '../config'
+import { API } from '../constants/config'
 
 export class GameStateHandler {
   constructor(private chessFactory: ChessFactory, private domGenerator: DOMGenerator) {

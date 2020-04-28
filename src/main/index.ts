@@ -1,11 +1,6 @@
-import axios from 'axios'
-import { API } from './config'
-import { JSONObject } from './definitions/JSONObject'
-import { Position } from './definitions/Movement'
-import { Board } from './domain/board/Board'
-import { DOMGenerator } from './DOMGenerator'
+import { ChessFactoryImpl } from './factory/ChessFactory'
 import { GameStateHandler } from './domain/GameStateHandler'
-import { ChessFactoryImpl } from './domain/ChessFactory'
+import { DOMGenerator } from './DOMGenerator'
 
 const domGeneratorInstance = DOMGenerator.getInstance()
 const chessFactory = new ChessFactoryImpl()
