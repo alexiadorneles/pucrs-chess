@@ -1,5 +1,5 @@
-import { Board } from './domain/Board'
-import { BoardItem } from './domain/BoardItem'
+import { Board } from './domain/board/Board'
+import { BoardItem } from './domain/board/BoardItem'
 import { Piece } from './domain/piece/Piece'
 
 export class DOMGenerator {

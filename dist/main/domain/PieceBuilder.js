@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var InitialPositions_1 = require("../definitions/InitialPositions");
 var PieceKind_1 = require("../definitions/PieceKind");
 var ColorAdapter_1 = require("./ColorAdapter");
-var BoardItem_1 = require("./BoardItem");
+var BoardItem_1 = require("./board/BoardItem");
 var DiagonalMovement_1 = require("./movement/DiagonalMovement");
 var HorizontalMovement_1 = require("./movement/HorizontalMovement");
 var LMovement_1 = require("./movement/LMovement");

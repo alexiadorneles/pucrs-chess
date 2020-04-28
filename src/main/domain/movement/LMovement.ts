@@ -1,6 +1,6 @@
 import { MovementOffset, Position, MovementKind } from '../../definitions/Movement'
 import { ModifierImpl } from '../ModifierImpl'
-import { Board } from '../Board'
+import { Board } from '../board/Board'
 import { Movement } from './Movement'
 
 export class LMovement extends Movement {

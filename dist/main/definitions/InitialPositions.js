@@ -68,7 +68,7 @@ exports.WhitePiecesPositionMap = new Map([
     [PieceKind_1.PieceKind.KING, whiteKingPosition],
     [PieceKind_1.PieceKind.EMPTY, emptySpace],
 ]);
-var blackPawnPosition = [
+var pinkPawnPosition = [
     { line: 6, column: 0 },
     { line: 6, column: 1 },
     { line: 6, column: 2 },
@@ -78,25 +78,25 @@ var blackPawnPosition = [
     { line: 6, column: 6 },
     { line: 6, column: 7 },
 ];
-var blackRookPosition = [
+var pinkRookPosition = [
     { line: 7, column: 0 },
     { line: 7, column: 7 },
 ];
-var blackKnightPosition = [
+var pinkKnightPosition = [
     { line: 7, column: 1 },
     { line: 7, column: 6 },
 ];
-var blackBishopsPosition = [
+var pinkBishopsPosition = [
     { line: 7, column: 2 },
     { line: 7, column: 5 },
 ];
-var blackQueenPosition = [{ line: 7, column: 3 }];
-var blackKingPosition = [{ line: 7, column: 4 }];
+var pinkQueenPosition = [{ line: 7, column: 3 }];
+var pinkKingPosition = [{ line: 7, column: 4 }];
 exports.BlackPiecesPositionMap = new Map([
-    [PieceKind_1.PieceKind.PAWN, blackPawnPosition],
-    [PieceKind_1.PieceKind.ROOK, blackRookPosition],
-    [PieceKind_1.PieceKind.KNIGHT, blackKnightPosition],
-    [PieceKind_1.PieceKind.BISHOP, blackBishopsPosition],
-    [PieceKind_1.PieceKind.QUEEN, blackQueenPosition],
-    [PieceKind_1.PieceKind.KING, blackKingPosition],
+    [PieceKind_1.PieceKind.PAWN, pinkPawnPosition],
+    [PieceKind_1.PieceKind.ROOK, pinkRookPosition],
+    [PieceKind_1.PieceKind.KNIGHT, pinkKnightPosition],
+    [PieceKind_1.PieceKind.BISHOP, pinkBishopsPosition],
+    [PieceKind_1.PieceKind.QUEEN, pinkQueenPosition],
+    [PieceKind_1.PieceKind.KING, pinkKingPosition],
 ]);

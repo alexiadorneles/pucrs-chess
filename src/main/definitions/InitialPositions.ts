@@ -1,7 +1,7 @@
 import { Position } from './Movement'
 import { PieceKind } from './PieceKind'
 
-const whitePawnPosition = [
+const whitePawnPosition: Position[] = [
   { line: 1, column: 0 },
   { line: 1, column: 1 },
   { line: 1, column: 2 },
@@ -12,26 +12,26 @@ const whitePawnPosition = [
   { line: 1, column: 7 },
 ]
 
-const whiteRookPosition = [
+const whiteRookPosition: Position[] = [
   { line: 0, column: 0 },
   { line: 0, column: 7 },
 ]
 
-const whiteKnightPosition = [
+const whiteKnightPosition: Position[] = [
   { line: 0, column: 1 },
   { line: 0, column: 6 },
 ]
 
-const whiteBishopPosition = [
+const whiteBishopPosition: Position[] = [
   { line: 0, column: 2 },
   { line: 0, column: 5 },
 ]
 
-const whiteQueenPosition = [{ line: 0, column: 3 }]
+const whiteQueenPosition: Position[] = [{ line: 0, column: 3 }]
 
-const whiteKingPosition = [{ line: 0, column: 4 }]
+const whiteKingPosition: Position[] = [{ line: 0, column: 4 }]
 
-const emptySpace = [
+const emptySpace: Position[] = [
   { line: 2, column: 0 },
   { line: 2, column: 1 },
   { line: 2, column: 2 },
@@ -76,7 +76,7 @@ export const WhitePiecesPositionMap: Map<PieceKind, Position[]> = new Map([
   [PieceKind.EMPTY, emptySpace],
 ])
 
-const blackPawnPosition = [
+const pinkPawnPosition: Position[] = [
   { line: 6, column: 0 },
   { line: 6, column: 1 },
   { line: 6, column: 2 },
@@ -87,30 +87,30 @@ const blackPawnPosition = [
   { line: 6, column: 7 },
 ]
 
-const blackRookPosition = [
+const pinkRookPosition: Position[] = [
   { line: 7, column: 0 },
   { line: 7, column: 7 },
 ]
 
-const blackKnightPosition = [
+const pinkKnightPosition: Position[] = [
   { line: 7, column: 1 },
   { line: 7, column: 6 },
 ]
 
-const blackBishopsPosition = [
+const pinkBishopsPosition: Position[] = [
   { line: 7, column: 2 },
   { line: 7, column: 5 },
 ]
 
-const blackQueenPosition = [{ line: 7, column: 3 }]
+const pinkQueenPosition: Position[] = [{ line: 7, column: 3 }]
 
-const blackKingPosition = [{ line: 7, column: 4 }]
+const pinkKingPosition: Position[] = [{ line: 7, column: 4 }]
 
 export const BlackPiecesPositionMap: Map<PieceKind, Position[]> = new Map([
-  [PieceKind.PAWN, blackPawnPosition],
-  [PieceKind.ROOK, blackRookPosition],
-  [PieceKind.KNIGHT, blackKnightPosition],
-  [PieceKind.BISHOP, blackBishopsPosition],
-  [PieceKind.QUEEN, blackQueenPosition],
-  [PieceKind.KING, blackKingPosition],
+  [PieceKind.PAWN, pinkPawnPosition],
+  [PieceKind.ROOK, pinkRookPosition],
+  [PieceKind.KNIGHT, pinkKnightPosition],
+  [PieceKind.BISHOP, pinkBishopsPosition],
+  [PieceKind.QUEEN, pinkQueenPosition],
+  [PieceKind.KING, pinkKingPosition],
 ])

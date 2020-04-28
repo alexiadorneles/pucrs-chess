@@ -7,9 +7,9 @@ var chai_1 = require("chai");
 var lodash_1 = __importDefault(require("lodash"));
 require("mocha");
 var sinon_1 = __importDefault(require("sinon"));
-var BoardItem_1 = require("../main/domain/BoardItem");
+var BoardItem_1 = require("../main/domain/board/BoardItem");
 var Pawn_1 = require("../main/domain/piece/Pawn");
-var Board_1 = require("../main/domain/Board");
+var Board_1 = require("../main/domain/board/Board");
 context('Pawn', function () {
     describe('calling addToItem', function () {
         it('should set item property', function () {

@@ -41,8 +41,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 var PieceBuilder_1 = require("./domain/PieceBuilder");
-var BoardItem_1 = require("./domain/BoardItem");
-var Board_1 = require("./domain/Board");
+var BoardItem_1 = require("./domain/board/BoardItem");
+var Board_1 = require("./domain/board/Board");
 var DOMGenerator_1 = require("./DOMGenerator");
 var config_1 = require("./config");
 var buildBoardModel = function (loaded) {
@@ -50,19 +50,19 @@ var buildBoardModel = function (loaded) {
     return Object.assign(board, loaded);
 };
 var buildModelItem = function (loaded) {
-    var boardItem = new BoardItem_1.BoardItem(loaded.posicao, loaded.cor);
+    var boardItem = new BoardItem_1.BoardItem(loaded.position, loaded.color);
     return Object.assign(boardItem, loaded);
 };
 var buildModelPiece = function (loaded) {
-    var clazz = PieceBuilder_1.PieceBuilderMap.get(loaded.tipo);
-    var piece = new clazz(loaded.cor);
+    var clazz = PieceBuilder_1.PieceBuilderMap.get(loaded.kind);
+    var piece = new clazz(loaded.color);
     var model = Object.assign(piece, loaded);
     var movements = model.getMovements().map(function (mov) { return buildMovementModel(mov); });
     model.setMovements(movements);
     return model;
 };
 var buildMovementModel = function (loaded) {
-    var clazz = PieceBuilder_1.MovementBuilderMap[loaded.tipo];
+    var clazz = PieceBuilder_1.MovementBuilderMap[loaded.kind];
     var movement = new clazz();
     return Object.assign(movement, loaded);
 };
@@ -80,13 +80,13 @@ var loadGame = function () { return __awaiter(void 0, void 0, void 0, function (
                 response = _a.sent();
                 board = buildBoardModel(response.data);
                 board.executeForAll(function (item, _a) {
-                    var linha = _a.line, coluna = _a.column;
+                    var line = _a.line, column = _a.column;
                     var itemModel = buildModelItem(item);
                     if (itemModel.getPiece()) {
                         var pieceModel = buildModelPiece(itemModel.getPiece());
                         itemModel.addPiece(pieceModel);
                     }
-                    board.matrix[linha][coluna] = itemModel;
+                    board.matrix[line][column] = itemModel;
                     itemModel.addToBoard(board);
                 });
                 DOMGenerator_1.DOMGenerator.getInstance().injectBoard(board);

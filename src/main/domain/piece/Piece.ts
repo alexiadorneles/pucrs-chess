@@ -1,9 +1,9 @@
 import _ from 'lodash'
-import { Board } from 'main/domain/Board'
+import { Board } from 'main/domain/board/Board'
 import { Color } from '../../definitions/Color'
 import { Position } from '../../definitions/Movement'
 import { PieceKind } from '../../definitions/PieceKind'
-import { BoardItem } from '../BoardItem'
+import { BoardItem } from '../board/BoardItem'
 import { Movement } from '../movement/Movement'
 
 export abstract class Piece {

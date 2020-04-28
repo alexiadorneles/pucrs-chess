@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { MovementOffset, Position, MovementKind } from '../../definitions/Movement'
-import { Board } from '../Board'
+import { Board } from '../board/Board'
 
 export abstract class Movement {
   constructor(private kind: MovementKind) {}

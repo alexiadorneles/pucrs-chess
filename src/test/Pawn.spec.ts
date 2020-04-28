@@ -3,9 +3,9 @@ import _ from 'lodash'
 import 'mocha'
 import sinon from 'sinon'
 import { Color } from '../main/definitions/Color'
-import { BoardItem } from '../main/domain/BoardItem'
+import { BoardItem } from '../main/domain/board/BoardItem'
 import { Pawn } from '../main/domain/piece/Pawn'
-import { Board } from '../main/domain/Board'
+import { Board } from '../main/domain/board/Board'
 import { Position } from '../main/definitions/Movement'
 
 context('Pawn', () => {

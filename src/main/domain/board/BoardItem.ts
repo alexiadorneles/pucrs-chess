@@ -1,8 +1,8 @@
 import _ from 'lodash'
-import { Color } from '../definitions/Color'
-import { Position } from '../definitions/Movement'
-import { Piece } from './piece/Piece'
-import { Board } from './board/Board'
+import { Color } from '../../definitions/Color'
+import { Position } from '../../definitions/Movement'
+import { Piece } from '../piece/Piece'
+import { Board } from './Board'
 
 export class BoardItem {
   private piece: Piece

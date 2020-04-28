@@ -3,7 +3,7 @@ import { WhitePiecesPositionMap, BlackPiecesPositionMap } from '../definitions/I
 import { MovementKind } from '../definitions/Movement'
 import { PieceKind } from '../definitions/PieceKind'
 import { ColorAdapter } from './ColorAdapter'
-import { BoardItem } from './BoardItem'
+import { BoardItem } from './board/BoardItem'
 import { DiagonalMovement } from './movement/DiagonalMovement'
 import { HorizontalMovement } from './movement/HorizontalMovement'
 import { LMovement } from './movement/LMovement'

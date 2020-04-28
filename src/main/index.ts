@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { Position } from './definitions/Movement'
 import { MovementBuilderMap, PieceBuilderMap } from './domain/PieceBuilder'
-import { BoardItem } from './domain/BoardItem'
+import { BoardItem } from './domain/board/BoardItem'
 import { Movement } from './domain/movement/Movement'
 import { Piece } from './domain/piece/Piece'
-import { Board } from './domain/Board'
+import { Board } from './domain/board/Board'
 import { DOMGenerator } from './DOMGenerator'
 import { API } from './config'
 
@@ -16,13 +16,13 @@ const buildBoardModel = (loaded: JSONObject) => {
 }
 
 const buildModelItem = (loaded: JSONObject): BoardItem => {
-  const boardItem = new BoardItem(loaded.posicao, loaded.cor)
+  const boardItem = new BoardItem(loaded.position, loaded.color)
   return Object.assign(boardItem, loaded)
 }
 
 const buildModelPiece = (loaded: JSONObject): Piece => {
-  const clazz = PieceBuilderMap.get(loaded.tipo)
-  const piece = new clazz(loaded.cor)
+  const clazz = PieceBuilderMap.get(loaded.kind)
+  const piece = new clazz(loaded.color)
   const model: Piece = Object.assign(piece, loaded)
   const movements = model.getMovements().map(mov => buildMovementModel(mov))
   model.setMovements(movements)
@@ -30,7 +30,7 @@ const buildModelPiece = (loaded: JSONObject): Piece => {
 }
 
 const buildMovementModel = (loaded: JSONObject) => {
-  const clazz = MovementBuilderMap[loaded.tipo]
+  const clazz = MovementBuilderMap[loaded.kind]
   const movement: Movement = new clazz()
   return Object.assign(movement, loaded)
 }
@@ -45,13 +45,13 @@ const loadGame = async () => {
   const response = await axios.get(API.LOAD_URL)
   const board = buildBoardModel(response.data)
 
-  board.executeForAll((item: JSONObject, { line: linha, column: coluna }: Position) => {
+  board.executeForAll((item: JSONObject, { line, column }: Position) => {
     const itemModel = buildModelItem(item)
     if (itemModel.getPiece()) {
       const pieceModel = buildModelPiece(itemModel.getPiece())
       itemModel.addPiece(pieceModel)
     }
-    board.matrix[linha][coluna] = itemModel
+    board.matrix[line][column] = itemModel
     itemModel.addToBoard(board)
   })
 
