@@ -1,7 +1,7 @@
 import chai from 'chai'
 import 'mocha'
 import sinon from 'sinon'
-import { Color } from '../main/definitions/Cor'
+import { Color } from '../main/definitions/Color'
 import { ItemTabuleiro } from '../main/domain/ItemTabuleiro'
 import { Cavalo } from '../main/domain/peca/Cavalo'
 import { Peao } from '../main/domain/peca/Peao'

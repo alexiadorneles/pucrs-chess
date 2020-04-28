@@ -1,6 +1,6 @@
 import axios from 'axios'
 import _ from 'lodash'
-import { Color } from '../definitions/Cor'
+import { Color } from '../definitions/Color'
 import { Position } from '../definitions/Movement'
 import { MapPosicaoPecasBrancas } from '../definitions/PosicoesIniciais'
 import { TipoPeca } from '../definitions/TipoPeca'

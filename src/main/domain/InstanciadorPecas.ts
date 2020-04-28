@@ -1,4 +1,4 @@
-import { Color } from '../definitions/Cor'
+import { Color } from '../definitions/Color'
 import { MapPosicaoPecasBrancas, MapPosicaoPecasPretas } from '../definitions/PosicoesIniciais'
 import { TipoPeca } from '../definitions/TipoPeca'
 import { ColorAdapter } from './DefinidorCores'

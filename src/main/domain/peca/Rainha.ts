@@ -1,4 +1,4 @@
-import { Color } from '../../definitions/Cor'
+import { Color } from '../../definitions/Color'
 import { TipoPeca } from '../../definitions/TipoPeca'
 import { MovimentoDiagonal } from '../movimento/MovimentoDiagonal'
 import { MovimentoHorizontal } from '../movimento/MovimentoHorizontal'

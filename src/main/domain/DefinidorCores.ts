@@ -1,4 +1,4 @@
-import { Color } from '../definitions/Cor'
+import { Color } from '../definitions/Color'
 import { Position } from '../definitions/Movement'
 
 export namespace ColorAdapter {

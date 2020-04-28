@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { Tabuleiro } from 'main/domain/Tabuleiro'
-import { Color } from '../../definitions/Cor'
+import { Color } from '../../definitions/Color'
 import { Position, MovementKind } from '../../definitions/Movement'
 import { TipoPeca } from '../../definitions/TipoPeca'
 import { ItemTabuleiro } from '../ItemTabuleiro'
