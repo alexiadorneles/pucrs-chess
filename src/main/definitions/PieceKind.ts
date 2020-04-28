@@ -4,6 +4,6 @@ export enum PieceKind {
   KING = 'chess-king',
   QUEEN = 'chess-queen',
   BISHOP = 'chess-bishop',
-  TOWER = 'chess-rook',
+  ROOK = 'chess-rook',
   EMPTY = ''
 }

@@ -3,7 +3,7 @@ import { Position } from './definitions/Movement'
 import { MovementBuilderMap, PieceBuilderMap } from './domain/PieceBuilder'
 import { ItemTabuleiro } from './domain/ItemTabuleiro'
 import { Movement } from './domain/movement/Movement'
-import { Peca } from './domain/peca/Peca'
+import { Piece } from './domain/piece/Piece'
 import { Tabuleiro } from './domain/Tabuleiro'
 import { DOMGenerator } from './DOMGenerator'
 import { API } from './config'
@@ -20,12 +20,12 @@ const buildModelItem = (loaded: JSONObject): ItemTabuleiro => {
   return Object.assign(boardItem, loaded)
 }
 
-const buildModelPiece = (loaded: JSONObject): Peca => {
+const buildModelPiece = (loaded: JSONObject): Piece => {
   const clazz = PieceBuilderMap.get(loaded.tipo)
   const piece = new clazz(loaded.cor)
-  const model: Peca = Object.assign(piece, loaded)
-  const movements = model.getMovimentos().map(mov => buildMovementModel(mov))
-  model.setMovimentos(movements)
+  const model: Piece = Object.assign(piece, loaded)
+  const movements = model.getMovements().map(mov => buildMovementModel(mov))
+  model.setMovements(movements)
   return model
 }
 

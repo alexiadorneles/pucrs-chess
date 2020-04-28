@@ -1,6 +1,6 @@
 import { Tabuleiro } from './domain/Tabuleiro'
 import { ItemTabuleiro } from './domain/ItemTabuleiro'
-import { Peca } from './domain/peca/Peca'
+import { Piece } from './domain/piece/Piece'
 
 export class DOMGenerator {
   private static instance: DOMGenerator
@@ -67,8 +67,8 @@ export class DOMGenerator {
     return div
   }
 
-  private createPieceIcon(piece: Peca | undefined): Element {
-    const pieceType = (piece && piece.getTipo()) || ''
+  private createPieceIcon(piece: Piece | undefined): Element {
+    const pieceType = (piece && piece.getKind()) || ''
     const pieceColor = (piece && piece.getCor()) || ''
     const pieceIcon = document.createElement('i')
     pieceIcon.setAttribute('class', `fas fa-${pieceType} peca ${pieceColor}`)

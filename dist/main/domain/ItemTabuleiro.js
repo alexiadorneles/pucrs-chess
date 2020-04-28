@@ -36,7 +36,7 @@ var ItemTabuleiro = (function () {
     ItemTabuleiro.prototype.atribuirPeca = function (peca) {
         this.peca = peca;
         if (peca) {
-            this.peca.adicionarAoItem(this);
+            this.peca.addToItem(this);
         }
     };
     ItemTabuleiro.prototype.atribuirElemento = function (elemento) {
@@ -81,7 +81,7 @@ var ItemTabuleiro = (function () {
     };
     ItemTabuleiro.prototype.simularMovimento = function () {
         if (this.peca) {
-            var posicoes = this.peca.simularMovimento();
+            var posicoes = this.peca.simulateMovement();
             this.tabuleiro.destacarPosicoes(posicoes);
         }
     };

@@ -16,15 +16,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var PieceKind_1 = require("../../definitions/PieceKind");
 var HorizontalMovement_1 = require("../movement/HorizontalMovement");
 var VerticalMovement_1 = require("../movement/VerticalMovement");
-var Peca_1 = require("./Peca");
+var Piece_1 = require("./Piece");
 var Torre = (function (_super) {
     __extends(Torre, _super);
     function Torre(cor) {
         var _this = this;
         var movimentos = [new VerticalMovement_1.VerticalMovement(), new HorizontalMovement_1.HorizontalMovement()];
-        _this = _super.call(this, PieceKind_1.PieceKind.ROOK, cor, movimentos, true) || this;
+        _this = _super.call(this, PieceKind_1.PieceKind.TOWER, cor, movimentos, true) || this;
         return _this;
     }
     return Torre;
-}(Peca_1.Peca));
+}(Piece_1.Peca));
 exports.Torre = Torre;

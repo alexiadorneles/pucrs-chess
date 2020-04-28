@@ -14,17 +14,16 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var PieceKind_1 = require("../../definitions/PieceKind");
-var HorizontalMovement_1 = require("../movement/HorizontalMovement");
-var VerticalMovement_1 = require("../movement/VerticalMovement");
+var DiagonalMovement_1 = require("../movement/DiagonalMovement");
 var Peca_1 = require("./Peca");
-var Torre = (function (_super) {
-    __extends(Torre, _super);
-    function Torre(cor) {
+var Bispo = (function (_super) {
+    __extends(Bispo, _super);
+    function Bispo(cor) {
         var _this = this;
-        var movimentos = [new VerticalMovement_1.VerticalMovement(), new HorizontalMovement_1.HorizontalMovement()];
-        _this = _super.call(this, PieceKind_1.PieceKind.ROOK, cor, movimentos, true) || this;
+        var movimentos = [new DiagonalMovement_1.DiagonalMovement()];
+        _this = _super.call(this, PieceKind_1.PieceKind.BISHOP, cor, movimentos, true) || this;
         return _this;
     }
-    return Torre;
+    return Bispo;
 }(Peca_1.Peca));
-exports.Torre = Torre;
+exports.Bispo = Bispo;

@@ -78,7 +78,7 @@ var Tabuleiro = (function () {
                         this.percorrerTabuleiro(function (item) {
                             item.setTabuleiro(null);
                             if (item.getPeca()) {
-                                item.getPeca().adicionarAoItem(null);
+                                item.getPeca().addToItem(null);
                             }
                         });
                         conteudo = JSON.stringify(this);
@@ -132,7 +132,7 @@ var Tabuleiro = (function () {
         return !!this.pecaEmMovimento;
     };
     Tabuleiro.prototype.moverPeca = function (itemClicado) {
-        var itemDaPeca = this.pecaEmMovimento.getItemTabuleiro();
+        var itemDaPeca = this.pecaEmMovimento.getBoardItem();
         itemClicado.atribuirPeca(this.pecaEmMovimento);
         this.pecaEmMovimento = null;
         itemDaPeca.atribuirPeca(null);

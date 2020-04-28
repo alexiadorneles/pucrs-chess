@@ -9,19 +9,19 @@ var DiagonalMovement_1 = require("./movement/DiagonalMovement");
 var HorizontalMovement_1 = require("./movement/HorizontalMovement");
 var LMovement_1 = require("./movement/LMovement");
 var VerticalMovement_1 = require("./movement/VerticalMovement");
-var Bispo_1 = require("./peca/Bispo");
-var Cavalo_1 = require("./peca/Cavalo");
-var Peao_1 = require("./peca/Peao");
-var Rainha_1 = require("./peca/Rainha");
-var Rei_1 = require("./peca/Rei");
-var Torre_1 = require("./peca/Torre");
+var Bishop_1 = require("./piece/Bishop");
+var Knight_1 = require("./piece/Knight");
+var Pawn_1 = require("./piece/Pawn");
+var Queen_1 = require("./piece/Queen");
+var King_1 = require("./piece/King");
+var Rook_1 = require("./piece/Rook");
 exports.PieceBuilderMap = new Map([
-    [PieceKind_1.PieceKind.PAWN, Peao_1.Peao],
-    [PieceKind_1.PieceKind.KNIGHT, Cavalo_1.Cavalo],
-    [PieceKind_1.PieceKind.BISHOP, Bispo_1.Bispo],
-    [PieceKind_1.PieceKind.QUEEN, Rainha_1.Rainha],
-    [PieceKind_1.PieceKind.KING, Rei_1.Rei],
-    [PieceKind_1.PieceKind.TOWER, Torre_1.Torre],
+    [PieceKind_1.PieceKind.PAWN, Pawn_1.Pawn],
+    [PieceKind_1.PieceKind.KNIGHT, Knight_1.Knight],
+    [PieceKind_1.PieceKind.BISHOP, Bishop_1.Bishop],
+    [PieceKind_1.PieceKind.QUEEN, Queen_1.Queen],
+    [PieceKind_1.PieceKind.KING, King_1.King],
+    [PieceKind_1.PieceKind.ROOK, Rook_1.Rook],
 ]);
 exports.MovementBuilderMap = (_a = {},
     _a[2] = DiagonalMovement_1.DiagonalMovement,

@@ -12,7 +12,7 @@ const whitePawnPosition = [
   { line: 1, column: 7 },
 ]
 
-const whiteTowerPosition = [
+const whiteRookPosition = [
   { line: 0, column: 0 },
   { line: 0, column: 7 },
 ]
@@ -68,7 +68,7 @@ const emptySpace = [
 
 export const WhitePiecesPositionMap: Map<PieceKind, Position[]> = new Map([
   [PieceKind.PAWN, whitePawnPosition],
-  [PieceKind.TOWER, whiteTowerPosition],
+  [PieceKind.ROOK, whiteRookPosition],
   [PieceKind.KNIGHT, whiteKnightPosition],
   [PieceKind.BISHOP, whiteBishopPosition],
   [PieceKind.QUEEN, whiteQueenPosition],
@@ -87,7 +87,7 @@ const blackPawnPosition = [
   { line: 6, column: 7 },
 ]
 
-const blackTowerPosition = [
+const blackRookPosition = [
   { line: 7, column: 0 },
   { line: 7, column: 7 },
 ]
@@ -108,7 +108,7 @@ const blackKingPosition = [{ line: 7, column: 4 }]
 
 export const BlackPiecesPositionMap: Map<PieceKind, Position[]> = new Map([
   [PieceKind.PAWN, blackPawnPosition],
-  [PieceKind.TOWER, blackTowerPosition],
+  [PieceKind.ROOK, blackRookPosition],
   [PieceKind.KNIGHT, blackKnightPosition],
   [PieceKind.BISHOP, blackBishopsPosition],
   [PieceKind.QUEEN, blackQueenPosition],

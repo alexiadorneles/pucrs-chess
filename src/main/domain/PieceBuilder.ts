@@ -8,21 +8,21 @@ import { DiagonalMovement } from './movement/DiagonalMovement'
 import { HorizontalMovement } from './movement/HorizontalMovement'
 import { LMovement } from './movement/LMovement'
 import { VerticalMovement } from './movement/VerticalMovement'
-import { Bispo } from './peca/Bispo'
-import { Cavalo } from './peca/Cavalo'
-import { Peao } from './peca/Peao'
-import { Peca } from './peca/Peca'
-import { Rainha } from './peca/Rainha'
-import { Rei } from './peca/Rei'
-import { Torre } from './peca/Torre'
+import { Bishop } from './piece/Bishop'
+import { Knight } from './piece/Knight'
+import { Pawn } from './piece/Pawn'
+import { Piece } from './piece/Piece'
+import { Queen } from './piece/Queen'
+import { King } from './piece/King'
+import { Rook } from './piece/Rook'
 
-export const PieceBuilderMap: Map<PieceKind, new (color: Color) => Peca> = new Map([
-  [PieceKind.PAWN, Peao],
-  [PieceKind.KNIGHT, Cavalo],
-  [PieceKind.BISHOP, Bispo],
-  [PieceKind.QUEEN, Rainha],
-  [PieceKind.KING, Rei],
-  [PieceKind.TOWER, Torre],
+export const PieceBuilderMap: Map<PieceKind, new (color: Color) => Piece> = new Map([
+  [PieceKind.PAWN, Pawn],
+  [PieceKind.KNIGHT, Knight],
+  [PieceKind.BISHOP, Bishop],
+  [PieceKind.QUEEN, Queen],
+  [PieceKind.KING, King],
+  [PieceKind.ROOK, Rook],
 ])
 
 export const MovementBuilderMap = {

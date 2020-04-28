@@ -1,20 +1,20 @@
 import _ from 'lodash'
 import { Color } from '../definitions/Color'
 import { Position } from '../definitions/Movement'
-import { Peca } from './peca/Peca'
+import { Piece } from './piece/Piece'
 import { Tabuleiro } from './Tabuleiro'
 
 export class ItemTabuleiro {
-  private peca: Peca
+  private peca: Piece
   private isDestacado: boolean
   private elemento: Element
   private tabuleiro: Tabuleiro
   constructor(private posicao: Position, private cor: Color) { }
 
-  public atribuirPeca(peca: Peca): void {
+  public atribuirPeca(peca: Piece): void {
     this.peca = peca
     if (peca) {
-      this.peca.adicionarAoItem(this)
+      this.peca.addToItem(this)
     }
   }
 
@@ -56,7 +56,7 @@ export class ItemTabuleiro {
     return this.cor
   }
 
-  public getPeca(): Peca {
+  public getPeca(): Piece {
     return this.peca
   }
 
@@ -91,7 +91,7 @@ export class ItemTabuleiro {
 
   private simularMovimento(): void {
     if (this.peca) {
-      const posicoes = this.peca.simularMovimento()
+      const posicoes = this.peca.simulateMovement()
       this.tabuleiro.destacarPosicoes(posicoes)
     }
   }

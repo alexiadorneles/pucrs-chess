@@ -7,6 +7,6 @@ var PieceKind;
     PieceKind["KING"] = "chess-king";
     PieceKind["QUEEN"] = "chess-queen";
     PieceKind["BISHOP"] = "chess-bishop";
-    PieceKind["TOWER"] = "chess-rook";
+    PieceKind["ROOK"] = "chess-rook";
     PieceKind["EMPTY"] = "";
 })(PieceKind = exports.PieceKind || (exports.PieceKind = {}));

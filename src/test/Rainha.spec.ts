@@ -4,12 +4,12 @@ import 'mocha'
 import sinon from 'sinon'
 import { Color } from '../main/definitions/Color'
 import { ItemTabuleiro } from '../main/domain/ItemTabuleiro'
-import { Peao } from '../main/domain/peca/Peao'
-import { Rainha } from '../main/domain/peca/Rainha'
+import { Pawn } from '../main/domain/piece/Pawn'
+import { Queen } from '../main/domain/piece/Queen'
 import { Tabuleiro } from '../main/domain/Tabuleiro'
 import deepEqualInAnyOrder = require('deep-equal-in-any-order')
-import { Rei } from '../main/domain/peca/Rei'
-import { Torre } from '../main/domain/peca/Torre'
+import { King } from '../main/domain/piece/King'
+import { Rook } from '../main/domain/piece/Rook'
 
 chai.use(deepEqualInAnyOrder)
 const expect = chai.expect
@@ -18,12 +18,12 @@ context('Rainha', () => {
   describe('ao chamar adicionarAoItem', () => {
     it('deve atribuir propriedade item', () => {
       // arrange
-      const rainha = new Rainha(Color.WHITE)
+      const rainha = new Queen(Color.WHITE)
       const item = new ItemTabuleiro({ line: 0, column: 0 }, Color.BLACK)
       // act
-      rainha.adicionarAoItem(item)
+      rainha.addToItem(item)
       // assert
-      expect(rainha.getItemTabuleiro()).to.deep.equals(item)
+      expect(rainha.getBoardItem()).to.deep.equals(item)
     })
   })
   describe('ao chamar simularMovimento', () => {
@@ -31,7 +31,7 @@ context('Rainha', () => {
     it('quando posição inicial e tabuleiro limpo deve retornar muitas opções ', () => {
       // arrange
       const tabuleiro = new Tabuleiro()
-      const rainha = new Rainha(Color.WHITE)
+      const rainha = new Queen(Color.WHITE)
       const posicaoRainha = { line: 0, column: 3 }
       const item = new ItemTabuleiro(posicaoRainha, Color.BLACK)
       item.atribuirPeca(rainha)
@@ -67,7 +67,7 @@ context('Rainha', () => {
         { line: 3, column: 6 },
         { line: 4, column: 7 },
       ]
-      const resultado = rainha.simularMovimento()
+      const resultado = rainha.simulateMovement()
       // assert
       expect(resultado).to.deep.equalInAnyOrder(esperado)
       sinon.restore()
@@ -76,7 +76,7 @@ context('Rainha', () => {
       // arrange
       const tabuleiro = new Tabuleiro()
       const posicaoRainha = { line: 3, column: 3 }
-      const rainha = new Rainha(Color.WHITE)
+      const rainha = new Queen(Color.WHITE)
       const item = new ItemTabuleiro(posicaoRainha, Color.BLACK)
       item.atribuirPeca(rainha)
       sinon.replace(tabuleiro, 'getItem', (posicao) => {
@@ -121,42 +121,42 @@ context('Rainha', () => {
         { line: 6, column: 6 },
         { line: 7, column: 7 },
       ]
-      const resultado = rainha.simularMovimento()
+      const resultado = rainha.simulateMovement()
       // assert
       expect(resultado).to.deep.equalInAnyOrder(esperado)
       sinon.restore()
     })
     it('quando peças no caminho retorna apenas posições válidas', () => {
       // arrange
-      const rainha = new Rainha(Color.WHITE)
+      const rainha = new Queen(Color.WHITE)
       const itemRainha = new ItemTabuleiro({ line: 2, column: 2 }, Color.BLACK)
       itemRainha.atribuirPeca(rainha)
 
-      const peao = new Peao(Color.WHITE)
+      const peao = new Pawn(Color.WHITE)
       const itemPeao = new ItemTabuleiro({ line: 2, column: 1 }, Color.BLACK)
       itemPeao.atribuirPeca(peao)
 
-      const peao2 = new Peao(Color.WHITE)
+      const peao2 = new Pawn(Color.WHITE)
       const itemPeao2 = new ItemTabuleiro({ line: 3, column: 3 }, Color.BLACK)
       itemPeao2.atribuirPeca(peao2)
 
-      const peao3 = new Peao(Color.WHITE)
+      const peao3 = new Pawn(Color.WHITE)
       const itemPeao3 = new ItemTabuleiro({ line: 2, column: 4 }, Color.BLACK)
       itemPeao3.atribuirPeca(peao3)
 
-      const peao4 = new Peao(Color.WHITE)
+      const peao4 = new Pawn(Color.WHITE)
       const itemPeao4 = new ItemTabuleiro({ line: 1, column: 2 }, Color.BLACK)
       itemPeao4.atribuirPeca(peao4)
 
-      const torre = new Torre(Color.WHITE)
+      const torre = new Rook(Color.WHITE)
       const itemTorre = new ItemTabuleiro({ line: 0, column: 0 }, Color.BLACK)
       itemTorre.atribuirPeca(torre)
 
-      const rei = new Rei(Color.WHITE)
+      const rei = new King(Color.WHITE)
       const itemRei = new ItemTabuleiro({ line: 0, column: 4 }, Color.BLACK)
       itemRei.atribuirPeca(rei)
 
-      const peaoOponente = new Peao(Color.WHITE)
+      const peaoOponente = new Pawn(Color.WHITE)
       const itemPeaoOponente = new ItemTabuleiro({ line: 6, column: 2 }, Color.WHITE)
       itemPeaoOponente.atribuirPeca(peaoOponente)
 
@@ -179,7 +179,7 @@ context('Rainha', () => {
         { line: 4, column: 2 },
         { line: 5, column: 2 },
       ]
-      const resultado = rainha.simularMovimento()
+      const resultado = rainha.simulateMovement()
       // assert
       expect(resultado).to.deep.equalInAnyOrder(esperado)
       sinon.restore()

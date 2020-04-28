@@ -1,11 +1,11 @@
 import { Color } from '../../definitions/Color'
 import { PieceKind } from '../../definitions/PieceKind'
 import { LMovement } from '../movement/LMovement'
-import { Peca } from './Peca'
+import { Piece } from './Piece'
 
-export class Cavalo extends Peca {
+export class Knight extends Piece {
   constructor(cor: Color) {
-    const movimentos = [new LMovement()]
-    super(PieceKind.KNIGHT, cor, movimentos, true)
+    const movements = [new LMovement()]
+    super(PieceKind.KNIGHT, cor, movements, true)
   }
 }

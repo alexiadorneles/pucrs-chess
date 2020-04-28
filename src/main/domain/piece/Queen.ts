@@ -3,11 +3,11 @@ import { PieceKind } from '../../definitions/PieceKind'
 import { DiagonalMovement } from '../movement/DiagonalMovement'
 import { HorizontalMovement } from '../movement/HorizontalMovement'
 import { VerticalMovement } from '../movement/VerticalMovement'
-import { Peca } from './Peca'
+import { Piece } from './Piece'
 
-export class Rainha extends Peca {
+export class Queen extends Piece {
   constructor(cor: Color) {
-    const movimentos = [new VerticalMovement(), new HorizontalMovement(), new DiagonalMovement()]
-    super(PieceKind.QUEEN, cor, movimentos, true)
+    const movements = [new VerticalMovement(), new HorizontalMovement(), new DiagonalMovement()]
+    super(PieceKind.QUEEN, cor, movements, true)
   }
 }

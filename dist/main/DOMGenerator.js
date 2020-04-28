@@ -54,7 +54,7 @@ var DOMGenerator = (function () {
         return div;
     };
     DOMGenerator.prototype.createPieceIcon = function (piece) {
-        var pieceType = (piece && piece.getTipo()) || '';
+        var pieceType = (piece && piece.getKind()) || '';
         var pieceColor = (piece && piece.getCor()) || '';
         var pieceIcon = document.createElement('i');
         pieceIcon.setAttribute('class', "fas fa-" + pieceType + " peca " + pieceColor);

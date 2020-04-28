@@ -57,8 +57,8 @@ var buildModelPiece = function (loaded) {
     var clazz = PieceBuilder_1.PieceBuilderMap.get(loaded.tipo);
     var piece = new clazz(loaded.cor);
     var model = Object.assign(piece, loaded);
-    var movements = model.getMovimentos().map(function (mov) { return buildMovementModel(mov); });
-    model.setMovimentos(movements);
+    var movements = model.getMovements().map(function (mov) { return buildMovementModel(mov); });
+    model.setMovements(movements);
     return model;
 };
 var buildMovementModel = function (loaded) {

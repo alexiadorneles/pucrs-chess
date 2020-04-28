@@ -8,7 +8,7 @@ import { DOMGenerator } from '../DOMGenerator'
 import { ColorAdapter } from './DefinidorCores'
 import { PieceBuilder } from './PieceBuilder'
 import { ItemTabuleiro } from './ItemTabuleiro'
-import { Peca } from './peca/Peca'
+import { Piece } from './piece/Piece'
 
 
 const initilizarMatriz = (): ItemTabuleiro[][] => {
@@ -26,7 +26,7 @@ const initilizarMatriz = (): ItemTabuleiro[][] => {
 
 export class Tabuleiro {
   public posicoes: Array<Array<ItemTabuleiro>> = initilizarMatriz()
-  public pecaEmMovimento: Peca
+  public pecaEmMovimento: Piece
 
   public gerarTabuleiroInicial = (): Tabuleiro => {
     const brancas = this.gerarPecas(Color.BLACK)
@@ -56,7 +56,7 @@ export class Tabuleiro {
     this.percorrerTabuleiro((item: ItemTabuleiro) => {
       item.setTabuleiro(null)
       if (item.getPeca()) {
-        item.getPeca().adicionarAoItem(null)
+        item.getPeca().addToItem(null)
       }
     })
     const conteudo = JSON.stringify(this)
@@ -73,7 +73,7 @@ export class Tabuleiro {
     return (corBloqueante) && (corBloqueada !== corBloqueante)
   }
 
-  public setPecaEmMovimento(peca: Peca): void {
+  public setPecaEmMovimento(peca: Piece): void {
     if (this.pecaEmMovimento && !_.isEqual(this.pecaEmMovimento, peca)) {
       this.removerDestaques()
     }
@@ -85,7 +85,7 @@ export class Tabuleiro {
   }
 
   public moverPeca(itemClicado: ItemTabuleiro): void {
-    const itemDaPeca = this.pecaEmMovimento.getItemTabuleiro()
+    const itemDaPeca = this.pecaEmMovimento.getBoardItem()
     itemClicado.atribuirPeca(this.pecaEmMovimento)
     this.pecaEmMovimento = null
     itemDaPeca.atribuirPeca(null)
@@ -106,7 +106,7 @@ export class Tabuleiro {
     return (posicao.column < 8 && posicao.column >= 0) && (posicao.line >= 0 && posicao.line < 8)
   }
 
-  public isPosicaoOcupada(posicao: Position): Peca | null {
+  public isPosicaoOcupada(posicao: Position): Piece | null {
     return this.isPosicaoExistente(posicao) ? this.getItem(posicao).getPeca() : null
   }
 
