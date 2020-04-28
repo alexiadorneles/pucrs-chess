@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { Color } from '../../definitions/Cor'
-import { Posicao } from '../../definitions/Movimento'
+import { Position } from '../../definitions/Movimento'
 import { TipoPeca } from '../../definitions/TipoPeca'
 import { MovimentoDiagonal } from '../movimento/MovimentoDiagonal'
 import { MovimentoHorizontal } from '../movimento/MovimentoHorizontal'
@@ -13,7 +13,7 @@ export class Rei extends Peca {
     super(TipoPeca.REI, cor, movimentos, true)
   }
 
-  public simularMovimento(): Posicao[] {
+  public simularMovimento(): Position[] {
     const posicaoInicial = this.getItemTabuleiro().getPosicao()
     const tabuleiro = this.getTabuleiro()
     const posicoes = this.movimentos.map(movimento =>

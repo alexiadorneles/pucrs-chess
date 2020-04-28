@@ -1,9 +1,9 @@
-import { Modificador } from '../definitions/Movimento'
+import { Modifier } from '../definitions/Movimento'
 
-export class ModificadorImpl implements Modificador {
-  constructor(public quantidade: number, public apply: (quantidade: number, propriedade: number) => number) {
-    this.quantidade = quantidade
-    this.apply = apply.bind(this, quantidade)
+export class ModificadorImpl implements Modifier {
+  constructor(public quantity: number, public apply: (quantidade: number, propriedade: number) => number) {
+    this.quantity = quantity
+    this.apply = apply.bind(this, quantity)
   }
 
   static soma = (quantidade: number, propriedade: number) => propriedade + quantidade

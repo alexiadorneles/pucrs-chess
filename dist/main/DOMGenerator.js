@@ -25,7 +25,7 @@ var DOMGenerator = (function () {
         var _loop_1 = function (line) {
             columnElements = [];
             for (var column = 0; column < columns; column++) {
-                var item = this_1.board.getItem({ linha: line, coluna: column });
+                var item = this_1.board.getItem({ line: line, column: column });
                 var element = this_1.createElement(item);
                 columnElements.push(element);
             }

@@ -10,7 +10,7 @@ import { Peca } from './peca/Peca'
 import { Rainha } from './peca/Rainha'
 import { Rei } from './peca/Rei'
 import { Torre } from './peca/Torre'
-import { TipoMovimento } from '../definitions/Movimento'
+import { MovementKind } from '../definitions/Movimento'
 import { MovimentoDiagonal } from './movimento/MovimentoDiagonal'
 import { MovimentoHorizontal } from './movimento/MovimentoHorizontal'
 import { MovimentoVertical } from './movimento/MovimentoVertical'
@@ -26,10 +26,10 @@ export const InstanciadorTipoMap: Map<TipoPeca, new (corPeca: Color) => Peca> = 
 ])
 
 export const InstanciadorMovimentoMap = {
-  [TipoMovimento.DIAGONAL]: MovimentoDiagonal,
-  [TipoMovimento.HORIZONTAL]: MovimentoHorizontal,
-  [TipoMovimento.VERTICAL]: MovimentoVertical,
-  [TipoMovimento.L]: MovimentoL,
+  [MovementKind.DIAGONAL]: MovimentoDiagonal,
+  [MovementKind.HORIZONTAL]: MovimentoHorizontal,
+  [MovementKind.VERTICAL]: MovimentoVertical,
+  [MovementKind.L]: MovimentoL,
 }
 
 export namespace InstanciadorPecas {

@@ -44,11 +44,11 @@ var Movimento = (function () {
         return posicoes;
     };
     Movimento.prototype.criarNovaPosicaoBaseadaEmOffset = function (_a, _b) {
-        var linha = _a.linha, coluna = _a.coluna;
-        var modificadorColuna = _b.modificadorColuna, modificadorLinha = _b.modificadorLinha;
+        var line = _a.line, column = _a.column;
+        var columnModifier = _b.columnModifier, lineModifier = _b.lineModifier;
         return {
-            linha: modificadorLinha.apply(linha),
-            coluna: modificadorColuna.apply(coluna),
+            line: lineModifier.apply(line),
+            column: columnModifier.apply(column),
         };
     };
     return Movimento;

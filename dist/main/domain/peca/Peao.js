@@ -53,22 +53,24 @@ var Peao = (function (_super) {
         return lodash_1.default.compact(__spreadArrays([novaPosicao], possiveisAtaques));
     };
     Peao.prototype.getNovaPosicaoByCor = function (_a) {
-        var linha = _a.linha, coluna = _a.coluna;
-        var novaLinha = this.cor === "grey" ? ++linha : --linha;
-        var novaPosicao = { linha: novaLinha, coluna: coluna };
+        var line = _a.line, column = _a.column;
+        var novaLinha = this.cor === "grey" ? ++line : --line;
+        var novaPosicao = { line: novaLinha, column: column };
         var isOcupada = this.getTabuleiro().isPosicaoOcupada(novaPosicao);
-        return !isOcupada && novaPosicao || null;
+        return (!isOcupada && novaPosicao) || null;
     };
     Peao.prototype.getAtaqueByCor = function (posicaoAtual) {
         var _this = this;
         var clone = __assign({}, posicaoAtual);
-        var novaLinha = this.cor === "grey" ? ++clone.linha : --clone.linha;
-        var novaPosicao = { linha: novaLinha, coluna: clone.coluna };
-        var linha = novaPosicao.linha, coluna = novaPosicao.coluna;
-        var diagonalDireita = { linha: linha, coluna: coluna + 1 };
-        var diagonalEsquerda = { linha: linha, coluna: coluna - 1 };
+        var novaLinha = this.cor === "grey" ? ++clone.line : --clone.line;
+        var novaPosicao = { line: novaLinha, column: clone.column };
+        var line = novaPosicao.line, column = novaPosicao.column;
+        var diagonalDireita = { line: line, column: column + 1 };
+        var diagonalEsquerda = { line: line, column: column - 1 };
         var ataques = [diagonalDireita, diagonalEsquerda];
-        return ataques.filter(function (posicao) { return _this.getTabuleiro().isBloqueadaPorOponente(posicao, posicaoAtual); });
+        return ataques.filter(function (posicao) {
+            return _this.getTabuleiro().isBloqueadaPorOponente(posicao, posicaoAtual);
+        });
     };
     return Peao;
 }(Peca_1.Peca));

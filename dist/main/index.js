@@ -80,7 +80,7 @@ var loadGame = function () { return __awaiter(void 0, void 0, void 0, function (
                 response = _a.sent();
                 board = buildBoardModel(response.data);
                 board.percorrerTabuleiro(function (item, _a) {
-                    var linha = _a.linha, coluna = _a.coluna;
+                    var linha = _a.line, coluna = _a.column;
                     var itemModel = buildModelItem(item);
                     if (itemModel.getPeca()) {
                         var pieceModel = buildModelPiece(itemModel.getPeca());

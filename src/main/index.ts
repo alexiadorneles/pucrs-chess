@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Posicao } from './definitions/Movimento'
+import { Position } from './definitions/Movimento'
 import { InstanciadorMovimentoMap, InstanciadorTipoMap } from './domain/InstanciadorPecas'
 import { ItemTabuleiro } from './domain/ItemTabuleiro'
 import { Movimento } from './domain/movimento/Movimento'
@@ -45,7 +45,7 @@ const loadGame = async () => {
   const response = await axios.get(API.URL)
   const board = buildBoardModel(response.data)
 
-  board.percorrerTabuleiro((item: JSONObject, { linha, coluna }: Posicao) => {
+  board.percorrerTabuleiro((item: JSONObject, { line: linha, column: coluna }: Position) => {
     const itemModel = buildModelItem(item)
     if (itemModel.getPeca()) {
       const pieceModel = buildModelPiece(itemModel.getPeca())

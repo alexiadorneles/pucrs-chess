@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ModificadorImpl = (function () {
-    function ModificadorImpl(quantidade, apply) {
-        this.quantidade = quantidade;
+    function ModificadorImpl(quantity, apply) {
+        this.quantity = quantity;
         this.apply = apply;
-        this.quantidade = quantidade;
-        this.apply = apply.bind(this, quantidade);
+        this.quantity = quantity;
+        this.apply = apply.bind(this, quantity);
     }
     ModificadorImpl.soma = function (quantidade, propriedade) { return propriedade + quantidade; };
     ModificadorImpl.subtracao = function (quantidade, propriedade) { return propriedade - quantidade; };

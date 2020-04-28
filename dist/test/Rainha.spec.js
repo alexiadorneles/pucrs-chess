@@ -20,7 +20,7 @@ context('Rainha', function () {
     describe('ao chamar adicionarAoItem', function () {
         it('deve atribuir propriedade item', function () {
             var rainha = new Rainha_1.Rainha("white");
-            var item = new ItemTabuleiro_1.ItemTabuleiro({ linha: 0, coluna: 0 }, "black");
+            var item = new ItemTabuleiro_1.ItemTabuleiro({ line: 0, column: 0 }, "black");
             rainha.adicionarAoItem(item);
             expect(rainha.getItemTabuleiro()).to.deep.equals(item);
         });
@@ -30,7 +30,7 @@ context('Rainha', function () {
         it('quando posição inicial e tabuleiro limpo deve retornar muitas opções ', function () {
             var tabuleiro = new Tabuleiro_1.Tabuleiro();
             var rainha = new Rainha_1.Rainha("white");
-            var posicaoRainha = { linha: 0, coluna: 3 };
+            var posicaoRainha = { line: 0, column: 3 };
             var item = new ItemTabuleiro_1.ItemTabuleiro(posicaoRainha, "black");
             item.atribuirPeca(rainha);
             sinon_1.default.replace(tabuleiro, 'getItem', function (posicao) {
@@ -38,27 +38,27 @@ context('Rainha', function () {
             });
             tabuleiro.adicionarItem(item);
             var esperado = [
-                { linha: 0, coluna: 0 },
-                { linha: 0, coluna: 1 },
-                { linha: 0, coluna: 2 },
-                { linha: 0, coluna: 4 },
-                { linha: 0, coluna: 5 },
-                { linha: 0, coluna: 6 },
-                { linha: 0, coluna: 7 },
-                { linha: 1, coluna: 3 },
-                { linha: 2, coluna: 3 },
-                { linha: 3, coluna: 3 },
-                { linha: 4, coluna: 3 },
-                { linha: 5, coluna: 3 },
-                { linha: 6, coluna: 3 },
-                { linha: 7, coluna: 3 },
-                { linha: 1, coluna: 2 },
-                { linha: 2, coluna: 1 },
-                { linha: 3, coluna: 0 },
-                { linha: 1, coluna: 4 },
-                { linha: 2, coluna: 5 },
-                { linha: 3, coluna: 6 },
-                { linha: 4, coluna: 7 },
+                { line: 0, column: 0 },
+                { line: 0, column: 1 },
+                { line: 0, column: 2 },
+                { line: 0, column: 4 },
+                { line: 0, column: 5 },
+                { line: 0, column: 6 },
+                { line: 0, column: 7 },
+                { line: 1, column: 3 },
+                { line: 2, column: 3 },
+                { line: 3, column: 3 },
+                { line: 4, column: 3 },
+                { line: 5, column: 3 },
+                { line: 6, column: 3 },
+                { line: 7, column: 3 },
+                { line: 1, column: 2 },
+                { line: 2, column: 1 },
+                { line: 3, column: 0 },
+                { line: 1, column: 4 },
+                { line: 2, column: 5 },
+                { line: 3, column: 6 },
+                { line: 4, column: 7 },
             ];
             var resultado = rainha.simularMovimento();
             expect(resultado).to.deep.equalInAnyOrder(esperado);
@@ -66,7 +66,7 @@ context('Rainha', function () {
         });
         it('quando caminho livre deve retornar todos possíveis', function () {
             var tabuleiro = new Tabuleiro_1.Tabuleiro();
-            var posicaoRainha = { linha: 3, coluna: 3 };
+            var posicaoRainha = { line: 3, column: 3 };
             var rainha = new Rainha_1.Rainha("white");
             var item = new ItemTabuleiro_1.ItemTabuleiro(posicaoRainha, "black");
             item.atribuirPeca(rainha);
@@ -75,33 +75,33 @@ context('Rainha', function () {
             });
             tabuleiro.adicionarItem(item);
             var esperado = [
-                { linha: 2, coluna: 3 },
-                { linha: 1, coluna: 3 },
-                { linha: 0, coluna: 3 },
-                { linha: 4, coluna: 3 },
-                { linha: 5, coluna: 3 },
-                { linha: 6, coluna: 3 },
-                { linha: 7, coluna: 3 },
-                { linha: 3, coluna: 2 },
-                { linha: 3, coluna: 1 },
-                { linha: 3, coluna: 0 },
-                { linha: 3, coluna: 4 },
-                { linha: 3, coluna: 5 },
-                { linha: 3, coluna: 6 },
-                { linha: 3, coluna: 7 },
-                { linha: 2, coluna: 2 },
-                { linha: 1, coluna: 1 },
-                { linha: 0, coluna: 0 },
-                { linha: 2, coluna: 4 },
-                { linha: 1, coluna: 5 },
-                { linha: 0, coluna: 6 },
-                { linha: 4, coluna: 2 },
-                { linha: 5, coluna: 1 },
-                { linha: 6, coluna: 0 },
-                { linha: 4, coluna: 4 },
-                { linha: 5, coluna: 5 },
-                { linha: 6, coluna: 6 },
-                { linha: 7, coluna: 7 },
+                { line: 2, column: 3 },
+                { line: 1, column: 3 },
+                { line: 0, column: 3 },
+                { line: 4, column: 3 },
+                { line: 5, column: 3 },
+                { line: 6, column: 3 },
+                { line: 7, column: 3 },
+                { line: 3, column: 2 },
+                { line: 3, column: 1 },
+                { line: 3, column: 0 },
+                { line: 3, column: 4 },
+                { line: 3, column: 5 },
+                { line: 3, column: 6 },
+                { line: 3, column: 7 },
+                { line: 2, column: 2 },
+                { line: 1, column: 1 },
+                { line: 0, column: 0 },
+                { line: 2, column: 4 },
+                { line: 1, column: 5 },
+                { line: 0, column: 6 },
+                { line: 4, column: 2 },
+                { line: 5, column: 1 },
+                { line: 6, column: 0 },
+                { line: 4, column: 4 },
+                { line: 5, column: 5 },
+                { line: 6, column: 6 },
+                { line: 7, column: 7 },
             ];
             var resultado = rainha.simularMovimento();
             expect(resultado).to.deep.equalInAnyOrder(esperado);
@@ -109,28 +109,28 @@ context('Rainha', function () {
         });
         it('quando peças no caminho retorna apenas posições válidas', function () {
             var rainha = new Rainha_1.Rainha("white");
-            var itemRainha = new ItemTabuleiro_1.ItemTabuleiro({ linha: 2, coluna: 2 }, "black");
+            var itemRainha = new ItemTabuleiro_1.ItemTabuleiro({ line: 2, column: 2 }, "black");
             itemRainha.atribuirPeca(rainha);
             var peao = new Peao_1.Peao("white");
-            var itemPeao = new ItemTabuleiro_1.ItemTabuleiro({ linha: 2, coluna: 1 }, "black");
+            var itemPeao = new ItemTabuleiro_1.ItemTabuleiro({ line: 2, column: 1 }, "black");
             itemPeao.atribuirPeca(peao);
             var peao2 = new Peao_1.Peao("white");
-            var itemPeao2 = new ItemTabuleiro_1.ItemTabuleiro({ linha: 3, coluna: 3 }, "black");
+            var itemPeao2 = new ItemTabuleiro_1.ItemTabuleiro({ line: 3, column: 3 }, "black");
             itemPeao2.atribuirPeca(peao2);
             var peao3 = new Peao_1.Peao("white");
-            var itemPeao3 = new ItemTabuleiro_1.ItemTabuleiro({ linha: 2, coluna: 4 }, "black");
+            var itemPeao3 = new ItemTabuleiro_1.ItemTabuleiro({ line: 2, column: 4 }, "black");
             itemPeao3.atribuirPeca(peao3);
             var peao4 = new Peao_1.Peao("white");
-            var itemPeao4 = new ItemTabuleiro_1.ItemTabuleiro({ linha: 1, coluna: 2 }, "black");
+            var itemPeao4 = new ItemTabuleiro_1.ItemTabuleiro({ line: 1, column: 2 }, "black");
             itemPeao4.atribuirPeca(peao4);
             var torre = new Torre_1.Torre("white");
-            var itemTorre = new ItemTabuleiro_1.ItemTabuleiro({ linha: 0, coluna: 0 }, "black");
+            var itemTorre = new ItemTabuleiro_1.ItemTabuleiro({ line: 0, column: 0 }, "black");
             itemTorre.atribuirPeca(torre);
             var rei = new Rei_1.Rei("white");
-            var itemRei = new ItemTabuleiro_1.ItemTabuleiro({ linha: 0, coluna: 4 }, "black");
+            var itemRei = new ItemTabuleiro_1.ItemTabuleiro({ line: 0, column: 4 }, "black");
             itemRei.atribuirPeca(rei);
             var peaoOponente = new Peao_1.Peao("white");
-            var itemPeaoOponente = new ItemTabuleiro_1.ItemTabuleiro({ linha: 6, coluna: 2 }, "white");
+            var itemPeaoOponente = new ItemTabuleiro_1.ItemTabuleiro({ line: 6, column: 2 }, "white");
             itemPeaoOponente.atribuirPeca(peaoOponente);
             var itens = [itemRainha, itemPeao, itemPeao2, itemPeao3, itemPeao4, itemPeaoOponente, itemTorre, itemRei];
             sinon_1.default.replace(Tabuleiro_1.Tabuleiro.prototype, 'getItem', function (posicao) {
@@ -140,14 +140,14 @@ context('Rainha', function () {
             var tabuleiro = new Tabuleiro_1.Tabuleiro();
             itens.forEach(function (item) { return tabuleiro.adicionarItem(item); });
             var esperado = [
-                { linha: 1, coluna: 1 },
-                { linha: 1, coluna: 3 },
-                { linha: 2, coluna: 3 },
-                { linha: 3, coluna: 1 },
-                { linha: 3, coluna: 2 },
-                { linha: 4, coluna: 0 },
-                { linha: 4, coluna: 2 },
-                { linha: 5, coluna: 2 },
+                { line: 1, column: 1 },
+                { line: 1, column: 3 },
+                { line: 2, column: 3 },
+                { line: 3, column: 1 },
+                { line: 3, column: 2 },
+                { line: 4, column: 0 },
+                { line: 4, column: 2 },
+                { line: 5, column: 2 },
             ];
             var resultado = rainha.simularMovimento();
             expect(resultado).to.deep.equalInAnyOrder(esperado);

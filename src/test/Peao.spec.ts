@@ -12,7 +12,7 @@ context('Peao', () => {
     it('deve atribuir propriedade item', () => {
       // arrange
       const peao = new Peao(Color.WHITE)
-      const item = new ItemTabuleiro({ linha: 0, coluna: 0 }, Color.BLACK)
+      const item = new ItemTabuleiro({ line: 0, column: 0 }, Color.BLACK)
       // act
       peao.adicionarAoItem(item)
       // assert
@@ -23,8 +23,8 @@ context('Peao', () => {
     it('quando caminho livre deve retornar posição atual e uma para frente', () => {
       // arrange
       const tabuleiro = new Tabuleiro()
-      const posicaoPeao = { linha: 1, coluna: 2 }
-      sinon.replace(tabuleiro, 'getItem', (posicao) => {
+      const posicaoPeao = { line: 1, column: 2 }
+      sinon.replace(tabuleiro, 'getItem', posicao => {
         return _.isEqual(posicaoPeao, posicao) ? item : new ItemTabuleiro(posicao, Color.GREY)
       })
       const peao = new Peao(Color.GREY)
@@ -32,7 +32,7 @@ context('Peao', () => {
       item.atribuirPeca(peao)
       tabuleiro.adicionarItem(item)
       // act
-      const esperado = [{ linha: 2, coluna: 2 }]
+      const esperado = [{ line: 2, column: 2 }]
       const resultado = peao.simularMovimento()
       // assert
       expect(resultado).to.deep.equals(esperado)

@@ -1,48 +1,48 @@
-import { OffsetMovimento, Posicao, TipoMovimento } from '../../definitions/Movimento'
+import { MovementOffset, Position, MovementKind } from '../../definitions/Movimento'
 import { ModificadorImpl } from '../ModificadorImpl'
 import { Tabuleiro } from '../Tabuleiro'
 import { Movimento } from './Movimento'
 
 export class MovimentoL extends Movimento {
-  constructor() { super(TipoMovimento.L) }
-  public getOffsetMovimentos(): OffsetMovimento[] {
+  constructor() { super(MovementKind.L) }
+  public getOffsetMovimentos(): MovementOffset[] {
     return [
       {
-        modificadorLinha: new ModificadorImpl(2, ModificadorImpl.soma),
-        modificadorColuna: new ModificadorImpl(1, ModificadorImpl.soma),
+        lineModifier: new ModificadorImpl(2, ModificadorImpl.soma),
+        columnModifier: new ModificadorImpl(1, ModificadorImpl.soma),
       },
       {
-        modificadorLinha: new ModificadorImpl(2, ModificadorImpl.soma),
-        modificadorColuna: new ModificadorImpl(1, ModificadorImpl.subtracao),
+        lineModifier: new ModificadorImpl(2, ModificadorImpl.soma),
+        columnModifier: new ModificadorImpl(1, ModificadorImpl.subtracao),
       },
       {
-        modificadorLinha: new ModificadorImpl(2, ModificadorImpl.subtracao),
-        modificadorColuna: new ModificadorImpl(1, ModificadorImpl.subtracao),
+        lineModifier: new ModificadorImpl(2, ModificadorImpl.subtracao),
+        columnModifier: new ModificadorImpl(1, ModificadorImpl.subtracao),
       },
       {
-        modificadorLinha: new ModificadorImpl(2, ModificadorImpl.subtracao),
-        modificadorColuna: new ModificadorImpl(1, ModificadorImpl.soma),
+        lineModifier: new ModificadorImpl(2, ModificadorImpl.subtracao),
+        columnModifier: new ModificadorImpl(1, ModificadorImpl.soma),
       },
       {
-        modificadorLinha: new ModificadorImpl(1, ModificadorImpl.soma),
-        modificadorColuna: new ModificadorImpl(2, ModificadorImpl.soma),
+        lineModifier: new ModificadorImpl(1, ModificadorImpl.soma),
+        columnModifier: new ModificadorImpl(2, ModificadorImpl.soma),
       },
       {
-        modificadorLinha: new ModificadorImpl(1, ModificadorImpl.subtracao),
-        modificadorColuna: new ModificadorImpl(2, ModificadorImpl.soma),
+        lineModifier: new ModificadorImpl(1, ModificadorImpl.subtracao),
+        columnModifier: new ModificadorImpl(2, ModificadorImpl.soma),
       },
       {
-        modificadorLinha: new ModificadorImpl(1, ModificadorImpl.subtracao),
-        modificadorColuna: new ModificadorImpl(2, ModificadorImpl.subtracao),
+        lineModifier: new ModificadorImpl(1, ModificadorImpl.subtracao),
+        columnModifier: new ModificadorImpl(2, ModificadorImpl.subtracao),
       },
       {
-        modificadorLinha: new ModificadorImpl(1, ModificadorImpl.soma),
-        modificadorColuna: new ModificadorImpl(2, ModificadorImpl.subtracao),
+        lineModifier: new ModificadorImpl(1, ModificadorImpl.soma),
+        columnModifier: new ModificadorImpl(2, ModificadorImpl.subtracao),
       },
     ]
   }
 
-  public simularMovimento(posicaoInicial: Posicao, tabuleiro: Tabuleiro): Posicao[] {
+  public simularMovimento(posicaoInicial: Position, tabuleiro: Tabuleiro): Position[] {
     return this.getOffsetMovimentos()
       .map(offset => this.criarNovaPosicaoBaseadaEmOffset(posicaoInicial, offset))
       .filter(posicao => tabuleiro.isPosicaoExistente(posicao))

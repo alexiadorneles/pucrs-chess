@@ -18,7 +18,7 @@ context('Cavalo', () => {
     it('deve atribuir propriedade item', () => {
       // arrange
       const cavalo = new Cavalo(Color.WHITE)
-      const item = new ItemTabuleiro({ linha: 0, coluna: 0 }, Color.BLACK)
+      const item = new ItemTabuleiro({ line: 0, column: 0 }, Color.BLACK)
       // act
       cavalo.adicionarAoItem(item)
       // assert
@@ -31,7 +31,7 @@ context('Cavalo', () => {
       const tabuleiro = new Tabuleiro()
       sinon.replace(tabuleiro, 'getItem', (posicao) => new ItemTabuleiro(posicao, Color.WHITE))
       const cavalo = new Cavalo(Color.WHITE)
-      const item = new ItemTabuleiro({ linha: 0, coluna: 1 }, Color.BLACK)
+      const item = new ItemTabuleiro({ line: 0, column: 1 }, Color.BLACK)
       item.atribuirPeca(cavalo)
       tabuleiro.adicionarItem(item)
       // act
@@ -49,7 +49,7 @@ context('Cavalo', () => {
       const tabuleiro = new Tabuleiro()
       sinon.replace(tabuleiro, 'getItem', (posicao) => new ItemTabuleiro(posicao, Color.WHITE))
       const cavalo = new Cavalo(Color.WHITE)
-      const item = new ItemTabuleiro({ linha: 2, coluna: 2 }, Color.BLACK)
+      const item = new ItemTabuleiro({ line: 2, column: 2 }, Color.BLACK)
       item.atribuirPeca(cavalo)
       tabuleiro.adicionarItem(item)
       // act
@@ -70,19 +70,19 @@ context('Cavalo', () => {
     it('quando peças no caminho retorna apenas posições válidas', () => {
       // arrange
       const cavalo = new Cavalo(Color.WHITE)
-      const itemCavalo = new ItemTabuleiro({ linha: 2, coluna: 2 }, Color.BLACK)
+      const itemCavalo = new ItemTabuleiro({ line: 2, column: 2 }, Color.BLACK)
       itemCavalo.atribuirPeca(cavalo)
 
       const rainha = new Rainha(Color.WHITE)
-      const itemRainha = new ItemTabuleiro({ linha: 0, coluna: 3 }, Color.BLACK)
+      const itemRainha = new ItemTabuleiro({ line: 0, column: 3 }, Color.BLACK)
       itemRainha.atribuirPeca(rainha)
 
       const peao = new Peao(Color.WHITE)
-      const itemPeao = new ItemTabuleiro({ linha: 1, coluna: 0 }, Color.BLACK)
+      const itemPeao = new ItemTabuleiro({ line: 1, column: 0 }, Color.BLACK)
       itemPeao.atribuirPeca(peao)
 
       const peao2 = new Peao(Color.WHITE)
-      const itemPeao2 = new ItemTabuleiro({ linha: 1, coluna: 4 }, Color.BLACK)
+      const itemPeao2 = new ItemTabuleiro({ line: 1, column: 4 }, Color.BLACK)
       itemPeao2.atribuirPeca(peao2)
 
       sinon.replace(Tabuleiro.prototype, 'getItem', (posicao) => {

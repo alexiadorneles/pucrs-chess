@@ -1,7 +1,7 @@
 import axios from 'axios'
 import _ from 'lodash'
 import { Color } from '../definitions/Cor'
-import { Posicao } from '../definitions/Movimento'
+import { Position } from '../definitions/Movimento'
 import { MapPosicaoPecasBrancas } from '../definitions/PosicoesIniciais'
 import { TipoPeca } from '../definitions/TipoPeca'
 import { DOMGenerator } from '../DOMGenerator'
@@ -36,12 +36,12 @@ export class Tabuleiro {
     return this
   }
 
-  public getItem({ linha, coluna }: Posicao): ItemTabuleiro | null {
-    const posicaoExiste = this.isPosicaoExistente({ linha, coluna })
+  public getItem({ line: linha, column: coluna }: Position): ItemTabuleiro | null {
+    const posicaoExiste = this.isPosicaoExistente({ line: linha, column: coluna })
     return posicaoExiste ? this.posicoes[linha][coluna] : null
   }
 
-  public destacarPosicoes(posicoes: Posicao[]): void {
+  public destacarPosicoes(posicoes: Position[]): void {
     posicoes.forEach((posicao) =>
       this.getItem(posicao).setDestaque(true)
     )
@@ -66,7 +66,7 @@ export class Tabuleiro {
     await axios.post(url, data, config)
   }
 
-  public isBloqueadaPorOponente(posicao: Posicao, posicaoInicial: Posicao): boolean {
+  public isBloqueadaPorOponente(posicao: Position, posicaoInicial: Position): boolean {
     const bloqueante = this.isPosicaoExistente(posicao) && this.isPosicaoOcupada(posicao)
     const corBloqueante = bloqueante && this.isPosicaoOcupada(posicao).getCor()
     const corBloqueada = this.getItem(posicaoInicial).getPeca().getCor()
@@ -92,26 +92,26 @@ export class Tabuleiro {
     DOMGenerator.getInstance().refresh()
   }
 
-  public percorrerTabuleiro(callback: (item: ItemTabuleiro, posicao?: Posicao) => void): void {
+  public percorrerTabuleiro(callback: (item: ItemTabuleiro, posicao?: Position) => void): void {
     for (let linha = 0; linha < 8; linha++)
       for (let coluna = 0; coluna < 8; coluna++)
-        callback(this.getItem({ linha, coluna }), { linha, coluna })
+        callback(this.getItem({ line: linha, column: coluna }), { line: linha, column: coluna })
   }
 
-  public isPosicaoValida = (posicao: Posicao): boolean => {
+  public isPosicaoValida = (posicao: Position): boolean => {
     return this.isPosicaoExistente(posicao) && !this.isPosicaoOcupada(posicao)
   }
 
-  public isPosicaoExistente(posicao: Posicao): boolean {
-    return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8)
+  public isPosicaoExistente(posicao: Position): boolean {
+    return (posicao.column < 8 && posicao.column >= 0) && (posicao.line >= 0 && posicao.line < 8)
   }
 
-  public isPosicaoOcupada(posicao: Posicao): Peca | null {
+  public isPosicaoOcupada(posicao: Position): Peca | null {
     return this.isPosicaoExistente(posicao) ? this.getItem(posicao).getPeca() : null
   }
 
   public adicionarItem = (item: ItemTabuleiro) => {
-    const { linha, coluna } = item.getPosicao()
+    const { line: linha, column: coluna } = item.getPosicao()
     this.posicoes[linha][coluna] = item
     item.adicionarAoTabuleiro(this)
   }

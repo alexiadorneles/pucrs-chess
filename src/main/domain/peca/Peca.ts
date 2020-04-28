@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { Tabuleiro } from 'main/domain/Tabuleiro'
 import { Color } from '../../definitions/Cor'
-import { Posicao, TipoMovimento } from '../../definitions/Movimento'
+import { Position, MovementKind } from '../../definitions/Movimento'
 import { TipoPeca } from '../../definitions/TipoPeca'
 import { ItemTabuleiro } from '../ItemTabuleiro'
 import { Movimento } from '../movimento/Movimento'
@@ -40,7 +40,7 @@ export abstract class Peca {
     return this.itemTabuleiro.getTabuleiro()
   }
 
-  public simularMovimento(): Posicao[] {
+  public simularMovimento(): Position[] {
     const posicaoAtual = this.getItemTabuleiro().getPosicao()
     const posicoes = this.movimentos.map(movimento => movimento.simularMovimento(posicaoAtual, this.getTabuleiro()))
     return _.flatten(posicoes)

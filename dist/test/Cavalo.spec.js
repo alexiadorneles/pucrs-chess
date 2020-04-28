@@ -19,7 +19,7 @@ context('Cavalo', function () {
     describe('ao chamar adicionarAoItem', function () {
         it('deve atribuir propriedade item', function () {
             var cavalo = new Cavalo_1.Cavalo("white");
-            var item = new ItemTabuleiro_1.ItemTabuleiro({ linha: 0, coluna: 0 }, "black");
+            var item = new ItemTabuleiro_1.ItemTabuleiro({ line: 0, column: 0 }, "black");
             cavalo.adicionarAoItem(item);
             expect(cavalo.getItemTabuleiro()).to.deep.equals(item);
         });
@@ -29,7 +29,7 @@ context('Cavalo', function () {
             var tabuleiro = new Tabuleiro_1.Tabuleiro();
             sinon_1.default.replace(tabuleiro, 'getItem', function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, "white"); });
             var cavalo = new Cavalo_1.Cavalo("white");
-            var item = new ItemTabuleiro_1.ItemTabuleiro({ linha: 0, coluna: 1 }, "black");
+            var item = new ItemTabuleiro_1.ItemTabuleiro({ line: 0, column: 1 }, "black");
             item.atribuirPeca(cavalo);
             tabuleiro.adicionarItem(item);
             var esperado = [
@@ -44,7 +44,7 @@ context('Cavalo', function () {
             var tabuleiro = new Tabuleiro_1.Tabuleiro();
             sinon_1.default.replace(tabuleiro, 'getItem', function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, "white"); });
             var cavalo = new Cavalo_1.Cavalo("white");
-            var item = new ItemTabuleiro_1.ItemTabuleiro({ linha: 2, coluna: 2 }, "black");
+            var item = new ItemTabuleiro_1.ItemTabuleiro({ line: 2, column: 2 }, "black");
             item.atribuirPeca(cavalo);
             tabuleiro.adicionarItem(item);
             var esperado = [
@@ -62,16 +62,16 @@ context('Cavalo', function () {
         });
         it('quando peças no caminho retorna apenas posições válidas', function () {
             var cavalo = new Cavalo_1.Cavalo("white");
-            var itemCavalo = new ItemTabuleiro_1.ItemTabuleiro({ linha: 2, coluna: 2 }, "black");
+            var itemCavalo = new ItemTabuleiro_1.ItemTabuleiro({ line: 2, column: 2 }, "black");
             itemCavalo.atribuirPeca(cavalo);
             var rainha = new Rainha_1.Rainha("white");
-            var itemRainha = new ItemTabuleiro_1.ItemTabuleiro({ linha: 0, coluna: 3 }, "black");
+            var itemRainha = new ItemTabuleiro_1.ItemTabuleiro({ line: 0, column: 3 }, "black");
             itemRainha.atribuirPeca(rainha);
             var peao = new Peao_1.Peao("white");
-            var itemPeao = new ItemTabuleiro_1.ItemTabuleiro({ linha: 1, coluna: 0 }, "black");
+            var itemPeao = new ItemTabuleiro_1.ItemTabuleiro({ line: 1, column: 0 }, "black");
             itemPeao.atribuirPeca(peao);
             var peao2 = new Peao_1.Peao("white");
-            var itemPeao2 = new ItemTabuleiro_1.ItemTabuleiro({ linha: 1, coluna: 4 }, "black");
+            var itemPeao2 = new ItemTabuleiro_1.ItemTabuleiro({ line: 1, column: 4 }, "black");
             itemPeao2.atribuirPeca(peao2);
             sinon_1.default.replace(Tabuleiro_1.Tabuleiro.prototype, 'getItem', function (posicao) {
                 var itens = [itemCavalo, itemRainha, itemPeao, itemPeao2];

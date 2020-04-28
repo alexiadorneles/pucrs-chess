@@ -1,21 +1,21 @@
-export const enum TipoMovimento {
+export const enum MovementKind {
   HORIZONTAL,
   VERTICAL,
   DIAGONAL,
-  L
+  L,
 }
 
-export interface OffsetMovimento {
-  modificadorColuna: Modificador
-  modificadorLinha: Modificador
+export interface MovementOffset {
+  columnModifier: Modifier
+  lineModifier: Modifier
 }
 
-export interface Modificador {
-  quantidade: number
-  apply: Function
+export interface Modifier {
+  quantity: number
+  apply: (quantity: number, property?: number) => number
 }
 
-export interface Posicao {
-  linha: number
-  coluna: number
+export interface Position {
+  line: number
+  column: number
 }

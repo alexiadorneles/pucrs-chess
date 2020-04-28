@@ -14,7 +14,7 @@ context('Peao', function () {
     describe('ao chamar adicionarAoItem', function () {
         it('deve atribuir propriedade item', function () {
             var peao = new Peao_1.Peao("white");
-            var item = new ItemTabuleiro_1.ItemTabuleiro({ linha: 0, coluna: 0 }, "black");
+            var item = new ItemTabuleiro_1.ItemTabuleiro({ line: 0, column: 0 }, "black");
             peao.adicionarAoItem(item);
             chai_1.expect(peao.getItemTabuleiro()).to.deep.equals(item);
         });
@@ -22,7 +22,7 @@ context('Peao', function () {
     describe('ao chamar simularMovimento', function () {
         it('quando caminho livre deve retornar posição atual e uma para frente', function () {
             var tabuleiro = new Tabuleiro_1.Tabuleiro();
-            var posicaoPeao = { linha: 1, coluna: 2 };
+            var posicaoPeao = { line: 1, column: 2 };
             sinon_1.default.replace(tabuleiro, 'getItem', function (posicao) {
                 return lodash_1.default.isEqual(posicaoPeao, posicao) ? item : new ItemTabuleiro_1.ItemTabuleiro(posicao, "grey");
             });
@@ -30,7 +30,7 @@ context('Peao', function () {
             var item = new ItemTabuleiro_1.ItemTabuleiro(posicaoPeao, "black");
             item.atribuirPeca(peao);
             tabuleiro.adicionarItem(item);
-            var esperado = [{ linha: 2, coluna: 2 }];
+            var esperado = [{ line: 2, column: 2 }];
             var resultado = peao.simularMovimento();
             chai_1.expect(resultado).to.deep.equals(esperado);
         });

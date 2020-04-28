@@ -1,22 +1,30 @@
 import _ from 'lodash'
-import { OffsetMovimento, Posicao, TipoMovimento } from '../../definitions/Movimento'
+import { MovementOffset, Position, MovementKind } from '../../definitions/Movimento'
 import { Tabuleiro } from '../Tabuleiro'
 
 export abstract class Movimento {
-  constructor(private tipo: TipoMovimento) { }
-  public abstract getOffsetMovimentos(): OffsetMovimento[]
+  constructor(private tipo: MovementKind) {}
+  public abstract getOffsetMovimentos(): MovementOffset[]
 
-  public getTipo(): TipoMovimento {
+  public getTipo(): MovementKind {
     return this.tipo
   }
 
-  public simularMovimento(posicao: Posicao, tabuleiro: Tabuleiro): Posicao[] {
-    const bindedGetter: () => Posicao[] = this.getPosicoesValidasPorOffset.bind(this, posicao, tabuleiro)
+  public simularMovimento(posicao: Position, tabuleiro: Tabuleiro): Position[] {
+    const bindedGetter: () => Position[] = this.getPosicoesValidasPorOffset.bind(
+      this,
+      posicao,
+      tabuleiro,
+    )
     const posicoes = this.getOffsetMovimentos().map(bindedGetter)
     return _.flatten(posicoes)
   }
 
-  private getPosicoesValidasPorOffset(posicaoInicial: Posicao, tabuleiro: Tabuleiro, offset: OffsetMovimento): Posicao[] {
+  private getPosicoesValidasPorOffset(
+    posicaoInicial: Position,
+    tabuleiro: Tabuleiro,
+    offset: MovementOffset,
+  ): Position[] {
     let isPosicaoValida = true
     let posicao = { ...posicaoInicial }
     const posicoes = []
@@ -33,12 +41,12 @@ export abstract class Movimento {
   }
 
   public criarNovaPosicaoBaseadaEmOffset(
-    { linha, coluna }: Posicao,
-    { modificadorColuna, modificadorLinha }: OffsetMovimento
-  ): Posicao {
+    { line, column }: Position,
+    { columnModifier, lineModifier }: MovementOffset,
+  ): Position {
     return {
-      linha: modificadorLinha.apply(linha),
-      coluna: modificadorColuna.apply(coluna),
+      line: lineModifier.apply(line),
+      column: columnModifier.apply(column),
     }
   }
 }

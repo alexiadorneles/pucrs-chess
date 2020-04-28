@@ -35,7 +35,7 @@ export class DOMGenerator {
       columnElements = []
 
       for (let column = 0; column < columns; column++) {
-        const item = this.board.getItem({ linha: line, coluna: column })
+        const item = this.board.getItem({ line: line, column: column })
         const element = this.createElement(item)
         columnElements.push(element)
       }

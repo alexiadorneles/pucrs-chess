@@ -96,14 +96,14 @@ var Tabuleiro = (function () {
             return _this.isPosicaoExistente(posicao) && !_this.isPosicaoOcupada(posicao);
         };
         this.adicionarItem = function (item) {
-            var _a = item.getPosicao(), linha = _a.linha, coluna = _a.coluna;
+            var _a = item.getPosicao(), linha = _a.line, coluna = _a.column;
             _this.posicoes[linha][coluna] = item;
             item.adicionarAoTabuleiro(_this);
         };
     }
     Tabuleiro.prototype.getItem = function (_a) {
-        var linha = _a.linha, coluna = _a.coluna;
-        var posicaoExiste = this.isPosicaoExistente({ linha: linha, coluna: coluna });
+        var linha = _a.line, coluna = _a.column;
+        var posicaoExiste = this.isPosicaoExistente({ line: linha, column: coluna });
         return posicaoExiste ? this.posicoes[linha][coluna] : null;
     };
     Tabuleiro.prototype.destacarPosicoes = function (posicoes) {
@@ -141,10 +141,10 @@ var Tabuleiro = (function () {
     Tabuleiro.prototype.percorrerTabuleiro = function (callback) {
         for (var linha = 0; linha < 8; linha++)
             for (var coluna = 0; coluna < 8; coluna++)
-                callback(this.getItem({ linha: linha, coluna: coluna }), { linha: linha, coluna: coluna });
+                callback(this.getItem({ line: linha, column: coluna }), { line: linha, column: coluna });
     };
     Tabuleiro.prototype.isPosicaoExistente = function (posicao) {
-        return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8);
+        return (posicao.column < 8 && posicao.column >= 0) && (posicao.line >= 0 && posicao.line < 8);
     };
     Tabuleiro.prototype.isPosicaoOcupada = function (posicao) {
         return this.isPosicaoExistente(posicao) ? this.getItem(posicao).getPeca() : null;
