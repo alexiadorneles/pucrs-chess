@@ -1,4 +1,4 @@
-import { Cor } from '../definitions/Cor'
+import { Color } from '../definitions/Cor'
 import { MapPosicaoPecasBrancas, MapPosicaoPecasPretas } from '../definitions/PosicoesIniciais'
 import { TipoPeca } from '../definitions/TipoPeca'
 import { DefinidorCores } from './DefinidorCores'
@@ -16,7 +16,7 @@ import { MovimentoHorizontal } from './movimento/MovimentoHorizontal'
 import { MovimentoVertical } from './movimento/MovimentoVertical'
 import { MovimentoL } from './movimento/MovimentoL'
 
-export const InstanciadorTipoMap: Map<TipoPeca, new (corPeca: Cor) => Peca> = new Map([
+export const InstanciadorTipoMap: Map<TipoPeca, new (corPeca: Color) => Peca> = new Map([
   [TipoPeca.PEAO, Peao],
   [TipoPeca.CAVALO, Cavalo],
   [TipoPeca.BISPO, Bispo],
@@ -33,8 +33,8 @@ export const InstanciadorMovimentoMap = {
 }
 
 export namespace InstanciadorPecas {
-  export function instanciar(tipo: TipoPeca, corPeca: Cor): ItemTabuleiro[] {
-    const map = corPeca === Cor.CINZA ? MapPosicaoPecasBrancas : MapPosicaoPecasPretas
+  export function instanciar(tipo: TipoPeca, corPeca: Color): ItemTabuleiro[] {
+    const map = corPeca === Color.GREY ? MapPosicaoPecasBrancas : MapPosicaoPecasPretas
     return map.get(tipo).map(posicao => {
       const clazz = InstanciadorTipoMap.get(tipo)
       const item = new ItemTabuleiro(posicao, DefinidorCores.definirCorDoItem(posicao))

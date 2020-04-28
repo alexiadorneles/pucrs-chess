@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { Cor } from '../../definitions/Cor'
+import { Color } from '../../definitions/Cor'
 import { Posicao } from '../../definitions/Movimento'
 import { TipoPeca } from '../../definitions/TipoPeca'
 import { MovimentoDiagonal } from '../movimento/MovimentoDiagonal'
@@ -8,7 +8,7 @@ import { MovimentoVertical } from '../movimento/MovimentoVertical'
 import { Peca } from './Peca'
 
 export class Rei extends Peca {
-  constructor(cor: Cor) {
+  constructor(cor: Color) {
     const movimentos = [new MovimentoVertical(), new MovimentoHorizontal(), new MovimentoDiagonal()]
     super(TipoPeca.REI, cor, movimentos, true)
   }

@@ -1,6 +1,6 @@
-export const enum Cor {
-  BRANCAS = 'white',
-  PRETAS = 'black',
-  CINZA = 'grey',
-  ROSA = 'rosa',
+export const enum Color {
+  WHITE = 'white',
+  BLACK = 'black',
+  GREY = 'grey',
+  PINK = 'pink',
 }

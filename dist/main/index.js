@@ -39,64 +39,69 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var axios_1 = __importDefault(require("axios"));
+var InstanciadorPecas_1 = require("./domain/InstanciadorPecas");
+var ItemTabuleiro_1 = require("./domain/ItemTabuleiro");
 var Tabuleiro_1 = require("./domain/Tabuleiro");
 var DOMGenerator_1 = require("./DOMGenerator");
-var axios_1 = __importDefault(require("axios"));
-var ItemTabuleiro_1 = require("./domain/ItemTabuleiro");
-var InstanciadorPecas_1 = require("./domain/InstanciadorPecas");
-var criarModelTabuleiro = function (carregado) {
-    var tabuleiro = new Tabuleiro_1.Tabuleiro();
-    return Object.assign(tabuleiro, carregado);
+var config_1 = require("./config");
+var buildBoardModel = function (loaded) {
+    var board = new Tabuleiro_1.Tabuleiro();
+    return Object.assign(board, loaded);
 };
-var criarModelItem = function (carregado) {
-    var itemTabuleiro = new ItemTabuleiro_1.ItemTabuleiro(carregado.posicao, carregado.cor);
-    return Object.assign(itemTabuleiro, carregado);
+var buildModelItem = function (loaded) {
+    var boardItem = new ItemTabuleiro_1.ItemTabuleiro(loaded.posicao, loaded.cor);
+    return Object.assign(boardItem, loaded);
 };
-var criarModelPeca = function (carregado) {
-    var clazz = InstanciadorPecas_1.InstanciadorTipoMap.get(carregado.tipo);
-    var peca = new clazz(carregado.cor);
-    var model = Object.assign(peca, carregado);
-    var movimentos = model.getMovimentos().map(function (mov) { return criarModelMovimento(mov); });
-    model.setMovimentos(movimentos);
+var buildModelPiece = function (loaded) {
+    var clazz = InstanciadorPecas_1.InstanciadorTipoMap.get(loaded.tipo);
+    var piece = new clazz(loaded.cor);
+    var model = Object.assign(piece, loaded);
+    var movements = model.getMovimentos().map(function (mov) { return buildMovementModel(mov); });
+    model.setMovimentos(movements);
     return model;
 };
-var criarModelMovimento = function (carregado) {
-    var clazz = InstanciadorPecas_1.InstanciadorMovimentoMap[carregado.tipo];
-    var movimento = new clazz();
-    return Object.assign(movimento, carregado);
+var buildMovementModel = function (loaded) {
+    var clazz = InstanciadorPecas_1.InstanciadorMovimentoMap[loaded.tipo];
+    var movement = new clazz();
+    return Object.assign(movement, loaded);
 };
-var tabuleiroInicial = new Tabuleiro_1.Tabuleiro().gerarTabuleiroInicial();
-var novoJogo = function (event) {
-    DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial);
+var initialBoard = new Tabuleiro_1.Tabuleiro().gerarTabuleiroInicial();
+var newGame = function () {
+    DOMGenerator_1.DOMGenerator.getInstance().injectBoard(initialBoard);
     DOMGenerator_1.DOMGenerator.getInstance().refresh();
 };
-var carregarJogo = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var response, tabuleiro;
+var loadGame = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var response, board;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4, axios_1.default.get('http://localhost:3000/carregar')];
+            case 0: return [4, axios_1.default.get(config_1.API.URL)];
             case 1:
                 response = _a.sent();
-                tabuleiro = criarModelTabuleiro(response.data);
-                tabuleiro.percorrerTabuleiro(function (item, _a) {
+                board = buildBoardModel(response.data);
+                board.percorrerTabuleiro(function (item, _a) {
                     var linha = _a.linha, coluna = _a.coluna;
-                    var itemModel = criarModelItem(item);
+                    var itemModel = buildModelItem(item);
                     if (itemModel.getPeca()) {
-                        var pecaModel = criarModelPeca(itemModel.getPeca());
-                        itemModel.atribuirPeca(pecaModel);
+                        var pieceModel = buildModelPiece(itemModel.getPeca());
+                        itemModel.atribuirPeca(pieceModel);
                     }
-                    tabuleiro.posicoes[linha][coluna] = itemModel;
-                    itemModel.adicionarAoTabuleiro(tabuleiro);
+                    board.posicoes[linha][coluna] = itemModel;
+                    itemModel.adicionarAoTabuleiro(board);
                 });
-                DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiro);
+                DOMGenerator_1.DOMGenerator.getInstance().injectBoard(board);
                 DOMGenerator_1.DOMGenerator.getInstance().refresh();
                 return [2];
         }
     });
 }); };
-var novoJogoButton = document.getElementById('novoJogo');
-var carregarJogoButton = document.getElementById('carregarJogo');
-var salvarJogoButton = document.getElementById('salvarJogo');
-novoJogoButton.addEventListener('click', novoJogo);
-carregarJogoButton.addEventListener('click', carregarJogo);
-salvarJogoButton.addEventListener('click', function () { return DOMGenerator_1.DOMGenerator.getInstance().getTabuleiro().salvar(); });
+var newGameButton = document.getElementById('novoJogo');
+var loadGameButton = document.getElementById('carregarJogo');
+var saveGameButton = document.getElementById('salvarJogo');
+newGameButton.addEventListener('click', newGame);
+loadGameButton.addEventListener('click', loadGame);
+saveGameButton.addEventListener('click', function () {
+    return DOMGenerator_1.DOMGenerator.getInstance()
+        .getBoard()
+        .salvar();
+});

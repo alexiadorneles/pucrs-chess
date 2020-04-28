@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { Cor } from '../definitions/Cor'
+import { Color } from '../definitions/Cor'
 import { Posicao } from '../definitions/Movimento'
 import { Peca } from './peca/Peca'
 import { Tabuleiro } from './Tabuleiro'
@@ -9,7 +9,7 @@ export class ItemTabuleiro {
   private isDestacado: boolean
   private elemento: Element
   private tabuleiro: Tabuleiro
-  constructor(private posicao: Posicao, private cor: Cor) { }
+  constructor(private posicao: Posicao, private cor: Color) { }
 
   public atribuirPeca(peca: Peca): void {
     this.peca = peca
@@ -52,7 +52,7 @@ export class ItemTabuleiro {
     }
   }
 
-  public getCor(): Cor {
+  public getCor(): Color {
     return this.cor
   }
 

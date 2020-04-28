@@ -4,11 +4,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var DOMGenerator = (function () {
     function DOMGenerator() {
     }
-    DOMGenerator.prototype.injetarTabuleiro = function (tabuleiro) {
-        this.tabuleiro = tabuleiro;
+    DOMGenerator.prototype.injectBoard = function (board) {
+        this.board = board;
     };
-    DOMGenerator.prototype.getTabuleiro = function () {
-        return this.tabuleiro;
+    DOMGenerator.prototype.getBoard = function () {
+        return this.board;
     };
     DOMGenerator.getInstance = function () {
         if (!DOMGenerator.instance) {
@@ -19,53 +19,60 @@ var DOMGenerator = (function () {
     DOMGenerator.prototype.refresh = function () {
         var root = document.getElementById('root');
         root.innerHTML = '';
-        var linhas = 8;
-        var colunas = 8;
-        var elementosLinha = [];
-        var elementosColuna = [];
-        var _loop_1 = function (linha) {
-            elementosColuna = [];
-            for (var coluna = 0; coluna < colunas; coluna++) {
-                var item = this_1.tabuleiro.getItem({ linha: linha, coluna: coluna });
-                var elemento = this_1.criarElemento(item);
-                elementosColuna.push(elemento);
+        var lines = 8;
+        var columns = 8;
+        var lineElements = [];
+        var columnElements = [];
+        var _loop_1 = function (line) {
+            columnElements = [];
+            for (var column = 0; column < columns; column++) {
+                var item = this_1.board.getItem({ linha: line, coluna: column });
+                var element = this_1.createElement(item);
+                columnElements.push(element);
             }
-            var elementoLinha = document.createElement('div');
-            elementoLinha.setAttribute('class', 'xadrez-linha');
-            elementosColuna.forEach((function (elementoColuna) { return elementoLinha.appendChild(elementoColuna); }));
-            elementosLinha.push(elementoLinha);
+            var lineElement = document.createElement('div');
+            lineElement.setAttribute('class', 'xadrez-linha');
+            columnElements.forEach(function (columnElement) { return lineElement.appendChild(columnElement); });
+            lineElements.push(lineElement);
         };
         var this_1 = this;
-        for (var linha = 0; linha < linhas; linha++) {
-            _loop_1(linha);
+        for (var line = 0; line < lines; line++) {
+            _loop_1(line);
         }
-        elementosLinha.forEach(function (elemento) { return root.appendChild(elemento); });
+        lineElements.forEach(function (element) { return root.appendChild(element); });
     };
-    DOMGenerator.prototype.criarElemento = function (item) {
+    DOMGenerator.prototype.createElement = function (item) {
         var div = document.createElement('div');
         div.setAttribute('class', 'container');
-        var quadrado = document.createElement('span');
-        quadrado.setAttribute('class', "fas fa-square-full xadrez-quadrado " + item.getCor());
-        quadrado.addEventListener('click', item.onClick);
-        item.atribuirElemento(quadrado);
-        var iconePeca = this.criarIconePeca(item.getPeca());
-        iconePeca.addEventListener('click', item.onClick);
-        div.appendChild(iconePeca);
-        div.appendChild(quadrado);
+        var square = document.createElement('span');
+        square.setAttribute('class', "fas fa-square-full xadrez-quadrado " + item.getCor());
+        square.addEventListener('click', item.onClick);
+        item.atribuirElemento(square);
+        var pieceIcon = this.createPieceIcon(item.getPeca());
+        pieceIcon.addEventListener('click', item.onClick);
+        div.appendChild(pieceIcon);
+        div.appendChild(square);
         return div;
     };
-    DOMGenerator.prototype.criarIconePeca = function (peca) {
-        var tipoPeca = peca && peca.getTipo() || '';
-        var corPeca = peca && peca.getCor() || '';
-        var iconePeca = document.createElement('i');
-        iconePeca.setAttribute('class', "fas fa-" + tipoPeca + " peca " + corPeca);
-        return iconePeca;
+    DOMGenerator.prototype.createPieceIcon = function (piece) {
+        var pieceType = (piece && piece.getTipo()) || '';
+        var pieceColor = (piece && piece.getCor()) || '';
+        var pieceIcon = document.createElement('i');
+        pieceIcon.setAttribute('class', "fas fa-" + pieceType + " peca " + pieceColor);
+        return pieceIcon;
     };
     return DOMGenerator;
 }());
 exports.DOMGenerator = DOMGenerator;
 
 },{}],2:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.API = {
+    URL: 'http://localhost:9090/load',
+};
+
+},{}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TipoPeca_1 = require("./TipoPeca");
@@ -177,7 +184,7 @@ exports.MapPosicaoPecasPretas = new Map([
     [TipoPeca_1.TipoPeca.REI, posicaoReiPreto],
 ]);
 
-},{"./TipoPeca":3}],3:[function(require,module,exports){
+},{"./TipoPeca":4}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TipoPeca;
@@ -191,22 +198,22 @@ var TipoPeca;
     TipoPeca["VAZIO"] = "";
 })(TipoPeca = exports.TipoPeca || (exports.TipoPeca = {}));
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var DefinidorCores;
 (function (DefinidorCores) {
     function definirCorDoItem(_a) {
         var linha = _a.linha, coluna = _a.coluna;
-        var cor = linha % 2 === 0 ? "white" : "rosa";
+        var cor = linha % 2 === 0 ? "white" : "pink";
         var pares = cor;
-        var impares = cor == "rosa" ? "white" : "rosa";
+        var impares = cor == "pink" ? "white" : "pink";
         return coluna % 2 === 0 ? pares : impares;
     }
     DefinidorCores.definirCorDoItem = definirCorDoItem;
 })(DefinidorCores = exports.DefinidorCores || (exports.DefinidorCores = {}));
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 "use strict";
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -253,7 +260,7 @@ var InstanciadorPecas;
     InstanciadorPecas.instanciar = instanciar;
 })(InstanciadorPecas = exports.InstanciadorPecas || (exports.InstanciadorPecas = {}));
 
-},{"../definitions/PosicoesIniciais":2,"../definitions/TipoPeca":3,"./DefinidorCores":4,"./ItemTabuleiro":6,"./movimento/MovimentoDiagonal":10,"./movimento/MovimentoHorizontal":11,"./movimento/MovimentoL":12,"./movimento/MovimentoVertical":13,"./peca/Bispo":14,"./peca/Cavalo":15,"./peca/Peao":16,"./peca/Rainha":18,"./peca/Rei":19,"./peca/Torre":20}],6:[function(require,module,exports){
+},{"../definitions/PosicoesIniciais":3,"../definitions/TipoPeca":4,"./DefinidorCores":5,"./ItemTabuleiro":7,"./movimento/MovimentoDiagonal":11,"./movimento/MovimentoHorizontal":12,"./movimento/MovimentoL":13,"./movimento/MovimentoVertical":14,"./peca/Bispo":15,"./peca/Cavalo":16,"./peca/Peao":17,"./peca/Rainha":19,"./peca/Rei":20,"./peca/Torre":21}],7:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -353,7 +360,7 @@ var ItemTabuleiro = (function () {
 }());
 exports.ItemTabuleiro = ItemTabuleiro;
 
-},{"lodash":48}],7:[function(require,module,exports){
+},{"lodash":49}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ModificadorImpl = (function () {
@@ -369,7 +376,7 @@ var ModificadorImpl = (function () {
 }());
 exports.ModificadorImpl = ModificadorImpl;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -533,7 +540,7 @@ var Tabuleiro = (function () {
 }());
 exports.Tabuleiro = Tabuleiro;
 
-},{"../DOMGenerator":1,"../definitions/PosicoesIniciais":2,"../definitions/TipoPeca":3,"./DefinidorCores":4,"./InstanciadorPecas":5,"./ItemTabuleiro":6,"axios":22,"lodash":48}],9:[function(require,module,exports){
+},{"../DOMGenerator":1,"../definitions/PosicoesIniciais":3,"../definitions/TipoPeca":4,"./DefinidorCores":5,"./InstanciadorPecas":6,"./ItemTabuleiro":7,"axios":23,"lodash":49}],10:[function(require,module,exports){
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -591,7 +598,7 @@ var Movimento = (function () {
 }());
 exports.Movimento = Movimento;
 
-},{"lodash":48}],10:[function(require,module,exports){
+},{"lodash":49}],11:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -638,7 +645,7 @@ var MovimentoDiagonal = (function (_super) {
 }(Movimento_1.Movimento));
 exports.MovimentoDiagonal = MovimentoDiagonal;
 
-},{"../ModificadorImpl":7,"./Movimento":9}],11:[function(require,module,exports){
+},{"../ModificadorImpl":8,"./Movimento":10}],12:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -677,7 +684,7 @@ var MovimentoHorizontal = (function (_super) {
 }(Movimento_1.Movimento));
 exports.MovimentoHorizontal = MovimentoHorizontal;
 
-},{"../ModificadorImpl":7,"./Movimento":9}],12:[function(require,module,exports){
+},{"../ModificadorImpl":8,"./Movimento":10}],13:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -750,7 +757,7 @@ var MovimentoL = (function (_super) {
 }(Movimento_1.Movimento));
 exports.MovimentoL = MovimentoL;
 
-},{"../ModificadorImpl":7,"./Movimento":9}],13:[function(require,module,exports){
+},{"../ModificadorImpl":8,"./Movimento":10}],14:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -789,7 +796,7 @@ var MovimentoVertical = (function (_super) {
 }(Movimento_1.Movimento));
 exports.MovimentoVertical = MovimentoVertical;
 
-},{"../ModificadorImpl":7,"./Movimento":9}],14:[function(require,module,exports){
+},{"../ModificadorImpl":8,"./Movimento":10}],15:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -820,7 +827,7 @@ var Bispo = (function (_super) {
 }(Peca_1.Peca));
 exports.Bispo = Bispo;
 
-},{"../../definitions/TipoPeca":3,"../movimento/MovimentoDiagonal":10,"./Peca":17}],15:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":11,"./Peca":18}],16:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -851,7 +858,7 @@ var Cavalo = (function (_super) {
 }(Peca_1.Peca));
 exports.Cavalo = Cavalo;
 
-},{"../../definitions/TipoPeca":3,"../movimento/MovimentoL":12,"./Peca":17}],16:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoL":13,"./Peca":18}],17:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -928,7 +935,7 @@ var Peao = (function (_super) {
 }(Peca_1.Peca));
 exports.Peao = Peao;
 
-},{"../../definitions/TipoPeca":3,"../movimento/MovimentoVertical":13,"./Peca":17,"lodash":48}],17:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoVertical":14,"./Peca":18,"lodash":49}],18:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -976,7 +983,7 @@ var Peca = (function () {
 }());
 exports.Peca = Peca;
 
-},{"lodash":48}],18:[function(require,module,exports){
+},{"lodash":49}],19:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1009,7 +1016,7 @@ var Rainha = (function (_super) {
 }(Peca_1.Peca));
 exports.Rainha = Rainha;
 
-},{"../../definitions/TipoPeca":3,"../movimento/MovimentoDiagonal":10,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":17}],19:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":11,"../movimento/MovimentoHorizontal":12,"../movimento/MovimentoVertical":14,"./Peca":18}],20:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1060,7 +1067,7 @@ var Rei = (function (_super) {
 }(Peca_1.Peca));
 exports.Rei = Rei;
 
-},{"../../definitions/TipoPeca":3,"../movimento/MovimentoDiagonal":10,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":17,"lodash":48}],20:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":11,"../movimento/MovimentoHorizontal":12,"../movimento/MovimentoVertical":14,"./Peca":18,"lodash":49}],21:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1092,7 +1099,7 @@ var Torre = (function (_super) {
 }(Peca_1.Peca));
 exports.Torre = Torre;
 
-},{"../../definitions/TipoPeca":3,"../movimento/MovimentoHorizontal":11,"../movimento/MovimentoVertical":13,"./Peca":17}],21:[function(require,module,exports){
+},{"../../definitions/TipoPeca":4,"../movimento/MovimentoHorizontal":12,"../movimento/MovimentoVertical":14,"./Peca":18}],22:[function(require,module,exports){
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -1134,71 +1141,76 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var axios_1 = __importDefault(require("axios"));
+var InstanciadorPecas_1 = require("./domain/InstanciadorPecas");
+var ItemTabuleiro_1 = require("./domain/ItemTabuleiro");
 var Tabuleiro_1 = require("./domain/Tabuleiro");
 var DOMGenerator_1 = require("./DOMGenerator");
-var axios_1 = __importDefault(require("axios"));
-var ItemTabuleiro_1 = require("./domain/ItemTabuleiro");
-var InstanciadorPecas_1 = require("./domain/InstanciadorPecas");
-var criarModelTabuleiro = function (carregado) {
-    var tabuleiro = new Tabuleiro_1.Tabuleiro();
-    return Object.assign(tabuleiro, carregado);
+var config_1 = require("./config");
+var buildBoardModel = function (loaded) {
+    var board = new Tabuleiro_1.Tabuleiro();
+    return Object.assign(board, loaded);
 };
-var criarModelItem = function (carregado) {
-    var itemTabuleiro = new ItemTabuleiro_1.ItemTabuleiro(carregado.posicao, carregado.cor);
-    return Object.assign(itemTabuleiro, carregado);
+var buildModelItem = function (loaded) {
+    var boardItem = new ItemTabuleiro_1.ItemTabuleiro(loaded.posicao, loaded.cor);
+    return Object.assign(boardItem, loaded);
 };
-var criarModelPeca = function (carregado) {
-    var clazz = InstanciadorPecas_1.InstanciadorTipoMap.get(carregado.tipo);
-    var peca = new clazz(carregado.cor);
-    var model = Object.assign(peca, carregado);
-    var movimentos = model.getMovimentos().map(function (mov) { return criarModelMovimento(mov); });
-    model.setMovimentos(movimentos);
+var buildModelPiece = function (loaded) {
+    var clazz = InstanciadorPecas_1.InstanciadorTipoMap.get(loaded.tipo);
+    var piece = new clazz(loaded.cor);
+    var model = Object.assign(piece, loaded);
+    var movements = model.getMovimentos().map(function (mov) { return buildMovementModel(mov); });
+    model.setMovimentos(movements);
     return model;
 };
-var criarModelMovimento = function (carregado) {
-    var clazz = InstanciadorPecas_1.InstanciadorMovimentoMap[carregado.tipo];
-    var movimento = new clazz();
-    return Object.assign(movimento, carregado);
+var buildMovementModel = function (loaded) {
+    var clazz = InstanciadorPecas_1.InstanciadorMovimentoMap[loaded.tipo];
+    var movement = new clazz();
+    return Object.assign(movement, loaded);
 };
-var tabuleiroInicial = new Tabuleiro_1.Tabuleiro().gerarTabuleiroInicial();
-var novoJogo = function (event) {
-    DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiroInicial);
+var initialBoard = new Tabuleiro_1.Tabuleiro().gerarTabuleiroInicial();
+var newGame = function () {
+    DOMGenerator_1.DOMGenerator.getInstance().injectBoard(initialBoard);
     DOMGenerator_1.DOMGenerator.getInstance().refresh();
 };
-var carregarJogo = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var response, tabuleiro;
+var loadGame = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var response, board;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4, axios_1.default.get('http://localhost:3000/carregar')];
+            case 0: return [4, axios_1.default.get(config_1.API.URL)];
             case 1:
                 response = _a.sent();
-                tabuleiro = criarModelTabuleiro(response.data);
-                tabuleiro.percorrerTabuleiro(function (item, _a) {
+                board = buildBoardModel(response.data);
+                board.percorrerTabuleiro(function (item, _a) {
                     var linha = _a.linha, coluna = _a.coluna;
-                    var itemModel = criarModelItem(item);
+                    var itemModel = buildModelItem(item);
                     if (itemModel.getPeca()) {
-                        var pecaModel = criarModelPeca(itemModel.getPeca());
-                        itemModel.atribuirPeca(pecaModel);
+                        var pieceModel = buildModelPiece(itemModel.getPeca());
+                        itemModel.atribuirPeca(pieceModel);
                     }
-                    tabuleiro.posicoes[linha][coluna] = itemModel;
-                    itemModel.adicionarAoTabuleiro(tabuleiro);
+                    board.posicoes[linha][coluna] = itemModel;
+                    itemModel.adicionarAoTabuleiro(board);
                 });
-                DOMGenerator_1.DOMGenerator.getInstance().injetarTabuleiro(tabuleiro);
+                DOMGenerator_1.DOMGenerator.getInstance().injectBoard(board);
                 DOMGenerator_1.DOMGenerator.getInstance().refresh();
                 return [2];
         }
     });
 }); };
-var novoJogoButton = document.getElementById('novoJogo');
-var carregarJogoButton = document.getElementById('carregarJogo');
-var salvarJogoButton = document.getElementById('salvarJogo');
-novoJogoButton.addEventListener('click', novoJogo);
-carregarJogoButton.addEventListener('click', carregarJogo);
-salvarJogoButton.addEventListener('click', function () { return DOMGenerator_1.DOMGenerator.getInstance().getTabuleiro().salvar(); });
+var newGameButton = document.getElementById('novoJogo');
+var loadGameButton = document.getElementById('carregarJogo');
+var saveGameButton = document.getElementById('salvarJogo');
+newGameButton.addEventListener('click', newGame);
+loadGameButton.addEventListener('click', loadGame);
+saveGameButton.addEventListener('click', function () {
+    return DOMGenerator_1.DOMGenerator.getInstance()
+        .getBoard()
+        .salvar();
+});
 
-},{"./DOMGenerator":1,"./domain/InstanciadorPecas":5,"./domain/ItemTabuleiro":6,"./domain/Tabuleiro":8,"axios":22}],22:[function(require,module,exports){
+},{"./DOMGenerator":1,"./config":2,"./domain/InstanciadorPecas":6,"./domain/ItemTabuleiro":7,"./domain/Tabuleiro":9,"axios":23}],23:[function(require,module,exports){
 module.exports = require('./lib/axios');
-},{"./lib/axios":24}],23:[function(require,module,exports){
+},{"./lib/axios":25}],24:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1374,7 +1386,7 @@ module.exports = function xhrAdapter(config) {
   });
 };
 
-},{"../core/createError":30,"./../core/settle":34,"./../helpers/buildURL":38,"./../helpers/cookies":40,"./../helpers/isURLSameOrigin":42,"./../helpers/parseHeaders":44,"./../utils":46}],24:[function(require,module,exports){
+},{"../core/createError":31,"./../core/settle":35,"./../helpers/buildURL":39,"./../helpers/cookies":41,"./../helpers/isURLSameOrigin":43,"./../helpers/parseHeaders":45,"./../utils":47}],25:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -1429,7 +1441,7 @@ module.exports = axios;
 // Allow use of default import syntax in TypeScript
 module.exports.default = axios;
 
-},{"./cancel/Cancel":25,"./cancel/CancelToken":26,"./cancel/isCancel":27,"./core/Axios":28,"./core/mergeConfig":33,"./defaults":36,"./helpers/bind":37,"./helpers/spread":45,"./utils":46}],25:[function(require,module,exports){
+},{"./cancel/Cancel":26,"./cancel/CancelToken":27,"./cancel/isCancel":28,"./core/Axios":29,"./core/mergeConfig":34,"./defaults":37,"./helpers/bind":38,"./helpers/spread":46,"./utils":47}],26:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1450,7 +1462,7 @@ Cancel.prototype.__CANCEL__ = true;
 
 module.exports = Cancel;
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 'use strict';
 
 var Cancel = require('./Cancel');
@@ -1509,14 +1521,14 @@ CancelToken.source = function source() {
 
 module.exports = CancelToken;
 
-},{"./Cancel":25}],27:[function(require,module,exports){
+},{"./Cancel":26}],28:[function(require,module,exports){
 'use strict';
 
 module.exports = function isCancel(value) {
   return !!(value && value.__CANCEL__);
 };
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1604,7 +1616,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = Axios;
 
-},{"../helpers/buildURL":38,"./../utils":46,"./InterceptorManager":29,"./dispatchRequest":31,"./mergeConfig":33}],29:[function(require,module,exports){
+},{"../helpers/buildURL":39,"./../utils":47,"./InterceptorManager":30,"./dispatchRequest":32,"./mergeConfig":34}],30:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1658,7 +1670,7 @@ InterceptorManager.prototype.forEach = function forEach(fn) {
 
 module.exports = InterceptorManager;
 
-},{"./../utils":46}],30:[function(require,module,exports){
+},{"./../utils":47}],31:[function(require,module,exports){
 'use strict';
 
 var enhanceError = require('./enhanceError');
@@ -1678,7 +1690,7 @@ module.exports = function createError(message, config, code, request, response) 
   return enhanceError(error, config, code, request, response);
 };
 
-},{"./enhanceError":32}],31:[function(require,module,exports){
+},{"./enhanceError":33}],32:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1766,7 +1778,7 @@ module.exports = function dispatchRequest(config) {
   });
 };
 
-},{"../cancel/isCancel":27,"../defaults":36,"./../helpers/combineURLs":39,"./../helpers/isAbsoluteURL":41,"./../utils":46,"./transformData":35}],32:[function(require,module,exports){
+},{"../cancel/isCancel":28,"../defaults":37,"./../helpers/combineURLs":40,"./../helpers/isAbsoluteURL":42,"./../utils":47,"./transformData":36}],33:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1810,7 +1822,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
   return error;
 };
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -1863,7 +1875,7 @@ module.exports = function mergeConfig(config1, config2) {
   return config;
 };
 
-},{"../utils":46}],34:[function(require,module,exports){
+},{"../utils":47}],35:[function(require,module,exports){
 'use strict';
 
 var createError = require('./createError');
@@ -1890,7 +1902,7 @@ module.exports = function settle(resolve, reject, response) {
   }
 };
 
-},{"./createError":30}],35:[function(require,module,exports){
+},{"./createError":31}],36:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1912,7 +1924,7 @@ module.exports = function transformData(data, headers, fns) {
   return data;
 };
 
-},{"./../utils":46}],36:[function(require,module,exports){
+},{"./../utils":47}],37:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -2014,7 +2026,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 }).call(this,require('_process'))
-},{"./adapters/http":23,"./adapters/xhr":23,"./helpers/normalizeHeaderName":43,"./utils":46,"_process":49}],37:[function(require,module,exports){
+},{"./adapters/http":24,"./adapters/xhr":24,"./helpers/normalizeHeaderName":44,"./utils":47,"_process":50}],38:[function(require,module,exports){
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -2027,7 +2039,7 @@ module.exports = function bind(fn, thisArg) {
   };
 };
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2100,7 +2112,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
   return url;
 };
 
-},{"./../utils":46}],39:[function(require,module,exports){
+},{"./../utils":47}],40:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2116,7 +2128,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
     : baseURL;
 };
 
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2171,7 +2183,7 @@ module.exports = (
     })()
 );
 
-},{"./../utils":46}],41:[function(require,module,exports){
+},{"./../utils":47}],42:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2187,7 +2199,7 @@ module.exports = function isAbsoluteURL(url) {
   return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
 };
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2257,7 +2269,7 @@ module.exports = (
     })()
 );
 
-},{"./../utils":46}],43:[function(require,module,exports){
+},{"./../utils":47}],44:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -2271,7 +2283,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
   });
 };
 
-},{"../utils":46}],44:[function(require,module,exports){
+},{"../utils":47}],45:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2326,7 +2338,7 @@ module.exports = function parseHeaders(headers) {
   return parsed;
 };
 
-},{"./../utils":46}],45:[function(require,module,exports){
+},{"./../utils":47}],46:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2355,7 +2367,7 @@ module.exports = function spread(callback) {
   };
 };
 
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 var bind = require('./helpers/bind');
@@ -2691,7 +2703,7 @@ module.exports = {
   trim: trim
 };
 
-},{"./helpers/bind":37,"is-buffer":47}],47:[function(require,module,exports){
+},{"./helpers/bind":38,"is-buffer":48}],48:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -2704,7 +2716,7 @@ module.exports = function isBuffer (obj) {
     typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
 }
 
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -19820,7 +19832,7 @@ module.exports = function isBuffer (obj) {
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -20006,4 +20018,4 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[21]);
+},{}]},{},[22]);

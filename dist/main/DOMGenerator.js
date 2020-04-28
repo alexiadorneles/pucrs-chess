@@ -3,11 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var DOMGenerator = (function () {
     function DOMGenerator() {
     }
-    DOMGenerator.prototype.injetarTabuleiro = function (tabuleiro) {
-        this.tabuleiro = tabuleiro;
+    DOMGenerator.prototype.injectBoard = function (board) {
+        this.board = board;
     };
-    DOMGenerator.prototype.getTabuleiro = function () {
-        return this.tabuleiro;
+    DOMGenerator.prototype.getBoard = function () {
+        return this.board;
     };
     DOMGenerator.getInstance = function () {
         if (!DOMGenerator.instance) {
@@ -18,47 +18,47 @@ var DOMGenerator = (function () {
     DOMGenerator.prototype.refresh = function () {
         var root = document.getElementById('root');
         root.innerHTML = '';
-        var linhas = 8;
-        var colunas = 8;
-        var elementosLinha = [];
-        var elementosColuna = [];
-        var _loop_1 = function (linha) {
-            elementosColuna = [];
-            for (var coluna = 0; coluna < colunas; coluna++) {
-                var item = this_1.tabuleiro.getItem({ linha: linha, coluna: coluna });
-                var elemento = this_1.criarElemento(item);
-                elementosColuna.push(elemento);
+        var lines = 8;
+        var columns = 8;
+        var lineElements = [];
+        var columnElements = [];
+        var _loop_1 = function (line) {
+            columnElements = [];
+            for (var column = 0; column < columns; column++) {
+                var item = this_1.board.getItem({ linha: line, coluna: column });
+                var element = this_1.createElement(item);
+                columnElements.push(element);
             }
-            var elementoLinha = document.createElement('div');
-            elementoLinha.setAttribute('class', 'xadrez-linha');
-            elementosColuna.forEach((function (elementoColuna) { return elementoLinha.appendChild(elementoColuna); }));
-            elementosLinha.push(elementoLinha);
+            var lineElement = document.createElement('div');
+            lineElement.setAttribute('class', 'xadrez-linha');
+            columnElements.forEach(function (columnElement) { return lineElement.appendChild(columnElement); });
+            lineElements.push(lineElement);
         };
         var this_1 = this;
-        for (var linha = 0; linha < linhas; linha++) {
-            _loop_1(linha);
+        for (var line = 0; line < lines; line++) {
+            _loop_1(line);
         }
-        elementosLinha.forEach(function (elemento) { return root.appendChild(elemento); });
+        lineElements.forEach(function (element) { return root.appendChild(element); });
     };
-    DOMGenerator.prototype.criarElemento = function (item) {
+    DOMGenerator.prototype.createElement = function (item) {
         var div = document.createElement('div');
         div.setAttribute('class', 'container');
-        var quadrado = document.createElement('span');
-        quadrado.setAttribute('class', "fas fa-square-full xadrez-quadrado " + item.getCor());
-        quadrado.addEventListener('click', item.onClick);
-        item.atribuirElemento(quadrado);
-        var iconePeca = this.criarIconePeca(item.getPeca());
-        iconePeca.addEventListener('click', item.onClick);
-        div.appendChild(iconePeca);
-        div.appendChild(quadrado);
+        var square = document.createElement('span');
+        square.setAttribute('class', "fas fa-square-full xadrez-quadrado " + item.getCor());
+        square.addEventListener('click', item.onClick);
+        item.atribuirElemento(square);
+        var pieceIcon = this.createPieceIcon(item.getPeca());
+        pieceIcon.addEventListener('click', item.onClick);
+        div.appendChild(pieceIcon);
+        div.appendChild(square);
         return div;
     };
-    DOMGenerator.prototype.criarIconePeca = function (peca) {
-        var tipoPeca = peca && peca.getTipo() || '';
-        var corPeca = peca && peca.getCor() || '';
-        var iconePeca = document.createElement('i');
-        iconePeca.setAttribute('class', "fas fa-" + tipoPeca + " peca " + corPeca);
-        return iconePeca;
+    DOMGenerator.prototype.createPieceIcon = function (piece) {
+        var pieceType = (piece && piece.getTipo()) || '';
+        var pieceColor = (piece && piece.getCor()) || '';
+        var pieceIcon = document.createElement('i');
+        pieceIcon.setAttribute('class', "fas fa-" + pieceType + " peca " + pieceColor);
+        return pieceIcon;
     };
     return DOMGenerator;
 }());

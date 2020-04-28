@@ -2,7 +2,7 @@ import chai from 'chai'
 import _ from 'lodash'
 import 'mocha'
 import sinon from 'sinon'
-import { Cor } from '../main/definitions/Cor'
+import { Color } from '../main/definitions/Cor'
 import { ItemTabuleiro } from '../main/domain/ItemTabuleiro'
 import { Peao } from '../main/domain/peca/Peao'
 import { Rainha } from '../main/domain/peca/Rainha'
@@ -18,8 +18,8 @@ context('Rainha', () => {
   describe('ao chamar adicionarAoItem', () => {
     it('deve atribuir propriedade item', () => {
       // arrange
-      const rainha = new Rainha(Cor.BRANCAS)
-      const item = new ItemTabuleiro({ linha: 0, coluna: 0 }, Cor.PRETAS)
+      const rainha = new Rainha(Color.WHITE)
+      const item = new ItemTabuleiro({ linha: 0, coluna: 0 }, Color.BLACK)
       // act
       rainha.adicionarAoItem(item)
       // assert
@@ -31,12 +31,12 @@ context('Rainha', () => {
     it('quando posição inicial e tabuleiro limpo deve retornar muitas opções ', () => {
       // arrange
       const tabuleiro = new Tabuleiro()
-      const rainha = new Rainha(Cor.BRANCAS)
+      const rainha = new Rainha(Color.WHITE)
       const posicaoRainha = { linha: 0, coluna: 3 }
-      const item = new ItemTabuleiro(posicaoRainha, Cor.PRETAS)
+      const item = new ItemTabuleiro(posicaoRainha, Color.BLACK)
       item.atribuirPeca(rainha)
       sinon.replace(tabuleiro, 'getItem', (posicao) => {
-        return _.isEqual(posicaoRainha, posicao) ? item : new ItemTabuleiro(posicao, Cor.BRANCAS)
+        return _.isEqual(posicaoRainha, posicao) ? item : new ItemTabuleiro(posicao, Color.WHITE)
       })
       tabuleiro.adicionarItem(item)
       // act
@@ -76,11 +76,11 @@ context('Rainha', () => {
       // arrange
       const tabuleiro = new Tabuleiro()
       const posicaoRainha = { linha: 3, coluna: 3 }
-      const rainha = new Rainha(Cor.BRANCAS)
-      const item = new ItemTabuleiro(posicaoRainha, Cor.PRETAS)
+      const rainha = new Rainha(Color.WHITE)
+      const item = new ItemTabuleiro(posicaoRainha, Color.BLACK)
       item.atribuirPeca(rainha)
       sinon.replace(tabuleiro, 'getItem', (posicao) => {
-        return _.isEqual(posicaoRainha, posicao) ? item : new ItemTabuleiro(posicao, Cor.BRANCAS)
+        return _.isEqual(posicaoRainha, posicao) ? item : new ItemTabuleiro(posicao, Color.WHITE)
       })
       tabuleiro.adicionarItem(item)
       // act
@@ -128,43 +128,43 @@ context('Rainha', () => {
     })
     it('quando peças no caminho retorna apenas posições válidas', () => {
       // arrange
-      const rainha = new Rainha(Cor.BRANCAS)
-      const itemRainha = new ItemTabuleiro({ linha: 2, coluna: 2 }, Cor.PRETAS)
+      const rainha = new Rainha(Color.WHITE)
+      const itemRainha = new ItemTabuleiro({ linha: 2, coluna: 2 }, Color.BLACK)
       itemRainha.atribuirPeca(rainha)
 
-      const peao = new Peao(Cor.BRANCAS)
-      const itemPeao = new ItemTabuleiro({ linha: 2, coluna: 1 }, Cor.PRETAS)
+      const peao = new Peao(Color.WHITE)
+      const itemPeao = new ItemTabuleiro({ linha: 2, coluna: 1 }, Color.BLACK)
       itemPeao.atribuirPeca(peao)
 
-      const peao2 = new Peao(Cor.BRANCAS)
-      const itemPeao2 = new ItemTabuleiro({ linha: 3, coluna: 3 }, Cor.PRETAS)
+      const peao2 = new Peao(Color.WHITE)
+      const itemPeao2 = new ItemTabuleiro({ linha: 3, coluna: 3 }, Color.BLACK)
       itemPeao2.atribuirPeca(peao2)
 
-      const peao3 = new Peao(Cor.BRANCAS)
-      const itemPeao3 = new ItemTabuleiro({ linha: 2, coluna: 4 }, Cor.PRETAS)
+      const peao3 = new Peao(Color.WHITE)
+      const itemPeao3 = new ItemTabuleiro({ linha: 2, coluna: 4 }, Color.BLACK)
       itemPeao3.atribuirPeca(peao3)
 
-      const peao4 = new Peao(Cor.BRANCAS)
-      const itemPeao4 = new ItemTabuleiro({ linha: 1, coluna: 2 }, Cor.PRETAS)
+      const peao4 = new Peao(Color.WHITE)
+      const itemPeao4 = new ItemTabuleiro({ linha: 1, coluna: 2 }, Color.BLACK)
       itemPeao4.atribuirPeca(peao4)
 
-      const torre = new Torre(Cor.BRANCAS)
-      const itemTorre = new ItemTabuleiro({ linha: 0, coluna: 0 }, Cor.PRETAS)
+      const torre = new Torre(Color.WHITE)
+      const itemTorre = new ItemTabuleiro({ linha: 0, coluna: 0 }, Color.BLACK)
       itemTorre.atribuirPeca(torre)
 
-      const rei = new Rei(Cor.BRANCAS)
-      const itemRei = new ItemTabuleiro({ linha: 0, coluna: 4 }, Cor.PRETAS)
+      const rei = new Rei(Color.WHITE)
+      const itemRei = new ItemTabuleiro({ linha: 0, coluna: 4 }, Color.BLACK)
       itemRei.atribuirPeca(rei)
 
-      const peaoOponente = new Peao(Cor.BRANCAS)
-      const itemPeaoOponente = new ItemTabuleiro({ linha: 6, coluna: 2 }, Cor.BRANCAS)
+      const peaoOponente = new Peao(Color.WHITE)
+      const itemPeaoOponente = new ItemTabuleiro({ linha: 6, coluna: 2 }, Color.WHITE)
       itemPeaoOponente.atribuirPeca(peaoOponente)
 
       const itens = [itemRainha, itemPeao, itemPeao2, itemPeao3, itemPeao4, itemPeaoOponente, itemTorre, itemRei]
 
       sinon.replace(Tabuleiro.prototype, 'getItem', (posicao) => {
         const item = itens.find(item => _.isEqual(item.getPosicao(), posicao))
-        return item || new ItemTabuleiro(posicao, Cor.BRANCAS)
+        return item || new ItemTabuleiro(posicao, Color.WHITE)
       })
       const tabuleiro = new Tabuleiro()
       itens.forEach(item => tabuleiro.adicionarItem(item))

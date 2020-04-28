@@ -1,6 +1,6 @@
 import axios from 'axios'
 import _ from 'lodash'
-import { Cor } from '../definitions/Cor'
+import { Color } from '../definitions/Cor'
 import { Posicao } from '../definitions/Movimento'
 import { MapPosicaoPecasBrancas } from '../definitions/PosicoesIniciais'
 import { TipoPeca } from '../definitions/TipoPeca'
@@ -29,8 +29,8 @@ export class Tabuleiro {
   public pecaEmMovimento: Peca
 
   public gerarTabuleiroInicial = (): Tabuleiro => {
-    const brancas = this.gerarPecas(Cor.PRETAS)
-    const pretas = this.gerarPecas(Cor.CINZA)
+    const brancas = this.gerarPecas(Color.BLACK)
+    const pretas = this.gerarPecas(Color.GREY)
     const vazias = this.gerarPecasVazias()
     brancas.concat(pretas).concat(vazias).forEach(this.adicionarItem)
     return this
@@ -116,7 +116,7 @@ export class Tabuleiro {
     item.adicionarAoTabuleiro(this)
   }
 
-  private gerarPecas(cor: Cor): ItemTabuleiro[] {
+  private gerarPecas(cor: Color): ItemTabuleiro[] {
     return (Object as any).values(TipoPeca)
       .filter((value: string) => !!value)
       .reduce((agg: ItemTabuleiro[], tipo: TipoPeca) => agg.concat(InstanciadorPecas.instanciar(tipo, cor)), [])
