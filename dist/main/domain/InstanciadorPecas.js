@@ -35,7 +35,7 @@ var InstanciadorPecas;
         var map = corPeca === "grey" ? PosicoesIniciais_1.MapPosicaoPecasBrancas : PosicoesIniciais_1.MapPosicaoPecasPretas;
         return map.get(tipo).map(function (posicao) {
             var clazz = exports.InstanciadorTipoMap.get(tipo);
-            var item = new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.DefinidorCores.definirCorDoItem(posicao));
+            var item = new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.ColorAdapter.defineItemColor(posicao));
             var peca = new clazz(corPeca);
             item.atribuirPeca(peca);
             return item;

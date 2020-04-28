@@ -5,7 +5,7 @@ import { Posicao } from '../definitions/Movimento'
 import { MapPosicaoPecasBrancas } from '../definitions/PosicoesIniciais'
 import { TipoPeca } from '../definitions/TipoPeca'
 import { DOMGenerator } from '../DOMGenerator'
-import { DefinidorCores } from './DefinidorCores'
+import { ColorAdapter } from './DefinidorCores'
 import { InstanciadorPecas } from './InstanciadorPecas'
 import { ItemTabuleiro } from './ItemTabuleiro'
 import { Peca } from './peca/Peca'
@@ -123,6 +123,6 @@ export class Tabuleiro {
   }
 
   private gerarPecasVazias(): ItemTabuleiro[] {
-    return MapPosicaoPecasBrancas.get(TipoPeca.VAZIO).map(posicao => new ItemTabuleiro(posicao, DefinidorCores.definirCorDoItem(posicao)))
+    return MapPosicaoPecasBrancas.get(TipoPeca.VAZIO).map(posicao => new ItemTabuleiro(posicao, ColorAdapter.defineItemColor(posicao)))
   }
 }

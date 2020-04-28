@@ -1,7 +1,7 @@
 import { Color } from '../definitions/Cor'
 import { MapPosicaoPecasBrancas, MapPosicaoPecasPretas } from '../definitions/PosicoesIniciais'
 import { TipoPeca } from '../definitions/TipoPeca'
-import { DefinidorCores } from './DefinidorCores'
+import { ColorAdapter } from './DefinidorCores'
 import { ItemTabuleiro } from './ItemTabuleiro'
 import { Bispo } from './peca/Bispo'
 import { Cavalo } from './peca/Cavalo'
@@ -37,7 +37,7 @@ export namespace InstanciadorPecas {
     const map = corPeca === Color.GREY ? MapPosicaoPecasBrancas : MapPosicaoPecasPretas
     return map.get(tipo).map(posicao => {
       const clazz = InstanciadorTipoMap.get(tipo)
-      const item = new ItemTabuleiro(posicao, DefinidorCores.definirCorDoItem(posicao))
+      const item = new ItemTabuleiro(posicao, ColorAdapter.defineItemColor(posicao))
       const peca = new clazz(corPeca)
       item.atribuirPeca(peca)
       return item

@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var DefinidorCores;
-(function (DefinidorCores) {
-    function definirCorDoItem(_a) {
-        var linha = _a.linha, coluna = _a.coluna;
-        var cor = linha % 2 === 0 ? "white" : "pink";
-        var pares = cor;
-        var impares = cor == "pink" ? "white" : "pink";
-        return coluna % 2 === 0 ? pares : impares;
+var ColorAdapter;
+(function (ColorAdapter) {
+    function defineItemColor(_a) {
+        var line = _a.linha, column = _a.coluna;
+        var color = line % 2 === 0 ? "white" : "pink";
+        var even = color;
+        var odds = color == "pink" ? "white" : "pink";
+        return column % 2 === 0 ? even : odds;
     }
-    DefinidorCores.definirCorDoItem = definirCorDoItem;
-})(DefinidorCores = exports.DefinidorCores || (exports.DefinidorCores = {}));
+    ColorAdapter.defineItemColor = defineItemColor;
+})(ColorAdapter = exports.ColorAdapter || (exports.ColorAdapter = {}));
