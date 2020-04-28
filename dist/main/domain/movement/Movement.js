@@ -33,11 +33,11 @@ var Movement = (function () {
         var positions = [];
         while (isValidPosition) {
             position = this.createNewPositionBasedOnOffset(position, offset);
-            isValidPosition = board.isPosicaoValida(position);
+            isValidPosition = board.isValidPosition(position);
             if (isValidPosition) {
                 positions.push(position);
             }
-            else if (board.isBloqueadaPorOponente(position, initialPosition)) {
+            else if (board.isPositionBlockedByOpponent(position, initialPosition)) {
                 positions.push(position);
             }
         }

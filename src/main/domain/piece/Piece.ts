@@ -1,13 +1,13 @@
 import _ from 'lodash'
-import { Tabuleiro } from 'main/domain/Tabuleiro'
+import { Board } from 'main/domain/Board'
 import { Color } from '../../definitions/Color'
 import { Position } from '../../definitions/Movement'
 import { PieceKind } from '../../definitions/PieceKind'
-import { ItemTabuleiro } from '../ItemTabuleiro'
+import { BoardItem } from '../BoardItem'
 import { Movement } from '../movement/Movement'
 
 export abstract class Piece {
-  protected boardItem: ItemTabuleiro
+  protected boardItem: BoardItem
   protected kind: PieceKind
   protected movements: Movement[]
   protected color: Color
@@ -37,23 +37,23 @@ export abstract class Piece {
     return this.isAllowedToGoBackwards
   }
 
-  public getBoardItem(): ItemTabuleiro {
+  public getBoardItem(): BoardItem {
     return this.boardItem
   }
 
-  public getBoard(): Tabuleiro {
-    return this.boardItem.getTabuleiro()
+  public getBoard(): Board {
+    return this.boardItem.getBoard()
   }
 
   public simulateMovement(): Position[] {
-    const currentPosition = this.getBoardItem().getPosicao()
+    const currentPosition = this.getBoardItem().getPosition()
     const positions = this.movements.map(movement =>
       movement.executeSimulation(currentPosition, this.getBoard()),
     )
     return _.flatten(positions)
   }
 
-  public addToItem(item: ItemTabuleiro): void {
+  public addToItem(item: BoardItem): void {
     this.boardItem = item
   }
 

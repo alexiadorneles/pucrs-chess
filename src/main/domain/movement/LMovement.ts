@@ -1,6 +1,6 @@
 import { MovementOffset, Position, MovementKind } from '../../definitions/Movement'
-import { ModificadorImpl } from '../ModificadorImpl'
-import { Tabuleiro } from '../Tabuleiro'
+import { ModifierImpl } from '../ModifierImpl'
+import { Board } from '../Board'
 import { Movement } from './Movement'
 
 export class LMovement extends Movement {
@@ -10,48 +10,48 @@ export class LMovement extends Movement {
   public getMovementOffsets(): MovementOffset[] {
     return [
       {
-        lineModifier: new ModificadorImpl(2, ModificadorImpl.soma),
-        columnModifier: new ModificadorImpl(1, ModificadorImpl.soma),
+        lineModifier: new ModifierImpl(2, ModifierImpl.sum),
+        columnModifier: new ModifierImpl(1, ModifierImpl.sum),
       },
       {
-        lineModifier: new ModificadorImpl(2, ModificadorImpl.soma),
-        columnModifier: new ModificadorImpl(1, ModificadorImpl.subtracao),
+        lineModifier: new ModifierImpl(2, ModifierImpl.sum),
+        columnModifier: new ModifierImpl(1, ModifierImpl.minus),
       },
       {
-        lineModifier: new ModificadorImpl(2, ModificadorImpl.subtracao),
-        columnModifier: new ModificadorImpl(1, ModificadorImpl.subtracao),
+        lineModifier: new ModifierImpl(2, ModifierImpl.minus),
+        columnModifier: new ModifierImpl(1, ModifierImpl.minus),
       },
       {
-        lineModifier: new ModificadorImpl(2, ModificadorImpl.subtracao),
-        columnModifier: new ModificadorImpl(1, ModificadorImpl.soma),
+        lineModifier: new ModifierImpl(2, ModifierImpl.minus),
+        columnModifier: new ModifierImpl(1, ModifierImpl.sum),
       },
       {
-        lineModifier: new ModificadorImpl(1, ModificadorImpl.soma),
-        columnModifier: new ModificadorImpl(2, ModificadorImpl.soma),
+        lineModifier: new ModifierImpl(1, ModifierImpl.sum),
+        columnModifier: new ModifierImpl(2, ModifierImpl.sum),
       },
       {
-        lineModifier: new ModificadorImpl(1, ModificadorImpl.subtracao),
-        columnModifier: new ModificadorImpl(2, ModificadorImpl.soma),
+        lineModifier: new ModifierImpl(1, ModifierImpl.minus),
+        columnModifier: new ModifierImpl(2, ModifierImpl.sum),
       },
       {
-        lineModifier: new ModificadorImpl(1, ModificadorImpl.subtracao),
-        columnModifier: new ModificadorImpl(2, ModificadorImpl.subtracao),
+        lineModifier: new ModifierImpl(1, ModifierImpl.minus),
+        columnModifier: new ModifierImpl(2, ModifierImpl.minus),
       },
       {
-        lineModifier: new ModificadorImpl(1, ModificadorImpl.soma),
-        columnModifier: new ModificadorImpl(2, ModificadorImpl.subtracao),
+        lineModifier: new ModifierImpl(1, ModifierImpl.sum),
+        columnModifier: new ModifierImpl(2, ModifierImpl.minus),
       },
     ]
   }
 
-  public executeSimulation(initialPosition: Position, board: Tabuleiro): Position[] {
+  public executeSimulation(initialPosition: Position, board: Board): Position[] {
     return this.getMovementOffsets()
       .map(offset => this.createNewPositionBasedOnOffset(initialPosition, offset))
-      .filter(position => board.isPosicaoExistente(position))
+      .filter(position => board.isPositionInMatrixRange(position))
       .filter(
         position =>
-          !board.isPosicaoOcupada(position) ||
-          board.isBloqueadaPorOponente(position, initialPosition),
+          !board.getPieceByPosition(position) ||
+          board.isPositionBlockedByOpponent(position, initialPosition),
       )
   }
 }

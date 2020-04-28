@@ -24,11 +24,11 @@ var Piece = (function () {
         return this.boardItem;
     };
     Piece.prototype.getBoard = function () {
-        return this.boardItem.getTabuleiro();
+        return this.boardItem.getBoard();
     };
     Piece.prototype.simulateMovement = function () {
         var _this = this;
-        var currentPosition = this.getBoardItem().getPosicao();
+        var currentPosition = this.getBoardItem().getPosition();
         var positions = this.movements.map(function (movement) {
             return movement.executeSimulation(currentPosition, _this.getBoard());
         });

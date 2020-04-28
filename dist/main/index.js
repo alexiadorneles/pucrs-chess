@@ -41,16 +41,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 var PieceBuilder_1 = require("./domain/PieceBuilder");
-var ItemTabuleiro_1 = require("./domain/ItemTabuleiro");
-var Tabuleiro_1 = require("./domain/Tabuleiro");
+var BoardItem_1 = require("./domain/BoardItem");
+var Board_1 = require("./domain/Board");
 var DOMGenerator_1 = require("./DOMGenerator");
 var config_1 = require("./config");
 var buildBoardModel = function (loaded) {
-    var board = new Tabuleiro_1.Tabuleiro();
+    var board = new Board_1.Board();
     return Object.assign(board, loaded);
 };
 var buildModelItem = function (loaded) {
-    var boardItem = new ItemTabuleiro_1.ItemTabuleiro(loaded.posicao, loaded.cor);
+    var boardItem = new BoardItem_1.BoardItem(loaded.posicao, loaded.cor);
     return Object.assign(boardItem, loaded);
 };
 var buildModelPiece = function (loaded) {
@@ -66,7 +66,7 @@ var buildMovementModel = function (loaded) {
     var movement = new clazz();
     return Object.assign(movement, loaded);
 };
-var initialBoard = new Tabuleiro_1.Tabuleiro().gerarTabuleiroInicial();
+var initialBoard = new Board_1.Board().initBoard();
 var newGame = function () {
     DOMGenerator_1.DOMGenerator.getInstance().injectBoard(initialBoard);
     DOMGenerator_1.DOMGenerator.getInstance().refresh();
@@ -75,19 +75,19 @@ var loadGame = function () { return __awaiter(void 0, void 0, void 0, function (
     var response, board;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4, axios_1.default.get(config_1.API.URL)];
+            case 0: return [4, axios_1.default.get(config_1.API.LOAD_URL)];
             case 1:
                 response = _a.sent();
                 board = buildBoardModel(response.data);
-                board.percorrerTabuleiro(function (item, _a) {
+                board.executeForAll(function (item, _a) {
                     var linha = _a.line, coluna = _a.column;
                     var itemModel = buildModelItem(item);
-                    if (itemModel.getPeca()) {
-                        var pieceModel = buildModelPiece(itemModel.getPeca());
-                        itemModel.atribuirPeca(pieceModel);
+                    if (itemModel.getPiece()) {
+                        var pieceModel = buildModelPiece(itemModel.getPiece());
+                        itemModel.addPiece(pieceModel);
                     }
-                    board.posicoes[linha][coluna] = itemModel;
-                    itemModel.adicionarAoTabuleiro(board);
+                    board.matrix[linha][coluna] = itemModel;
+                    itemModel.addToBoard(board);
                 });
                 DOMGenerator_1.DOMGenerator.getInstance().injectBoard(board);
                 DOMGenerator_1.DOMGenerator.getInstance().refresh();
@@ -103,5 +103,5 @@ loadGameButton.addEventListener('click', loadGame);
 saveGameButton.addEventListener('click', function () {
     return DOMGenerator_1.DOMGenerator.getInstance()
         .getBoard()
-        .salvar();
+        .save();
 });

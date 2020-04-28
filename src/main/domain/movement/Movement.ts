@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { MovementOffset, Position, MovementKind } from '../../definitions/Movement'
-import { Tabuleiro } from '../Tabuleiro'
+import { Board } from '../Board'
 
 export abstract class Movement {
   constructor(private kind: MovementKind) {}
@@ -10,7 +10,7 @@ export abstract class Movement {
     return this.kind
   }
 
-  public executeSimulation(position: Position, board: Tabuleiro): Position[] {
+  public executeSimulation(position: Position, board: Board): Position[] {
     const boundGetter = this.getValidPositionsForEachOffset.bind(this, position, board)
     const positions = this.getMovementOffsets().map(boundGetter)
     return _.flatten(positions as Position[])
@@ -18,7 +18,7 @@ export abstract class Movement {
 
   private getValidPositionsForEachOffset(
     initialPosition: Position,
-    board: Tabuleiro,
+    board: Board,
     offset: MovementOffset,
   ): Position[] {
     let isValidPosition = true
@@ -26,10 +26,10 @@ export abstract class Movement {
     const positions = []
     while (isValidPosition) {
       position = this.createNewPositionBasedOnOffset(position, offset)
-      isValidPosition = board.isPosicaoValida(position)
+      isValidPosition = board.isValidPosition(position)
       if (isValidPosition) {
         positions.push(position)
-      } else if (board.isBloqueadaPorOponente(position, initialPosition)) {
+      } else if (board.isPositionBlockedByOpponent(position, initialPosition)) {
         positions.push(position)
       }
     }

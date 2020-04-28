@@ -31,16 +31,16 @@ var King = (function (_super) {
         return _this;
     }
     King.prototype.simulateMovement = function () {
-        var initialPosition = this.getBoardItem().getPosicao();
+        var initialPosition = this.getBoardItem().getPosition();
         var board = this.getBoard();
         var positions = this.movements.map(function (movements) {
             return movements
                 .getMovementOffsets()
                 .map(function (offset) { return movements.createNewPositionBasedOnOffset(initialPosition, offset); })
-                .filter(function (position) { return board.isPosicaoExistente(position); })
+                .filter(function (position) { return board.isPositionInMatrixRange(position); })
                 .filter(function (position) {
-                return !board.isPosicaoOcupada(position) ||
-                    board.isBloqueadaPorOponente(position, initialPosition);
+                return !board.getPieceByPosition(position) ||
+                    board.isPositionBlockedByOpponent(position, initialPosition);
             });
         });
         return lodash_1.default.flatten(positions);

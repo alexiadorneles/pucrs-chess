@@ -3,8 +3,8 @@ var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 var InitialPositions_1 = require("../definitions/InitialPositions");
 var PieceKind_1 = require("../definitions/PieceKind");
-var DefinidorCores_1 = require("./DefinidorCores");
-var ItemTabuleiro_1 = require("./ItemTabuleiro");
+var ColorAdapter_1 = require("./ColorAdapter");
+var BoardItem_1 = require("./BoardItem");
 var DiagonalMovement_1 = require("./movement/DiagonalMovement");
 var HorizontalMovement_1 = require("./movement/HorizontalMovement");
 var LMovement_1 = require("./movement/LMovement");
@@ -35,9 +35,9 @@ var PieceBuilder;
         var map = pieceColor === "grey" ? InitialPositions_1.WhitePiecesPositionMap : InitialPositions_1.BlackPiecesPositionMap;
         return map.get(kind).map(function (position) {
             var clazz = exports.PieceBuilderMap.get(kind);
-            var item = new ItemTabuleiro_1.ItemTabuleiro(position, DefinidorCores_1.ColorAdapter.defineItemColor(position));
+            var item = new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position));
             var peca = new clazz(pieceColor);
-            item.atribuirPeca(peca);
+            item.addPiece(peca);
             return item;
         });
     }

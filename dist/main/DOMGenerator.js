@@ -44,10 +44,10 @@ var DOMGenerator = (function () {
         var div = document.createElement('div');
         div.setAttribute('class', 'container');
         var square = document.createElement('span');
-        square.setAttribute('class', "fas fa-square-full xadrez-quadrado " + item.getCor());
+        square.setAttribute('class', "fas fa-square-full xadrez-quadrado " + item.getColor());
         square.addEventListener('click', item.onClick);
-        item.atribuirElemento(square);
-        var pieceIcon = this.createPieceIcon(item.getPeca());
+        item.setElement(square);
+        var pieceIcon = this.createPieceIcon(item.getPiece());
         pieceIcon.addEventListener('click', item.onClick);
         div.appendChild(pieceIcon);
         div.appendChild(square);

@@ -1,3 +1,4 @@
 export const API = {
-  URL: 'http://localhost:9090/load',
+  LOAD_URL: 'http://localhost:9090/load',
+  SAVE_URL: 'http://localhost:9090/save',
 }

@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ModificadorImpl_1 = require("../ModificadorImpl");
+var ModifierImpl_1 = require("../ModifierImpl");
 var Movement_1 = require("./Movement");
 var LMovement = (function (_super) {
     __extends(LMovement, _super);
@@ -23,36 +23,36 @@ var LMovement = (function (_super) {
     LMovement.prototype.getMovementOffsets = function () {
         return [
             {
-                lineModifier: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.soma),
-                columnModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+                lineModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
             },
             {
-                lineModifier: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.soma),
-                columnModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+                lineModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
             },
             {
-                lineModifier: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.subtracao),
-                columnModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+                lineModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.minus),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
             },
             {
-                lineModifier: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.subtracao),
-                columnModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+                lineModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.minus),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
             },
             {
-                lineModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
-                columnModifier: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.soma),
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.sum),
             },
             {
-                lineModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
-                columnModifier: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.soma),
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                columnModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.sum),
             },
             {
-                lineModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
-                columnModifier: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.subtracao),
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                columnModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.minus),
             },
             {
-                lineModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
-                columnModifier: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.subtracao),
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.minus),
             },
         ];
     };
@@ -60,10 +60,10 @@ var LMovement = (function (_super) {
         var _this = this;
         return this.getMovementOffsets()
             .map(function (offset) { return _this.createNewPositionBasedOnOffset(initialPosition, offset); })
-            .filter(function (position) { return board.isPosicaoExistente(position); })
+            .filter(function (position) { return board.isPositionInMatrixRange(position); })
             .filter(function (position) {
-            return !board.isPosicaoOcupada(position) ||
-                board.isBloqueadaPorOponente(position, initialPosition);
+            return !board.getPieceByPosition(position) ||
+                board.isPositionBlockedByOpponent(position, initialPosition);
         });
     };
     return LMovement;

@@ -1,5 +1,5 @@
 import { MovementOffset, MovementKind } from '../../definitions/Movement'
-import { ModificadorImpl } from '../ModificadorImpl'
+import { ModifierImpl } from '../ModifierImpl'
 import { Movement } from './Movement'
 
 export class HorizontalMovement extends Movement {
@@ -7,12 +7,12 @@ export class HorizontalMovement extends Movement {
   public getMovementOffsets(): MovementOffset[] {
     return [
       {
-        columnModifier: new ModificadorImpl(1, ModificadorImpl.soma),
-        lineModifier: new ModificadorImpl(0, ModificadorImpl.soma),
+        columnModifier: new ModifierImpl(1, ModifierImpl.sum),
+        lineModifier: new ModifierImpl(0, ModifierImpl.sum),
       },
       {
-        columnModifier: new ModificadorImpl(1, ModificadorImpl.subtracao),
-        lineModifier: new ModificadorImpl(0, ModificadorImpl.soma),
+        columnModifier: new ModifierImpl(1, ModifierImpl.minus),
+        lineModifier: new ModifierImpl(0, ModifierImpl.sum),
       },
     ]
   }

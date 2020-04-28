@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ModificadorImpl_1 = require("../ModificadorImpl");
+var ModifierImpl_1 = require("../ModifierImpl");
 var Movement_1 = require("./Movement");
 var DiagonalMovement = (function (_super) {
     __extends(DiagonalMovement, _super);
@@ -23,20 +23,20 @@ var DiagonalMovement = (function (_super) {
     DiagonalMovement.prototype.getMovementOffsets = function () {
         return [
             {
-                lineModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
-                columnModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
             },
             {
-                lineModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
-                columnModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
             },
             {
-                lineModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
-                columnModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
             },
             {
-                lineModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
-                columnModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
             },
         ];
     };

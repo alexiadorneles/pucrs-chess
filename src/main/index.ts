@@ -1,22 +1,22 @@
 import axios from 'axios'
 import { Position } from './definitions/Movement'
 import { MovementBuilderMap, PieceBuilderMap } from './domain/PieceBuilder'
-import { ItemTabuleiro } from './domain/ItemTabuleiro'
+import { BoardItem } from './domain/BoardItem'
 import { Movement } from './domain/movement/Movement'
 import { Piece } from './domain/piece/Piece'
-import { Tabuleiro } from './domain/Tabuleiro'
+import { Board } from './domain/Board'
 import { DOMGenerator } from './DOMGenerator'
 import { API } from './config'
 
 type JSONObject = { [key in string]: any }
 
 const buildBoardModel = (loaded: JSONObject) => {
-  const board = new Tabuleiro()
+  const board = new Board()
   return Object.assign(board, loaded)
 }
 
-const buildModelItem = (loaded: JSONObject): ItemTabuleiro => {
-  const boardItem = new ItemTabuleiro(loaded.posicao, loaded.cor)
+const buildModelItem = (loaded: JSONObject): BoardItem => {
+  const boardItem = new BoardItem(loaded.posicao, loaded.cor)
   return Object.assign(boardItem, loaded)
 }
 
@@ -35,24 +35,24 @@ const buildMovementModel = (loaded: JSONObject) => {
   return Object.assign(movement, loaded)
 }
 
-const initialBoard = new Tabuleiro().gerarTabuleiroInicial()
+const initialBoard = new Board().initBoard()
 const newGame = () => {
   DOMGenerator.getInstance().injectBoard(initialBoard)
   DOMGenerator.getInstance().refresh()
 }
 
 const loadGame = async () => {
-  const response = await axios.get(API.URL)
+  const response = await axios.get(API.LOAD_URL)
   const board = buildBoardModel(response.data)
 
-  board.percorrerTabuleiro((item: JSONObject, { line: linha, column: coluna }: Position) => {
+  board.executeForAll((item: JSONObject, { line: linha, column: coluna }: Position) => {
     const itemModel = buildModelItem(item)
-    if (itemModel.getPeca()) {
-      const pieceModel = buildModelPiece(itemModel.getPeca())
-      itemModel.atribuirPeca(pieceModel)
+    if (itemModel.getPiece()) {
+      const pieceModel = buildModelPiece(itemModel.getPiece())
+      itemModel.addPiece(pieceModel)
     }
-    board.posicoes[linha][coluna] = itemModel
-    itemModel.adicionarAoTabuleiro(board)
+    board.matrix[linha][coluna] = itemModel
+    itemModel.addToBoard(board)
   })
 
   DOMGenerator.getInstance().injectBoard(board)
@@ -68,5 +68,5 @@ loadGameButton.addEventListener('click', loadGame)
 saveGameButton.addEventListener('click', () =>
   DOMGenerator.getInstance()
     .getBoard()
-    .salvar(),
+    .save(),
 )

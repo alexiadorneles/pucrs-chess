@@ -2,8 +2,8 @@ import { Color } from '../definitions/Color'
 import { WhitePiecesPositionMap, BlackPiecesPositionMap } from '../definitions/InitialPositions'
 import { MovementKind } from '../definitions/Movement'
 import { PieceKind } from '../definitions/PieceKind'
-import { ColorAdapter } from './DefinidorCores'
-import { ItemTabuleiro } from './ItemTabuleiro'
+import { ColorAdapter } from './ColorAdapter'
+import { BoardItem } from './BoardItem'
 import { DiagonalMovement } from './movement/DiagonalMovement'
 import { HorizontalMovement } from './movement/HorizontalMovement'
 import { LMovement } from './movement/LMovement'
@@ -33,13 +33,13 @@ export const MovementBuilderMap = {
 }
 
 export namespace PieceBuilder {
-  export function build(kind: PieceKind, pieceColor: Color): ItemTabuleiro[] {
+  export function build(kind: PieceKind, pieceColor: Color): BoardItem[] {
     const map = pieceColor === Color.GREY ? WhitePiecesPositionMap : BlackPiecesPositionMap
     return map.get(kind).map(position => {
       const clazz = PieceBuilderMap.get(kind)
-      const item = new ItemTabuleiro(position, ColorAdapter.defineItemColor(position))
+      const item = new BoardItem(position, ColorAdapter.defineItemColor(position))
       const peca = new clazz(pieceColor)
-      item.atribuirPeca(peca)
+      item.addPiece(peca)
       return item
     })
   }

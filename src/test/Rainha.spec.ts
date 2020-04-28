@@ -3,10 +3,10 @@ import _ from 'lodash'
 import 'mocha'
 import sinon from 'sinon'
 import { Color } from '../main/definitions/Color'
-import { ItemTabuleiro } from '../main/domain/ItemTabuleiro'
+import { BoardItem } from '../main/domain/BoardItem'
 import { Pawn } from '../main/domain/piece/Pawn'
 import { Queen } from '../main/domain/piece/Queen'
-import { Tabuleiro } from '../main/domain/Tabuleiro'
+import { Board } from '../main/domain/Board'
 import deepEqualInAnyOrder = require('deep-equal-in-any-order')
 import { King } from '../main/domain/piece/King'
 import { Rook } from '../main/domain/piece/Rook'
@@ -19,7 +19,7 @@ context('Rainha', () => {
     it('deve atribuir propriedade item', () => {
       // arrange
       const rainha = new Queen(Color.WHITE)
-      const item = new ItemTabuleiro({ line: 0, column: 0 }, Color.BLACK)
+      const item = new BoardItem({ line: 0, column: 0 }, Color.BLACK)
       // act
       rainha.addToItem(item)
       // assert
@@ -30,15 +30,15 @@ context('Rainha', () => {
     beforeEach(() => sinon.restore())
     it('quando posição inicial e tabuleiro limpo deve retornar muitas opções ', () => {
       // arrange
-      const tabuleiro = new Tabuleiro()
+      const tabuleiro = new Board()
       const rainha = new Queen(Color.WHITE)
       const posicaoRainha = { line: 0, column: 3 }
-      const item = new ItemTabuleiro(posicaoRainha, Color.BLACK)
-      item.atribuirPeca(rainha)
+      const item = new BoardItem(posicaoRainha, Color.BLACK)
+      item.addPiece(rainha)
       sinon.replace(tabuleiro, 'getItem', (posicao) => {
-        return _.isEqual(posicaoRainha, posicao) ? item : new ItemTabuleiro(posicao, Color.WHITE)
+        return _.isEqual(posicaoRainha, posicao) ? item : new BoardItem(posicao, Color.WHITE)
       })
-      tabuleiro.adicionarItem(item)
+      tabuleiro.addItem(item)
       // act
       const esperado = [
         // horizontal
@@ -74,15 +74,15 @@ context('Rainha', () => {
     })
     it('quando caminho livre deve retornar todos possíveis', () => {
       // arrange
-      const tabuleiro = new Tabuleiro()
+      const tabuleiro = new Board()
       const posicaoRainha = { line: 3, column: 3 }
       const rainha = new Queen(Color.WHITE)
-      const item = new ItemTabuleiro(posicaoRainha, Color.BLACK)
-      item.atribuirPeca(rainha)
+      const item = new BoardItem(posicaoRainha, Color.BLACK)
+      item.addPiece(rainha)
       sinon.replace(tabuleiro, 'getItem', (posicao) => {
-        return _.isEqual(posicaoRainha, posicao) ? item : new ItemTabuleiro(posicao, Color.WHITE)
+        return _.isEqual(posicaoRainha, posicao) ? item : new BoardItem(posicao, Color.WHITE)
       })
-      tabuleiro.adicionarItem(item)
+      tabuleiro.addItem(item)
       // act
       const esperado = [
         // vertical - atrás
@@ -129,45 +129,45 @@ context('Rainha', () => {
     it('quando peças no caminho retorna apenas posições válidas', () => {
       // arrange
       const rainha = new Queen(Color.WHITE)
-      const itemRainha = new ItemTabuleiro({ line: 2, column: 2 }, Color.BLACK)
-      itemRainha.atribuirPeca(rainha)
+      const itemRainha = new BoardItem({ line: 2, column: 2 }, Color.BLACK)
+      itemRainha.addPiece(rainha)
 
       const peao = new Pawn(Color.WHITE)
-      const itemPeao = new ItemTabuleiro({ line: 2, column: 1 }, Color.BLACK)
-      itemPeao.atribuirPeca(peao)
+      const itemPeao = new BoardItem({ line: 2, column: 1 }, Color.BLACK)
+      itemPeao.addPiece(peao)
 
       const peao2 = new Pawn(Color.WHITE)
-      const itemPeao2 = new ItemTabuleiro({ line: 3, column: 3 }, Color.BLACK)
-      itemPeao2.atribuirPeca(peao2)
+      const itemPeao2 = new BoardItem({ line: 3, column: 3 }, Color.BLACK)
+      itemPeao2.addPiece(peao2)
 
       const peao3 = new Pawn(Color.WHITE)
-      const itemPeao3 = new ItemTabuleiro({ line: 2, column: 4 }, Color.BLACK)
-      itemPeao3.atribuirPeca(peao3)
+      const itemPeao3 = new BoardItem({ line: 2, column: 4 }, Color.BLACK)
+      itemPeao3.addPiece(peao3)
 
       const peao4 = new Pawn(Color.WHITE)
-      const itemPeao4 = new ItemTabuleiro({ line: 1, column: 2 }, Color.BLACK)
-      itemPeao4.atribuirPeca(peao4)
+      const itemPeao4 = new BoardItem({ line: 1, column: 2 }, Color.BLACK)
+      itemPeao4.addPiece(peao4)
 
       const torre = new Rook(Color.WHITE)
-      const itemTorre = new ItemTabuleiro({ line: 0, column: 0 }, Color.BLACK)
-      itemTorre.atribuirPeca(torre)
+      const itemTorre = new BoardItem({ line: 0, column: 0 }, Color.BLACK)
+      itemTorre.addPiece(torre)
 
       const rei = new King(Color.WHITE)
-      const itemRei = new ItemTabuleiro({ line: 0, column: 4 }, Color.BLACK)
-      itemRei.atribuirPeca(rei)
+      const itemRei = new BoardItem({ line: 0, column: 4 }, Color.BLACK)
+      itemRei.addPiece(rei)
 
       const peaoOponente = new Pawn(Color.WHITE)
-      const itemPeaoOponente = new ItemTabuleiro({ line: 6, column: 2 }, Color.WHITE)
-      itemPeaoOponente.atribuirPeca(peaoOponente)
+      const itemPeaoOponente = new BoardItem({ line: 6, column: 2 }, Color.WHITE)
+      itemPeaoOponente.addPiece(peaoOponente)
 
       const itens = [itemRainha, itemPeao, itemPeao2, itemPeao3, itemPeao4, itemPeaoOponente, itemTorre, itemRei]
 
-      sinon.replace(Tabuleiro.prototype, 'getItem', (posicao) => {
-        const item = itens.find(item => _.isEqual(item.getPosicao(), posicao))
-        return item || new ItemTabuleiro(posicao, Color.WHITE)
+      sinon.replace(Board.prototype, 'getItem', (posicao) => {
+        const item = itens.find(item => _.isEqual(item.getPosition(), posicao))
+        return item || new BoardItem(posicao, Color.WHITE)
       })
-      const tabuleiro = new Tabuleiro()
-      itens.forEach(item => tabuleiro.adicionarItem(item))
+      const tabuleiro = new Board()
+      itens.forEach(item => tabuleiro.addItem(item))
       // act
       const esperado = [
         { line: 1, column: 1 },

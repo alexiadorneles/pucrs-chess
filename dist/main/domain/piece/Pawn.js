@@ -44,7 +44,7 @@ var Pawn = (function (_super) {
         return _super.call(this, PieceKind_1.PieceKind.PAWN, color, [new VerticalMovement_1.VerticalMovement()], false) || this;
     }
     Pawn.prototype.simulateMovement = function () {
-        var currentPosition = this.boardItem.getPosicao();
+        var currentPosition = this.boardItem.getPosition();
         var newPosition = this.getNewPositionByColor(currentPosition);
         var possibleAttacks = this.getAttacksByColor(currentPosition);
         return lodash_1.default.compact(__spreadArrays([newPosition], possibleAttacks));
@@ -53,7 +53,7 @@ var Pawn = (function (_super) {
         var line = _a.line, column = _a.column;
         var newLine = this.color === "grey" ? ++line : --line;
         var newPosition = { line: newLine, column: column };
-        var isOccupied = this.getBoard().isPosicaoOcupada(newPosition);
+        var isOccupied = this.getBoard().getPieceByPosition(newPosition);
         return (!isOccupied && newPosition) || null;
     };
     Pawn.prototype.getAttacksByColor = function (currentPosition) {
@@ -66,7 +66,7 @@ var Pawn = (function (_super) {
         var leftDiagonal = { line: line, column: column - 1 };
         var attacks = [rightDiagonal, leftDiagonal];
         return attacks.filter(function (position) {
-            return _this.getBoard().isBloqueadaPorOponente(position, currentPosition);
+            return _this.getBoard().isPositionBlockedByOpponent(position, currentPosition);
         });
     };
     return Pawn;

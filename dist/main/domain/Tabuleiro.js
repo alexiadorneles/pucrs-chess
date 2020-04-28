@@ -44,9 +44,9 @@ var lodash_1 = __importDefault(require("lodash"));
 var InitialPositions_1 = require("../definitions/InitialPositions");
 var PieceKind_1 = require("../definitions/PieceKind");
 var DOMGenerator_1 = require("../DOMGenerator");
-var DefinidorCores_1 = require("./DefinidorCores");
+var ColorAdapter_1 = require("./ColorAdapter");
 var PieceBuilder_1 = require("./PieceBuilder");
-var ItemTabuleiro_1 = require("./ItemTabuleiro");
+var BoardItem_1 = require("./BoardItem");
 var initilizarMatriz = function () {
     var itens = [];
     itens[0] = [];
@@ -76,9 +76,9 @@ var Tabuleiro = (function () {
                 switch (_a.label) {
                     case 0:
                         this.percorrerTabuleiro(function (item) {
-                            item.setTabuleiro(null);
-                            if (item.getPeca()) {
-                                item.getPeca().addToItem(null);
+                            item.setBoard(null);
+                            if (item.getPiece()) {
+                                item.getPiece().addToItem(null);
                             }
                         });
                         conteudo = JSON.stringify(this);
@@ -96,9 +96,9 @@ var Tabuleiro = (function () {
             return _this.isPosicaoExistente(posicao) && !_this.isPosicaoOcupada(posicao);
         };
         this.adicionarItem = function (item) {
-            var _a = item.getPosicao(), linha = _a.line, coluna = _a.column;
+            var _a = item.getPosition(), linha = _a.line, coluna = _a.column;
             _this.posicoes[linha][coluna] = item;
-            item.adicionarAoTabuleiro(_this);
+            item.addToBoard(_this);
         };
     }
     Tabuleiro.prototype.getItem = function (_a) {
@@ -109,17 +109,17 @@ var Tabuleiro = (function () {
     Tabuleiro.prototype.destacarPosicoes = function (posicoes) {
         var _this = this;
         posicoes.forEach(function (posicao) {
-            return _this.getItem(posicao).setDestaque(true);
+            return _this.getItem(posicao).setHighlight(true);
         });
     };
     Tabuleiro.prototype.removerDestaques = function () {
-        var removerDestaque = function (item) { return item.removerDestaque(); };
+        var removerDestaque = function (item) { return item.removeHighlight(); };
         this.percorrerTabuleiro(removerDestaque);
     };
     Tabuleiro.prototype.isBloqueadaPorOponente = function (posicao, posicaoInicial) {
         var bloqueante = this.isPosicaoExistente(posicao) && this.isPosicaoOcupada(posicao);
         var corBloqueante = bloqueante && this.isPosicaoOcupada(posicao).getCor();
-        var corBloqueada = this.getItem(posicaoInicial).getPeca().getCor();
+        var corBloqueada = this.getItem(posicaoInicial).getPiece().getCor();
         return (corBloqueante) && (corBloqueada !== corBloqueante);
     };
     Tabuleiro.prototype.setPecaEmMovimento = function (peca) {
@@ -133,9 +133,9 @@ var Tabuleiro = (function () {
     };
     Tabuleiro.prototype.moverPeca = function (itemClicado) {
         var itemDaPeca = this.pecaEmMovimento.getBoardItem();
-        itemClicado.atribuirPeca(this.pecaEmMovimento);
+        itemClicado.addPiece(this.pecaEmMovimento);
         this.pecaEmMovimento = null;
-        itemDaPeca.atribuirPeca(null);
+        itemDaPeca.addPiece(null);
         DOMGenerator_1.DOMGenerator.getInstance().refresh();
     };
     Tabuleiro.prototype.percorrerTabuleiro = function (callback) {
@@ -147,7 +147,7 @@ var Tabuleiro = (function () {
         return (posicao.column < 8 && posicao.column >= 0) && (posicao.line >= 0 && posicao.line < 8);
     };
     Tabuleiro.prototype.isPosicaoOcupada = function (posicao) {
-        return this.isPosicaoExistente(posicao) ? this.getItem(posicao).getPeca() : null;
+        return this.isPosicaoExistente(posicao) ? this.getItem(posicao).getPiece() : null;
     };
     Tabuleiro.prototype.gerarPecas = function (cor) {
         return Object.values(PieceKind_1.PieceKind)
@@ -155,7 +155,7 @@ var Tabuleiro = (function () {
             .reduce(function (agg, tipo) { return agg.concat(PieceBuilder_1.PieceBuilder.build(tipo, cor)); }, []);
     };
     Tabuleiro.prototype.gerarPecasVazias = function () {
-        return InitialPositions_1.WhitePiecesPositionMap.get(PieceKind_1.PieceKind.EMPTY).map(function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.ColorAdapter.defineItemColor(posicao)); });
+        return InitialPositions_1.WhitePiecesPositionMap.get(PieceKind_1.PieceKind.EMPTY).map(function (posicao) { return new BoardItem_1.BoardItem(posicao, ColorAdapter_1.ColorAdapter.defineItemColor(posicao)); });
     };
     return Tabuleiro;
 }());

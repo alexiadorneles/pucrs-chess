@@ -1,18 +1,18 @@
-import { Tabuleiro } from './domain/Tabuleiro'
-import { ItemTabuleiro } from './domain/ItemTabuleiro'
+import { Board } from './domain/Board'
+import { BoardItem } from './domain/BoardItem'
 import { Piece } from './domain/piece/Piece'
 
 export class DOMGenerator {
   private static instance: DOMGenerator
-  private board: Tabuleiro
+  private board: Board
 
   private constructor() {}
 
-  public injectBoard(board: Tabuleiro): void {
+  public injectBoard(board: Board): void {
     this.board = board
   }
 
-  public getBoard(): Tabuleiro {
+  public getBoard(): Board {
     return this.board
   }
 
@@ -49,16 +49,16 @@ export class DOMGenerator {
     lineElements.forEach(element => root.appendChild(element))
   }
 
-  private createElement(item: ItemTabuleiro): Element {
+  private createElement(item: BoardItem): Element {
     const div = document.createElement('div')
     div.setAttribute('class', 'container')
 
     const square = document.createElement('span')
-    square.setAttribute('class', `fas fa-square-full xadrez-quadrado ${item.getCor()}`)
+    square.setAttribute('class', `fas fa-square-full xadrez-quadrado ${item.getColor()}`)
     square.addEventListener('click', item.onClick)
-    item.atribuirElemento(square)
+    item.setElement(square)
 
-    const pieceIcon = this.createPieceIcon(item.getPeca())
+    const pieceIcon = this.createPieceIcon(item.getPiece())
     pieceIcon.addEventListener('click', item.onClick)
 
     div.appendChild(pieceIcon)

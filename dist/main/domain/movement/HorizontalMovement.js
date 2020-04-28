@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ModificadorImpl_1 = require("../ModificadorImpl");
+var ModifierImpl_1 = require("../ModifierImpl");
 var Movement_1 = require("./Movement");
 var HorizontalMovement = (function (_super) {
     __extends(HorizontalMovement, _super);
@@ -23,12 +23,12 @@ var HorizontalMovement = (function (_super) {
     HorizontalMovement.prototype.getMovementOffsets = function () {
         return [
             {
-                columnModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
-                lineModifier: new ModificadorImpl_1.ModificadorImpl(0, ModificadorImpl_1.ModificadorImpl.soma),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                lineModifier: new ModifierImpl_1.ModifierImpl(0, ModifierImpl_1.ModifierImpl.sum),
             },
             {
-                columnModifier: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
-                lineModifier: new ModificadorImpl_1.ModificadorImpl(0, ModificadorImpl_1.ModificadorImpl.soma),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                lineModifier: new ModifierImpl_1.ModifierImpl(0, ModifierImpl_1.ModifierImpl.sum),
             },
         ];
     };
