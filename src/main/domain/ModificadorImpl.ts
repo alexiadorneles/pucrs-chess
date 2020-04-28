@@ -1,4 +1,4 @@
-import { Modifier } from '../definitions/Movimento'
+import { Modifier } from '../definitions/Movement'
 
 export class ModificadorImpl implements Modifier {
   constructor(public quantity: number, public apply: (quantidade: number, propriedade: number) => number) {

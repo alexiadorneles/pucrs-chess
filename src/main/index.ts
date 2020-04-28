@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Position } from './definitions/Movimento'
+import { Position } from './definitions/Movement'
 import { InstanciadorMovimentoMap, InstanciadorTipoMap } from './domain/InstanciadorPecas'
 import { ItemTabuleiro } from './domain/ItemTabuleiro'
 import { Movimento } from './domain/movimento/Movimento'

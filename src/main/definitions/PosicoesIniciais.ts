@@ -1,4 +1,4 @@
-import { Position } from './Movimento'
+import { Position } from './Movement'
 import { TipoPeca } from './TipoPeca'
 
 const posicaoPeoesBrancos = [

@@ -1,4 +1,4 @@
-import { MovementOffset, MovementKind } from '../../definitions/Movimento'
+import { MovementOffset, MovementKind } from '../../definitions/Movement'
 import { ModificadorImpl } from '../ModificadorImpl'
 import { Movimento } from './Movimento'
 

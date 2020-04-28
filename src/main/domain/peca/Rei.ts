@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { Color } from '../../definitions/Cor'
-import { Position } from '../../definitions/Movimento'
+import { Position } from '../../definitions/Movement'
 import { TipoPeca } from '../../definitions/TipoPeca'
 import { MovimentoDiagonal } from '../movimento/MovimentoDiagonal'
 import { MovimentoHorizontal } from '../movimento/MovimentoHorizontal'

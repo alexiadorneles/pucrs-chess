@@ -1,4 +1,4 @@
-import { MovementOffset, Position, MovementKind } from '../../definitions/Movimento'
+import { MovementOffset, Position, MovementKind } from '../../definitions/Movement'
 import { ModificadorImpl } from '../ModificadorImpl'
 import { Tabuleiro } from '../Tabuleiro'
 import { Movimento } from './Movimento'

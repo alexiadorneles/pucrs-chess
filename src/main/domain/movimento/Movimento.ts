@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { MovementOffset, Position, MovementKind } from '../../definitions/Movimento'
+import { MovementOffset, Position, MovementKind } from '../../definitions/Movement'
 import { Tabuleiro } from '../Tabuleiro'
 
 export abstract class Movimento {
