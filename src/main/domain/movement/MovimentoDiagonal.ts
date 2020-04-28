@@ -1,10 +1,10 @@
 import { MovementOffset, MovementKind } from '../../definitions/Movement'
 import { ModificadorImpl } from '../ModificadorImpl'
-import { Movimento } from './Movimento'
+import { Movement } from './Movement'
 
-export class MovimentoDiagonal extends Movimento {
+export class MovimentoDiagonal extends Movement {
   constructor() { super(MovementKind.DIAGONAL) }
-  public getOffsetMovimentos(): MovementOffset[] {
+  public getMovementOffsets(): MovementOffset[] {
     return [
       {
         lineModifier: new ModificadorImpl(1, ModificadorImpl.soma),

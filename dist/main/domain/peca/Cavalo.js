@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var PieceKind_1 = require("../../definitions/PieceKind");
-var MovimentoL_1 = require("../movimento/MovimentoL");
+var MovimentoL_1 = require("../movement/MovimentoL");
 var Peca_1 = require("./Peca");
 var Cavalo = (function (_super) {
     __extends(Cavalo, _super);

@@ -29,7 +29,7 @@ var Peca = (function () {
     Peca.prototype.simularMovimento = function () {
         var _this = this;
         var posicaoAtual = this.getItemTabuleiro().getPosicao();
-        var posicoes = this.movimentos.map(function (movimento) { return movimento.simularMovimento(posicaoAtual, _this.getTabuleiro()); });
+        var posicoes = this.movimentos.map(function (movimento) { return movimento.executeSimulation(posicaoAtual, _this.getTabuleiro()); });
         return lodash_1.default.flatten(posicoes);
     };
     Peca.prototype.adicionarAoItem = function (item) {

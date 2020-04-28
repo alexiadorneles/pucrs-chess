@@ -1,6 +1,6 @@
 import { Color } from '../../definitions/Color'
 import { PieceKind } from '../../definitions/PieceKind'
-import { MovimentoL } from '../movimento/MovimentoL'
+import { MovimentoL } from '../movement/MovimentoL'
 import { Peca } from './Peca'
 
 export class Cavalo extends Peca {

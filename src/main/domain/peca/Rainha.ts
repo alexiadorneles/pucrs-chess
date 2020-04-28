@@ -1,8 +1,8 @@
 import { Color } from '../../definitions/Color'
 import { PieceKind } from '../../definitions/PieceKind'
-import { MovimentoDiagonal } from '../movimento/MovimentoDiagonal'
-import { MovimentoHorizontal } from '../movimento/MovimentoHorizontal'
-import { MovimentoVertical } from '../movimento/MovimentoVertical'
+import { MovimentoDiagonal } from '../movement/MovimentoDiagonal'
+import { MovimentoHorizontal } from '../movement/MovimentoHorizontal'
+import { MovimentoVertical } from '../movement/MovimentoVertical'
 import { Peca } from './Peca'
 
 export class Rainha extends Peca {

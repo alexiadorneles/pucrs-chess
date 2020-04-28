@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
 var PieceKind_1 = require("../../definitions/PieceKind");
-var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
+var MovimentoVertical_1 = require("../movement/MovimentoVertical");
 var Peca_1 = require("./Peca");
 var Peao = (function (_super) {
     __extends(Peao, _super);

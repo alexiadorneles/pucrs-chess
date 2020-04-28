@@ -4,27 +4,27 @@ import { Color } from '../../definitions/Color'
 import { Position, MovementKind } from '../../definitions/Movement'
 import { PieceKind } from '../../definitions/PieceKind'
 import { ItemTabuleiro } from '../ItemTabuleiro'
-import { Movimento } from '../movimento/Movimento'
+import { Movement } from '../movement/Movement'
 
 export abstract class Peca {
   protected itemTabuleiro: ItemTabuleiro
   protected tipo: PieceKind
-  protected movimentos: Movimento[]
+  protected movimentos: Movement[]
   protected cor: Color
   protected vaiPraTras: boolean
 
-  constructor(tipo: PieceKind, cor: Color, movimentos: Movimento[], vaiPraTras: boolean) {
+  constructor(tipo: PieceKind, cor: Color, movimentos: Movement[], vaiPraTras: boolean) {
     this.tipo = tipo
     this.cor = cor
     this.movimentos = movimentos
     this.vaiPraTras = vaiPraTras
   }
 
-  public getMovimentos(): Movimento[] {
+  public getMovimentos(): Movement[] {
     return this.movimentos
   }
 
-  public setMovimentos(movimentos: Movimento[]): void {
+  public setMovimentos(movimentos: Movement[]): void {
     this.movimentos = movimentos
   }
 
@@ -42,7 +42,7 @@ export abstract class Peca {
 
   public simularMovimento(): Position[] {
     const posicaoAtual = this.getItemTabuleiro().getPosicao()
-    const posicoes = this.movimentos.map(movimento => movimento.simularMovimento(posicaoAtual, this.getTabuleiro()))
+    const posicoes = this.movimentos.map(movimento => movimento.executeSimulation(posicaoAtual, this.getTabuleiro()))
     return _.flatten(posicoes)
   }
 

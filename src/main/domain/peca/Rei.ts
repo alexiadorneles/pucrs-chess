@@ -2,9 +2,9 @@ import _ from 'lodash'
 import { Color } from '../../definitions/Color'
 import { Position } from '../../definitions/Movement'
 import { PieceKind } from '../../definitions/PieceKind'
-import { MovimentoDiagonal } from '../movimento/MovimentoDiagonal'
-import { MovimentoHorizontal } from '../movimento/MovimentoHorizontal'
-import { MovimentoVertical } from '../movimento/MovimentoVertical'
+import { MovimentoDiagonal } from '../movement/MovimentoDiagonal'
+import { MovimentoHorizontal } from '../movement/MovimentoHorizontal'
+import { MovimentoVertical } from '../movement/MovimentoVertical'
 import { Peca } from './Peca'
 
 export class Rei extends Peca {
@@ -17,8 +17,8 @@ export class Rei extends Peca {
     const posicaoInicial = this.getItemTabuleiro().getPosicao()
     const tabuleiro = this.getTabuleiro()
     const posicoes = this.movimentos.map(movimento =>
-      movimento.getOffsetMovimentos()
-        .map(offset => movimento.criarNovaPosicaoBaseadaEmOffset(posicaoInicial, offset))
+      movimento.getMovementOffsets()
+        .map(offset => movimento.createNewPositionBasedOnOffset(posicaoInicial, offset))
         .filter(posicao => tabuleiro.isPosicaoExistente(posicao))
         .filter(posicao =>
           !tabuleiro.isPosicaoOcupada(posicao) ||

@@ -18,9 +18,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
 var PieceKind_1 = require("../../definitions/PieceKind");
-var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
-var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
-var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
+var MovimentoDiagonal_1 = require("../movement/MovimentoDiagonal");
+var MovimentoHorizontal_1 = require("../movement/MovimentoHorizontal");
+var MovimentoVertical_1 = require("../movement/MovimentoVertical");
 var Peca_1 = require("./Peca");
 var Rei = (function (_super) {
     __extends(Rei, _super);
@@ -34,8 +34,8 @@ var Rei = (function (_super) {
         var posicaoInicial = this.getItemTabuleiro().getPosicao();
         var tabuleiro = this.getTabuleiro();
         var posicoes = this.movimentos.map(function (movimento) {
-            return movimento.getOffsetMovimentos()
-                .map(function (offset) { return movimento.criarNovaPosicaoBaseadaEmOffset(posicaoInicial, offset); })
+            return movimento.getMovementOffsets()
+                .map(function (offset) { return movimento.createNewPositionBasedOnOffset(posicaoInicial, offset); })
                 .filter(function (posicao) { return tabuleiro.isPosicaoExistente(posicao); })
                 .filter(function (posicao) {
                 return !tabuleiro.isPosicaoOcupada(posicao) ||

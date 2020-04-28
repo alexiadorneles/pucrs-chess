@@ -1,11 +1,11 @@
 import { MovementOffset, Position, MovementKind } from '../../definitions/Movement'
 import { ModificadorImpl } from '../ModificadorImpl'
 import { Tabuleiro } from '../Tabuleiro'
-import { Movimento } from './Movimento'
+import { Movement } from './Movement'
 
-export class MovimentoL extends Movimento {
+export class MovimentoL extends Movement {
   constructor() { super(MovementKind.L) }
-  public getOffsetMovimentos(): MovementOffset[] {
+  public getMovementOffsets(): MovementOffset[] {
     return [
       {
         lineModifier: new ModificadorImpl(2, ModificadorImpl.soma),
@@ -42,9 +42,9 @@ export class MovimentoL extends Movimento {
     ]
   }
 
-  public simularMovimento(posicaoInicial: Position, tabuleiro: Tabuleiro): Position[] {
-    return this.getOffsetMovimentos()
-      .map(offset => this.criarNovaPosicaoBaseadaEmOffset(posicaoInicial, offset))
+  public executeSimulation(posicaoInicial: Position, tabuleiro: Tabuleiro): Position[] {
+    return this.getMovementOffsets()
+      .map(offset => this.createNewPositionBasedOnOffset(posicaoInicial, offset))
       .filter(posicao => tabuleiro.isPosicaoExistente(posicao))
       .filter(posicao =>
         !tabuleiro.isPosicaoOcupada(posicao) ||

@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { Color } from '../../definitions/Color'
 import { Position } from '../../definitions/Movement'
 import { PieceKind } from '../../definitions/PieceKind'
-import { MovimentoVertical } from '../movimento/MovimentoVertical'
+import { MovimentoVertical } from '../movement/MovimentoVertical'
 import { Peca } from './Peca'
 
 export class Peao extends Peca {
