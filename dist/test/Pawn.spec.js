@@ -14,7 +14,7 @@ context('Pawn', function () {
     describe('calling addToItem', function () {
         it('should set item property', function () {
             var pawn = new Pawn_1.Pawn("white");
-            var item = new BoardItem_1.BoardItem({ line: 0, column: 0 }, "black");
+            var item = new BoardItem_1.BoardItem({ line: 0, column: 0 }, "dark-pink");
             pawn.addToItem(item);
             chai_1.expect(pawn.getBoardItem()).to.deep.equals(item);
         });
@@ -24,10 +24,10 @@ context('Pawn', function () {
             var board = new Board_1.Board();
             var pawnPosition = { line: 1, column: 2 };
             sinon_1.default.replace(board, 'getItem', function (posicao) {
-                return lodash_1.default.isEqual(pawnPosition, posicao) ? item : new BoardItem_1.BoardItem(posicao, "grey");
+                return lodash_1.default.isEqual(pawnPosition, posicao) ? item : new BoardItem_1.BoardItem(posicao, "white");
             });
-            var pawn = new Pawn_1.Pawn("grey");
-            var item = new BoardItem_1.BoardItem(pawnPosition, "black");
+            var pawn = new Pawn_1.Pawn("white");
+            var item = new BoardItem_1.BoardItem(pawnPosition, "dark-pink");
             item.addPiece(pawn);
             board.addItem(item);
             var expected = [{ line: 2, column: 2 }];

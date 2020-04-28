@@ -65,11 +65,11 @@ var Board = (function () {
         var _this = this;
         this.matrix = initMatrix();
         this.initBoard = function () {
-            var whites = _this.buildPieces("black");
-            var blacks = _this.buildPieces("grey");
+            var whites = _this.buildPieces("white");
+            var pinks = _this.buildPieces("dark-pink");
             var empties = _this.buildEmptyPieces();
             whites
-                .concat(blacks)
+                .concat(pinks)
                 .concat(empties)
                 .forEach(_this.addItem);
             return _this;
@@ -124,7 +124,7 @@ var Board = (function () {
             .getCor();
         return blockingColor && blockedColor !== blockingColor;
     };
-    Board.prototype.setPecaEmMovimento = function (piece) {
+    Board.prototype.setCurrentMovingPiece = function (piece) {
         if (this.currentMovingPieces && !lodash_1.default.isEqual(this.currentMovingPieces, piece)) {
             this.clearHighlights();
         }
@@ -151,10 +151,10 @@ var Board = (function () {
     Board.prototype.getPieceByPosition = function (position) {
         return this.isPositionInMatrixRange(position) ? this.getItem(position).getPiece() : null;
     };
-    Board.prototype.buildPieces = function (cor) {
+    Board.prototype.buildPieces = function (color) {
         return Object.values(PieceKind_1.PieceKind)
             .filter(Boolean)
-            .reduce(function (agg, kind) { return agg.concat(PieceBuilder_1.PieceBuilder.build(kind, cor)); }, []);
+            .reduce(function (agg, kind) { return agg.concat(PieceBuilder_1.PieceBuilder.build(kind, color)); }, []);
     };
     Board.prototype.buildEmptyPieces = function () {
         return InitialPositions_1.WhitePiecesPositionMap.get(PieceKind_1.PieceKind.EMPTY).map(function (position) { return new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position)); });

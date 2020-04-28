@@ -19,7 +19,7 @@ context('Knight', () => {
     it('should set item property', () => {
       // arrange
       const knight = new Knight(Color.WHITE)
-      const item = new BoardItem({ line: 0, column: 0 }, Color.BLACK)
+      const item = new BoardItem({ line: 0, column: 0 }, Color.DARK_PINK)
       // act
       knight.addToItem(item)
       // assert
@@ -32,7 +32,7 @@ context('Knight', () => {
       const board = new Board()
       sinon.replace(board, 'getItem', position => new BoardItem(position, Color.WHITE))
       const knight = new Knight(Color.WHITE)
-      const item = new BoardItem({ line: 0, column: 1 }, Color.BLACK)
+      const item = new BoardItem({ line: 0, column: 1 }, Color.DARK_PINK)
       item.addPiece(knight)
       board.addItem(item)
       // act
@@ -50,7 +50,7 @@ context('Knight', () => {
       const board = new Board()
       sinon.replace(board, 'getItem', position => new BoardItem(position, Color.WHITE))
       const knight = new Knight(Color.WHITE)
-      const item = new BoardItem({ line: 2, column: 2 }, Color.BLACK)
+      const item = new BoardItem({ line: 2, column: 2 }, Color.DARK_PINK)
       item.addPiece(knight)
       board.addItem(item)
       // act
@@ -71,19 +71,19 @@ context('Knight', () => {
     it('quando pieces are in the way, return only valid', () => {
       // arrange
       const knight = new Knight(Color.WHITE)
-      const knightItem = new BoardItem({ line: 2, column: 2 }, Color.BLACK)
+      const knightItem = new BoardItem({ line: 2, column: 2 }, Color.DARK_PINK)
       knightItem.addPiece(knight)
 
       const queen = new Queen(Color.WHITE)
-      const queenItem = new BoardItem({ line: 0, column: 3 }, Color.BLACK)
+      const queenItem = new BoardItem({ line: 0, column: 3 }, Color.DARK_PINK)
       queenItem.addPiece(queen)
 
       const pawn = new Pawn(Color.WHITE)
-      const pawnItem = new BoardItem({ line: 1, column: 0 }, Color.BLACK)
+      const pawnItem = new BoardItem({ line: 1, column: 0 }, Color.DARK_PINK)
       pawnItem.addPiece(pawn)
 
       const otherPawn = new Pawn(Color.WHITE)
-      const otherPawnItem = new BoardItem({ line: 1, column: 4 }, Color.BLACK)
+      const otherPawnItem = new BoardItem({ line: 1, column: 4 }, Color.DARK_PINK)
       otherPawnItem.addPiece(otherPawn)
 
       sinon.replace(Board.prototype, 'getItem', position => {

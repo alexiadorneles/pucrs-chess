@@ -51,7 +51,7 @@ var Pawn = (function (_super) {
     };
     Pawn.prototype.getNewPositionByColor = function (_a) {
         var line = _a.line, column = _a.column;
-        var newLine = this.color === "grey" ? ++line : --line;
+        var newLine = this.color === "white" ? ++line : --line;
         var newPosition = { line: newLine, column: column };
         var isOccupied = this.getBoard().getPieceByPosition(newPosition);
         return (!isOccupied && newPosition) || null;
@@ -59,7 +59,7 @@ var Pawn = (function (_super) {
     Pawn.prototype.getAttacksByColor = function (currentPosition) {
         var _this = this;
         var clone = __assign({}, currentPosition);
-        var newLine = this.color === "grey" ? ++clone.line : --clone.line;
+        var newLine = this.color === "white" ? ++clone.line : --clone.line;
         var newPosition = { line: newLine, column: clone.column };
         var line = newPosition.line, column = newPosition.column;
         var rightDiagonal = { line: line, column: column + 1 };

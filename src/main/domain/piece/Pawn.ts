@@ -18,7 +18,7 @@ export class Pawn extends Piece {
   }
 
   private getNewPositionByColor({ line, column }: Position): Position | null {
-    const newLine = this.color === Color.GREY ? ++line : --line
+    const newLine = this.color === Color.WHITE ? ++line : --line
     const newPosition = { line: newLine, column }
     const isOccupied = this.getBoard().getPieceByPosition(newPosition)
     return (!isOccupied && newPosition) || null
@@ -26,7 +26,7 @@ export class Pawn extends Piece {
 
   private getAttacksByColor(currentPosition: Position): Position[] {
     const clone = { ...currentPosition }
-    const newLine = this.color === Color.GREY ? ++clone.line : --clone.line
+    const newLine = this.color === Color.WHITE ? ++clone.line : --clone.line
     const newPosition = { line: newLine, column: clone.column }
     const { line, column } = newPosition
     const rightDiagonal = { line, column: column + 1 }

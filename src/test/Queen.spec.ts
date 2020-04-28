@@ -20,7 +20,7 @@ context('Queen', () => {
     it('should set item property', () => {
       // arrange
       const queen = new Queen(Color.WHITE)
-      const item = new BoardItem({ line: 0, column: 0 }, Color.BLACK)
+      const item = new BoardItem({ line: 0, column: 0 }, Color.DARK_PINK)
       // act
       queen.addToItem(item)
       // assert
@@ -34,7 +34,7 @@ context('Queen', () => {
       const board = new Board()
       const queen = new Queen(Color.WHITE)
       const queenItem = { line: 0, column: 3 }
-      const item = new BoardItem(queenItem, Color.BLACK)
+      const item = new BoardItem(queenItem, Color.DARK_PINK)
       item.addPiece(queen)
       sinon.replace(board, 'getItem', position => {
         return _.isEqual(queenItem, position) ? item : new BoardItem(position, Color.WHITE)
@@ -78,7 +78,7 @@ context('Queen', () => {
       const board = new Board()
       const queenItem = { line: 3, column: 3 }
       const queen = new Queen(Color.WHITE)
-      const item = new BoardItem(queenItem, Color.BLACK)
+      const item = new BoardItem(queenItem, Color.DARK_PINK)
       item.addPiece(queen)
       sinon.replace(board, 'getItem', position => {
         return _.isEqual(queenItem, position) ? item : new BoardItem(position, Color.WHITE)
@@ -130,31 +130,31 @@ context('Queen', () => {
     it('when pieces in the way, should return only', () => {
       // arrange
       const queen = new Queen(Color.WHITE)
-      const queenItem = new BoardItem({ line: 2, column: 2 }, Color.BLACK)
+      const queenItem = new BoardItem({ line: 2, column: 2 }, Color.DARK_PINK)
       queenItem.addPiece(queen)
 
       const pawn = new Pawn(Color.WHITE)
-      const pawnItem = new BoardItem({ line: 2, column: 1 }, Color.BLACK)
+      const pawnItem = new BoardItem({ line: 2, column: 1 }, Color.DARK_PINK)
       pawnItem.addPiece(pawn)
 
       const pawnTwo = new Pawn(Color.WHITE)
-      const pawnTwoItem = new BoardItem({ line: 3, column: 3 }, Color.BLACK)
+      const pawnTwoItem = new BoardItem({ line: 3, column: 3 }, Color.DARK_PINK)
       pawnTwoItem.addPiece(pawnTwo)
 
       const pawnThree = new Pawn(Color.WHITE)
-      const pawnThreeItem = new BoardItem({ line: 2, column: 4 }, Color.BLACK)
+      const pawnThreeItem = new BoardItem({ line: 2, column: 4 }, Color.DARK_PINK)
       pawnThreeItem.addPiece(pawnThree)
 
       const pawnFour = new Pawn(Color.WHITE)
-      const pawnFourItem = new BoardItem({ line: 1, column: 2 }, Color.BLACK)
+      const pawnFourItem = new BoardItem({ line: 1, column: 2 }, Color.DARK_PINK)
       pawnFourItem.addPiece(pawnFour)
 
       const rook = new Rook(Color.WHITE)
-      const rookItem = new BoardItem({ line: 0, column: 0 }, Color.BLACK)
+      const rookItem = new BoardItem({ line: 0, column: 0 }, Color.DARK_PINK)
       rookItem.addPiece(rook)
 
       const rei = new King(Color.WHITE)
-      const itemRei = new BoardItem({ line: 0, column: 4 }, Color.BLACK)
+      const itemRei = new BoardItem({ line: 0, column: 4 }, Color.DARK_PINK)
       itemRei.addPiece(rei)
 
       const opponentPawn = new Pawn(Color.WHITE)

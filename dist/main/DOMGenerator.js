@@ -30,7 +30,7 @@ var DOMGenerator = (function () {
                 columnElements.push(element);
             }
             var lineElement = document.createElement('div');
-            lineElement.setAttribute('class', 'xadrez-linha');
+            lineElement.setAttribute('class', 'chess-line');
             columnElements.forEach(function (columnElement) { return lineElement.appendChild(columnElement); });
             lineElements.push(lineElement);
         };
@@ -44,7 +44,7 @@ var DOMGenerator = (function () {
         var div = document.createElement('div');
         div.setAttribute('class', 'container');
         var square = document.createElement('span');
-        square.setAttribute('class', "fas fa-square-full xadrez-quadrado " + item.getColor());
+        square.setAttribute('class', "fas fa-square-full chess-square " + item.getColor());
         square.addEventListener('click', item.onClick);
         item.setElement(square);
         var pieceIcon = this.createPieceIcon(item.getPiece());
@@ -57,7 +57,7 @@ var DOMGenerator = (function () {
         var pieceType = (piece && piece.getKind()) || '';
         var pieceColor = (piece && piece.getCor()) || '';
         var pieceIcon = document.createElement('i');
-        pieceIcon.setAttribute('class', "fas fa-" + pieceType + " peca " + pieceColor);
+        pieceIcon.setAttribute('class', "fas fa-" + pieceType + " piece " + pieceColor);
         return pieceIcon;
     };
     return DOMGenerator;

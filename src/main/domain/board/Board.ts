@@ -29,11 +29,11 @@ export class Board {
   public currentMovingPieces: Piece
 
   public initBoard = (): Board => {
-    const whites = this.buildPieces(Color.BLACK)
-    const blacks = this.buildPieces(Color.GREY)
+    const whites = this.buildPieces(Color.WHITE)
+    const pinks = this.buildPieces(Color.DARK_PINK)
     const empties = this.buildEmptyPieces()
     whites
-      .concat(blacks)
+      .concat(pinks)
       .concat(empties)
       .forEach(this.addItem)
     return this
@@ -75,7 +75,7 @@ export class Board {
     return blockingColor && blockedColor !== blockingColor
   }
 
-  public setPecaEmMovimento(piece: Piece): void {
+  public setCurrentMovingPiece(piece: Piece): void {
     if (this.currentMovingPieces && !_.isEqual(this.currentMovingPieces, piece)) {
       this.clearHighlights()
     }
@@ -118,10 +118,13 @@ export class Board {
     item.addToBoard(this)
   }
 
-  private buildPieces(cor: Color): BoardItem[] {
+  private buildPieces(color: Color): BoardItem[] {
     return Object.values(PieceKind)
       .filter(Boolean)
-      .reduce((agg: BoardItem[], kind: PieceKind) => agg.concat(PieceBuilder.build(kind, cor)), [])
+      .reduce(
+        (agg: BoardItem[], kind: PieceKind) => agg.concat(PieceBuilder.build(kind, color)),
+        [],
+      )
   }
 
   private buildEmptyPieces(): BoardItem[] {

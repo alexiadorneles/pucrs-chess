@@ -1,6 +1,6 @@
 export const enum Color {
   WHITE = 'white',
   BLACK = 'black',
-  GREY = 'grey',
+  DARK_PINK = 'dark-pink',
   PINK = 'pink',
 }

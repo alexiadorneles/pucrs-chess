@@ -33,7 +33,7 @@ export class BoardItem {
   public onClick = () => {
     if (!this.isHighlighted) {
       if (this.piece) {
-        this.board.setPecaEmMovimento(this.piece)
+        this.board.setCurrentMovingPiece(this.piece)
         this.setHighlight(true)
       }
     } else {
@@ -98,9 +98,9 @@ export class BoardItem {
 
   private updateStyles(): void {
     let styleClass = this.element.getAttribute('class')
-    const alreadyHighlighted = styleClass.includes('destaque')
-    if (alreadyHighlighted && !this.isHighlighted) styleClass = styleClass.replace('destaque', '')
-    const highlightClass = this.isHighlighted && !alreadyHighlighted ? 'destaque' : ''
+    const alreadyHighlighted = styleClass.includes('highlight')
+    if (alreadyHighlighted && !this.isHighlighted) styleClass = styleClass.replace('highlight', '')
+    const highlightClass = this.isHighlighted && !alreadyHighlighted ? 'highlight' : ''
     this.element.setAttribute('class', `${styleClass} ${highlightClass}`)
   }
 }

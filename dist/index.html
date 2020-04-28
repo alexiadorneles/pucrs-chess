@@ -1,57 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <link href="../node_modules/@fortawesome/fontawesome-free/css/all.css" rel="stylesheet" />
+    <link href="../node_modules/@fortawesome/fontawesome-free/css/brands.css" rel="stylesheet" />
+    <link
+      href="../node_modules/@fortawesome/fontawesome-free/css/fontawesome.css"
+      rel="stylesheet"
+    />
+    <link href="../node_modules/@fortawesome/fontawesome-free/css/v4-shims.css" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet" />
+    <title>Xadrez</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
-  <link href="../node_modules/@fortawesome/fontawesome-free/css/all.css" rel="stylesheet">
-  <link href="../node_modules/@fortawesome/fontawesome-free/css/brands.css" rel="stylesheet">
-  <link href="../node_modules/@fortawesome/fontawesome-free/css/fontawesome.css" rel="stylesheet">
-  <link href="../node_modules/@fortawesome/fontawesome-free/css/v4-shims.css" rel="stylesheet">
-  <link href="style.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
-  <title>Xadrez</title>
-</head>
-
-<body>
-  <img src="./logo.png" />
-  <div class="jogador-container">
-    <div class="jogador">
-      <i class="fas fa-user-circle"></i>
-      <div class="jogador1">
-        <a>Jogador 1</a>
+  <body>
+    <img src="./logo.png" />
+    <div class="circled-container">
+      <div class="circled">
+        <i class="fas fa-user-circle"></i>
+        <a>Player 1</a>
+      </div>
+      <div class="circled">
+        <i class="fas fa-user-circle"></i>
+        <a>Player 2</a>
       </div>
     </div>
-    <div class="jogador">
-      <i class="fas fa-user-circle"></i>
-      <div class="jogadorDois">
-        <a>Jogador 2</a>
+
+    <div id="root"></div>
+
+    <div class="circled-container buttons">
+      <div class="circled">
+        <button id="novoJogo" class="button">
+          <a>Novo Jogo</a>
+        </button>
+      </div>
+      <div class="circled">
+        <button id="salvarJogo" class="button">
+          <a>Salvar Jogo</a>
+        </button>
+      </div>
+      <div class="circled">
+        <button id="carregarJogo" class="button">
+          <a>Carregar Jogo</a>
+        </button>
       </div>
     </div>
-  </div>
-  <div id="root"></div>
-  <div class="jogador-container botoes">
-    <div class="jogador">
-      <button id="novoJogo" class="jogador1">
-        <a>Novo Jogo</a>
-      </button>
-    </div>
-    <div class="jogador">
-      <button id="salvarJogo" class="jogadorDois">
-        <a>Salvar Jogo</a>
-      </button>
-    </div>
-    <div class="jogador">
-      <button id="carregarJogo" class="jogadorDois">
-        <a>Carregar Jogo</a>
-      </button>
-    </div>
-  </div>
-  <input style="display: none;" type="file" id="input-file">
-</body>
+  </body>
 
-<script src="bundle.js"></script>
-
+  <script src="bundle.js"></script>
 </html>

@@ -20,7 +20,7 @@ context('Queen', function () {
     describe('calling addToItem', function () {
         it('should set item property', function () {
             var queen = new Queen_1.Queen("white");
-            var item = new BoardItem_1.BoardItem({ line: 0, column: 0 }, "black");
+            var item = new BoardItem_1.BoardItem({ line: 0, column: 0 }, "dark-pink");
             queen.addToItem(item);
             expect(queen.getBoardItem()).to.deep.equals(item);
         });
@@ -31,7 +31,7 @@ context('Queen', function () {
             var board = new Board_1.Board();
             var queen = new Queen_1.Queen("white");
             var queenItem = { line: 0, column: 3 };
-            var item = new BoardItem_1.BoardItem(queenItem, "black");
+            var item = new BoardItem_1.BoardItem(queenItem, "dark-pink");
             item.addPiece(queen);
             sinon_1.default.replace(board, 'getItem', function (position) {
                 return lodash_1.default.isEqual(queenItem, position) ? item : new BoardItem_1.BoardItem(position, "white");
@@ -68,7 +68,7 @@ context('Queen', function () {
             var board = new Board_1.Board();
             var queenItem = { line: 3, column: 3 };
             var queen = new Queen_1.Queen("white");
-            var item = new BoardItem_1.BoardItem(queenItem, "black");
+            var item = new BoardItem_1.BoardItem(queenItem, "dark-pink");
             item.addPiece(queen);
             sinon_1.default.replace(board, 'getItem', function (position) {
                 return lodash_1.default.isEqual(queenItem, position) ? item : new BoardItem_1.BoardItem(position, "white");
@@ -109,25 +109,25 @@ context('Queen', function () {
         });
         it('when pieces in the way, should return only', function () {
             var queen = new Queen_1.Queen("white");
-            var queenItem = new BoardItem_1.BoardItem({ line: 2, column: 2 }, "black");
+            var queenItem = new BoardItem_1.BoardItem({ line: 2, column: 2 }, "dark-pink");
             queenItem.addPiece(queen);
             var pawn = new Pawn_1.Pawn("white");
-            var pawnItem = new BoardItem_1.BoardItem({ line: 2, column: 1 }, "black");
+            var pawnItem = new BoardItem_1.BoardItem({ line: 2, column: 1 }, "dark-pink");
             pawnItem.addPiece(pawn);
             var pawnTwo = new Pawn_1.Pawn("white");
-            var pawnTwoItem = new BoardItem_1.BoardItem({ line: 3, column: 3 }, "black");
+            var pawnTwoItem = new BoardItem_1.BoardItem({ line: 3, column: 3 }, "dark-pink");
             pawnTwoItem.addPiece(pawnTwo);
             var pawnThree = new Pawn_1.Pawn("white");
-            var pawnThreeItem = new BoardItem_1.BoardItem({ line: 2, column: 4 }, "black");
+            var pawnThreeItem = new BoardItem_1.BoardItem({ line: 2, column: 4 }, "dark-pink");
             pawnThreeItem.addPiece(pawnThree);
             var pawnFour = new Pawn_1.Pawn("white");
-            var pawnFourItem = new BoardItem_1.BoardItem({ line: 1, column: 2 }, "black");
+            var pawnFourItem = new BoardItem_1.BoardItem({ line: 1, column: 2 }, "dark-pink");
             pawnFourItem.addPiece(pawnFour);
             var rook = new Rook_1.Rook("white");
-            var rookItem = new BoardItem_1.BoardItem({ line: 0, column: 0 }, "black");
+            var rookItem = new BoardItem_1.BoardItem({ line: 0, column: 0 }, "dark-pink");
             rookItem.addPiece(rook);
             var rei = new King_1.King("white");
-            var itemRei = new BoardItem_1.BoardItem({ line: 0, column: 4 }, "black");
+            var itemRei = new BoardItem_1.BoardItem({ line: 0, column: 4 }, "dark-pink");
             itemRei.addPiece(rei);
             var opponentPawn = new Pawn_1.Pawn("white");
             var opponentPawnItem = new BoardItem_1.BoardItem({ line: 6, column: 2 }, "white");

@@ -12,7 +12,7 @@ var BoardItem = (function () {
         this.onClick = function () {
             if (!_this.isHighlighted) {
                 if (_this.piece) {
-                    _this.board.setPecaEmMovimento(_this.piece);
+                    _this.board.setCurrentMovingPiece(_this.piece);
                     _this.setHighlight(true);
                 }
             }
@@ -87,10 +87,10 @@ var BoardItem = (function () {
     };
     BoardItem.prototype.updateStyles = function () {
         var styleClass = this.element.getAttribute('class');
-        var alreadyHighlighted = styleClass.includes('destaque');
+        var alreadyHighlighted = styleClass.includes('highlight');
         if (alreadyHighlighted && !this.isHighlighted)
-            styleClass = styleClass.replace('destaque', '');
-        var highlightClass = this.isHighlighted && !alreadyHighlighted ? 'destaque' : '';
+            styleClass = styleClass.replace('highlight', '');
+        var highlightClass = this.isHighlighted && !alreadyHighlighted ? 'highlight' : '';
         this.element.setAttribute('class', styleClass + " " + highlightClass);
     };
     return BoardItem;

@@ -31,7 +31,7 @@ var DOMGenerator = (function () {
                 columnElements.push(element);
             }
             var lineElement = document.createElement('div');
-            lineElement.setAttribute('class', 'xadrez-linha');
+            lineElement.setAttribute('class', 'chess-line');
             columnElements.forEach(function (columnElement) { return lineElement.appendChild(columnElement); });
             lineElements.push(lineElement);
         };
@@ -45,7 +45,7 @@ var DOMGenerator = (function () {
         var div = document.createElement('div');
         div.setAttribute('class', 'container');
         var square = document.createElement('span');
-        square.setAttribute('class', "fas fa-square-full xadrez-quadrado " + item.getColor());
+        square.setAttribute('class', "fas fa-square-full chess-square " + item.getColor());
         square.addEventListener('click', item.onClick);
         item.setElement(square);
         var pieceIcon = this.createPieceIcon(item.getPiece());
@@ -58,7 +58,7 @@ var DOMGenerator = (function () {
         var pieceType = (piece && piece.getKind()) || '';
         var pieceColor = (piece && piece.getCor()) || '';
         var pieceIcon = document.createElement('i');
-        pieceIcon.setAttribute('class', "fas fa-" + pieceType + " peca " + pieceColor);
+        pieceIcon.setAttribute('class', "fas fa-" + pieceType + " piece " + pieceColor);
         return pieceIcon;
     };
     return DOMGenerator;
@@ -198,9 +198,9 @@ var ColorAdapter;
 (function (ColorAdapter) {
     function defineItemColor(_a) {
         var line = _a.line, column = _a.column;
-        var color = line % 2 === 0 ? "white" : "pink";
+        var color = line % 2 === 0 ? "black" : "pink";
         var even = color;
-        var odds = color == "pink" ? "white" : "pink";
+        var odds = color == "pink" ? "black" : "pink";
         return column % 2 === 0 ? even : odds;
     }
     ColorAdapter.defineItemColor = defineItemColor;
@@ -257,12 +257,12 @@ exports.MovementBuilderMap = (_a = {},
 var PieceBuilder;
 (function (PieceBuilder) {
     function build(kind, pieceColor) {
-        var map = pieceColor === "grey" ? InitialPositions_1.WhitePiecesPositionMap : InitialPositions_1.BlackPiecesPositionMap;
+        var map = pieceColor === "white" ? InitialPositions_1.WhitePiecesPositionMap : InitialPositions_1.BlackPiecesPositionMap;
         return map.get(kind).map(function (position) {
             var clazz = exports.PieceBuilderMap.get(kind);
             var item = new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position));
-            var peca = new clazz(pieceColor);
-            item.addPiece(peca);
+            var piece = new clazz(pieceColor);
+            item.addPiece(piece);
             return item;
         });
     }
@@ -337,11 +337,11 @@ var Board = (function () {
         var _this = this;
         this.matrix = initMatrix();
         this.initBoard = function () {
-            var whites = _this.buildPieces("black");
-            var blacks = _this.buildPieces("grey");
+            var whites = _this.buildPieces("white");
+            var pinks = _this.buildPieces("dark-pink");
             var empties = _this.buildEmptyPieces();
             whites
-                .concat(blacks)
+                .concat(pinks)
                 .concat(empties)
                 .forEach(_this.addItem);
             return _this;
@@ -396,7 +396,7 @@ var Board = (function () {
             .getCor();
         return blockingColor && blockedColor !== blockingColor;
     };
-    Board.prototype.setPecaEmMovimento = function (piece) {
+    Board.prototype.setCurrentMovingPiece = function (piece) {
         if (this.currentMovingPieces && !lodash_1.default.isEqual(this.currentMovingPieces, piece)) {
             this.clearHighlights();
         }
@@ -423,10 +423,10 @@ var Board = (function () {
     Board.prototype.getPieceByPosition = function (position) {
         return this.isPositionInMatrixRange(position) ? this.getItem(position).getPiece() : null;
     };
-    Board.prototype.buildPieces = function (cor) {
+    Board.prototype.buildPieces = function (color) {
         return Object.values(PieceKind_1.PieceKind)
             .filter(Boolean)
-            .reduce(function (agg, kind) { return agg.concat(PieceBuilder_1.PieceBuilder.build(kind, cor)); }, []);
+            .reduce(function (agg, kind) { return agg.concat(PieceBuilder_1.PieceBuilder.build(kind, color)); }, []);
     };
     Board.prototype.buildEmptyPieces = function () {
         return InitialPositions_1.WhitePiecesPositionMap.get(PieceKind_1.PieceKind.EMPTY).map(function (position) { return new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position)); });
@@ -450,7 +450,7 @@ var BoardItem = (function () {
         this.onClick = function () {
             if (!_this.isHighlighted) {
                 if (_this.piece) {
-                    _this.board.setPecaEmMovimento(_this.piece);
+                    _this.board.setCurrentMovingPiece(_this.piece);
                     _this.setHighlight(true);
                 }
             }
@@ -525,10 +525,10 @@ var BoardItem = (function () {
     };
     BoardItem.prototype.updateStyles = function () {
         var styleClass = this.element.getAttribute('class');
-        var alreadyHighlighted = styleClass.includes('destaque');
+        var alreadyHighlighted = styleClass.includes('highlight');
         if (alreadyHighlighted && !this.isHighlighted)
-            styleClass = styleClass.replace('destaque', '');
-        var highlightClass = this.isHighlighted && !alreadyHighlighted ? 'destaque' : '';
+            styleClass = styleClass.replace('highlight', '');
+        var highlightClass = this.isHighlighted && !alreadyHighlighted ? 'highlight' : '';
         this.element.setAttribute('class', styleClass + " " + highlightClass);
     };
     return BoardItem;
@@ -959,7 +959,7 @@ var Pawn = (function (_super) {
     };
     Pawn.prototype.getNewPositionByColor = function (_a) {
         var line = _a.line, column = _a.column;
-        var newLine = this.color === "grey" ? ++line : --line;
+        var newLine = this.color === "white" ? ++line : --line;
         var newPosition = { line: newLine, column: column };
         var isOccupied = this.getBoard().getPieceByPosition(newPosition);
         return (!isOccupied && newPosition) || null;
@@ -967,7 +967,7 @@ var Pawn = (function (_super) {
     Pawn.prototype.getAttacksByColor = function (currentPosition) {
         var _this = this;
         var clone = __assign({}, currentPosition);
-        var newLine = this.color === "grey" ? ++clone.line : --clone.line;
+        var newLine = this.color === "white" ? ++clone.line : --clone.line;
         var newPosition = { line: newLine, column: clone.column };
         var line = newPosition.line, column = newPosition.column;
         var rightDiagonal = { line: line, column: column + 1 };

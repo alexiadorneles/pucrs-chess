@@ -32,12 +32,12 @@ exports.MovementBuilderMap = (_a = {},
 var PieceBuilder;
 (function (PieceBuilder) {
     function build(kind, pieceColor) {
-        var map = pieceColor === "grey" ? InitialPositions_1.WhitePiecesPositionMap : InitialPositions_1.BlackPiecesPositionMap;
+        var map = pieceColor === "white" ? InitialPositions_1.WhitePiecesPositionMap : InitialPositions_1.BlackPiecesPositionMap;
         return map.get(kind).map(function (position) {
             var clazz = exports.PieceBuilderMap.get(kind);
             var item = new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position));
-            var peca = new clazz(pieceColor);
-            item.addPiece(peca);
+            var piece = new clazz(pieceColor);
+            item.addPiece(piece);
             return item;
         });
     }

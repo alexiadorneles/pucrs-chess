@@ -41,7 +41,7 @@ export class DOMGenerator {
       }
 
       const lineElement = document.createElement('div')
-      lineElement.setAttribute('class', 'xadrez-linha')
+      lineElement.setAttribute('class', 'chess-line')
       columnElements.forEach(columnElement => lineElement.appendChild(columnElement))
       lineElements.push(lineElement)
     }
@@ -54,7 +54,7 @@ export class DOMGenerator {
     div.setAttribute('class', 'container')
 
     const square = document.createElement('span')
-    square.setAttribute('class', `fas fa-square-full xadrez-quadrado ${item.getColor()}`)
+    square.setAttribute('class', `fas fa-square-full chess-square ${item.getColor()}`)
     square.addEventListener('click', item.onClick)
     item.setElement(square)
 
@@ -71,7 +71,7 @@ export class DOMGenerator {
     const pieceType = (piece && piece.getKind()) || ''
     const pieceColor = (piece && piece.getCor()) || ''
     const pieceIcon = document.createElement('i')
-    pieceIcon.setAttribute('class', `fas fa-${pieceType} peca ${pieceColor}`)
+    pieceIcon.setAttribute('class', `fas fa-${pieceType} piece ${pieceColor}`)
     return pieceIcon
   }
 }

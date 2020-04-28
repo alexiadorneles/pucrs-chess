@@ -34,12 +34,12 @@ export const MovementBuilderMap = {
 
 export namespace PieceBuilder {
   export function build(kind: PieceKind, pieceColor: Color): BoardItem[] {
-    const map = pieceColor === Color.GREY ? WhitePiecesPositionMap : BlackPiecesPositionMap
+    const map = pieceColor === Color.WHITE ? WhitePiecesPositionMap : BlackPiecesPositionMap
     return map.get(kind).map(position => {
       const clazz = PieceBuilderMap.get(kind)
       const item = new BoardItem(position, ColorAdapter.defineItemColor(position))
-      const peca = new clazz(pieceColor)
-      item.addPiece(peca)
+      const piece = new clazz(pieceColor)
+      item.addPiece(piece)
       return item
     })
   }

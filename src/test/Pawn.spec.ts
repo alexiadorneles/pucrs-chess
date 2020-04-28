@@ -13,7 +13,7 @@ context('Pawn', () => {
     it('should set item property', () => {
       // arrange
       const pawn = new Pawn(Color.WHITE)
-      const item = new BoardItem({ line: 0, column: 0 }, Color.BLACK)
+      const item = new BoardItem({ line: 0, column: 0 }, Color.DARK_PINK)
       // act
       pawn.addToItem(item)
       // assert
@@ -26,10 +26,10 @@ context('Pawn', () => {
       const board = new Board()
       const pawnPosition = { line: 1, column: 2 }
       sinon.replace(board, 'getItem', posicao => {
-        return _.isEqual(pawnPosition, posicao) ? item : new BoardItem(posicao, Color.GREY)
+        return _.isEqual(pawnPosition, posicao) ? item : new BoardItem(posicao, Color.WHITE)
       })
-      const pawn = new Pawn(Color.GREY)
-      const item = new BoardItem(pawnPosition, Color.BLACK)
+      const pawn = new Pawn(Color.WHITE)
+      const item = new BoardItem(pawnPosition, Color.DARK_PINK)
       item.addPiece(pawn)
       board.addItem(item)
       // act

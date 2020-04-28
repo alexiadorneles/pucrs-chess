@@ -12,7 +12,7 @@ var BoardItem = (function () {
         this.onClick = function () {
             if (!_this.isHighlighted) {
                 if (_this.piece) {
-                    _this.board.setPecaEmMovimento(_this.piece);
+                    _this.board.setCurrentMovingPiece(_this.piece);
                     _this.setHighlight(true);
                 }
             }
@@ -60,8 +60,8 @@ var BoardItem = (function () {
     BoardItem.prototype.getBoard = function () {
         return this.board;
     };
-    BoardItem.prototype.setHighlight = function (isDestacado) {
-        this.isHighlighted = isDestacado;
+    BoardItem.prototype.setHighlight = function (isHighlighted) {
+        this.isHighlighted = isHighlighted;
         this.updateStyles();
         if (this.isHighlighted) {
             if (lodash_1.default.isEqual(this.piece, this.board.currentMovingPieces)) {
