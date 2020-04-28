@@ -26,7 +26,7 @@ var DOMGenerator = (function () {
         var _loop_1 = function (line) {
             columnElements = [];
             for (var column = 0; column < columns; column++) {
-                var item = this_1.board.getItem({ linha: line, coluna: column });
+                var item = this_1.board.getItem({ line: line, column: column });
                 var element = this_1.createElement(item);
                 columnElements.push(element);
             }
@@ -45,17 +45,17 @@ var DOMGenerator = (function () {
         var div = document.createElement('div');
         div.setAttribute('class', 'container');
         var square = document.createElement('span');
-        square.setAttribute('class', "fas fa-square-full xadrez-quadrado " + item.getCor());
+        square.setAttribute('class', "fas fa-square-full xadrez-quadrado " + item.getColor());
         square.addEventListener('click', item.onClick);
-        item.atribuirElemento(square);
-        var pieceIcon = this.createPieceIcon(item.getPeca());
+        item.setElement(square);
+        var pieceIcon = this.createPieceIcon(item.getPiece());
         pieceIcon.addEventListener('click', item.onClick);
         div.appendChild(pieceIcon);
         div.appendChild(square);
         return div;
     };
     DOMGenerator.prototype.createPieceIcon = function (piece) {
-        var pieceType = (piece && piece.getTipo()) || '';
+        var pieceType = (piece && piece.getKind()) || '';
         var pieceColor = (piece && piece.getCor()) || '';
         var pieceIcon = document.createElement('i');
         pieceIcon.setAttribute('class', "fas fa-" + pieceType + " peca " + pieceColor);
@@ -69,314 +69,129 @@ exports.DOMGenerator = DOMGenerator;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.API = {
-    URL: 'http://localhost:9090/load',
+    LOAD_URL: 'http://localhost:9090/load',
+    SAVE_URL: 'http://localhost:9090/save',
 };
 
 },{}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var TipoPeca_1 = require("./TipoPeca");
-var posicaoPeoesBrancos = [
-    { linha: 1, coluna: 0 },
-    { linha: 1, coluna: 1 },
-    { linha: 1, coluna: 2 },
-    { linha: 1, coluna: 3 },
-    { linha: 1, coluna: 4 },
-    { linha: 1, coluna: 5 },
-    { linha: 1, coluna: 6 },
-    { linha: 1, coluna: 7 },
+var PieceKind_1 = require("./PieceKind");
+var whitePawnPosition = [
+    { line: 1, column: 0 },
+    { line: 1, column: 1 },
+    { line: 1, column: 2 },
+    { line: 1, column: 3 },
+    { line: 1, column: 4 },
+    { line: 1, column: 5 },
+    { line: 1, column: 6 },
+    { line: 1, column: 7 },
 ];
-var posicaoTorresBrancas = [
-    { linha: 0, coluna: 0 },
-    { linha: 0, coluna: 7 },
+var whiteRookPosition = [
+    { line: 0, column: 0 },
+    { line: 0, column: 7 },
 ];
-var posicaoCavalosBrancos = [
-    { linha: 0, coluna: 1 },
-    { linha: 0, coluna: 6 },
+var whiteKnightPosition = [
+    { line: 0, column: 1 },
+    { line: 0, column: 6 },
 ];
-var posicaoBisposBrancos = [
-    { linha: 0, coluna: 2 },
-    { linha: 0, coluna: 5 },
+var whiteBishopPosition = [
+    { line: 0, column: 2 },
+    { line: 0, column: 5 },
 ];
-var posicaoRainha = [
-    { linha: 0, coluna: 3 },
+var whiteQueenPosition = [{ line: 0, column: 3 }];
+var whiteKingPosition = [{ line: 0, column: 4 }];
+var emptySpace = [
+    { line: 2, column: 0 },
+    { line: 2, column: 1 },
+    { line: 2, column: 2 },
+    { line: 2, column: 3 },
+    { line: 2, column: 4 },
+    { line: 2, column: 5 },
+    { line: 2, column: 6 },
+    { line: 2, column: 7 },
+    { line: 3, column: 0 },
+    { line: 3, column: 1 },
+    { line: 3, column: 2 },
+    { line: 3, column: 3 },
+    { line: 3, column: 4 },
+    { line: 3, column: 5 },
+    { line: 3, column: 6 },
+    { line: 3, column: 7 },
+    { line: 4, column: 0 },
+    { line: 4, column: 1 },
+    { line: 4, column: 2 },
+    { line: 4, column: 3 },
+    { line: 4, column: 4 },
+    { line: 4, column: 5 },
+    { line: 4, column: 6 },
+    { line: 4, column: 7 },
+    { line: 5, column: 0 },
+    { line: 5, column: 1 },
+    { line: 5, column: 2 },
+    { line: 5, column: 3 },
+    { line: 5, column: 4 },
+    { line: 5, column: 5 },
+    { line: 5, column: 6 },
+    { line: 5, column: 7 },
 ];
-var posicaoRei = [
-    { linha: 0, coluna: 4 },
-];
-var vazios = [
-    { linha: 2, coluna: 0 },
-    { linha: 2, coluna: 1 },
-    { linha: 2, coluna: 2 },
-    { linha: 2, coluna: 3 },
-    { linha: 2, coluna: 4 },
-    { linha: 2, coluna: 5 },
-    { linha: 2, coluna: 6 },
-    { linha: 2, coluna: 7 },
-    { linha: 3, coluna: 0 },
-    { linha: 3, coluna: 1 },
-    { linha: 3, coluna: 2 },
-    { linha: 3, coluna: 3 },
-    { linha: 3, coluna: 4 },
-    { linha: 3, coluna: 5 },
-    { linha: 3, coluna: 6 },
-    { linha: 3, coluna: 7 },
-    { linha: 4, coluna: 0 },
-    { linha: 4, coluna: 1 },
-    { linha: 4, coluna: 2 },
-    { linha: 4, coluna: 3 },
-    { linha: 4, coluna: 4 },
-    { linha: 4, coluna: 5 },
-    { linha: 4, coluna: 6 },
-    { linha: 4, coluna: 7 },
-    { linha: 5, coluna: 0 },
-    { linha: 5, coluna: 1 },
-    { linha: 5, coluna: 2 },
-    { linha: 5, coluna: 3 },
-    { linha: 5, coluna: 4 },
-    { linha: 5, coluna: 5 },
-    { linha: 5, coluna: 6 },
-    { linha: 5, coluna: 7 },
-];
-exports.MapPosicaoPecasBrancas = new Map([
-    [TipoPeca_1.TipoPeca.PEAO, posicaoPeoesBrancos],
-    [TipoPeca_1.TipoPeca.TORRE, posicaoTorresBrancas],
-    [TipoPeca_1.TipoPeca.CAVALO, posicaoCavalosBrancos],
-    [TipoPeca_1.TipoPeca.BISPO, posicaoBisposBrancos],
-    [TipoPeca_1.TipoPeca.RAINHA, posicaoRainha],
-    [TipoPeca_1.TipoPeca.REI, posicaoRei],
-    [TipoPeca_1.TipoPeca.VAZIO, vazios],
+exports.WhitePiecesPositionMap = new Map([
+    [PieceKind_1.PieceKind.PAWN, whitePawnPosition],
+    [PieceKind_1.PieceKind.ROOK, whiteRookPosition],
+    [PieceKind_1.PieceKind.KNIGHT, whiteKnightPosition],
+    [PieceKind_1.PieceKind.BISHOP, whiteBishopPosition],
+    [PieceKind_1.PieceKind.QUEEN, whiteQueenPosition],
+    [PieceKind_1.PieceKind.KING, whiteKingPosition],
+    [PieceKind_1.PieceKind.EMPTY, emptySpace],
 ]);
-var posicaoPeoesPretos = [
-    { linha: 6, coluna: 0 },
-    { linha: 6, coluna: 1 },
-    { linha: 6, coluna: 2 },
-    { linha: 6, coluna: 3 },
-    { linha: 6, coluna: 4 },
-    { linha: 6, coluna: 5 },
-    { linha: 6, coluna: 6 },
-    { linha: 6, coluna: 7 },
+var blackPawnPosition = [
+    { line: 6, column: 0 },
+    { line: 6, column: 1 },
+    { line: 6, column: 2 },
+    { line: 6, column: 3 },
+    { line: 6, column: 4 },
+    { line: 6, column: 5 },
+    { line: 6, column: 6 },
+    { line: 6, column: 7 },
 ];
-var posicaoTorresPretos = [
-    { linha: 7, coluna: 0 },
-    { linha: 7, coluna: 7 },
+var blackRookPosition = [
+    { line: 7, column: 0 },
+    { line: 7, column: 7 },
 ];
-var posicaoCavalosPretos = [
-    { linha: 7, coluna: 1 },
-    { linha: 7, coluna: 6 },
+var blackKnightPosition = [
+    { line: 7, column: 1 },
+    { line: 7, column: 6 },
 ];
-var posicaoBisposPretos = [
-    { linha: 7, coluna: 2 },
-    { linha: 7, coluna: 5 },
+var blackBishopsPosition = [
+    { line: 7, column: 2 },
+    { line: 7, column: 5 },
 ];
-var posicaoRainhaPreto = [
-    { linha: 7, coluna: 3 },
-];
-var posicaoReiPreto = [
-    { linha: 7, coluna: 4 },
-];
-exports.MapPosicaoPecasPretas = new Map([
-    [TipoPeca_1.TipoPeca.PEAO, posicaoPeoesPretos],
-    [TipoPeca_1.TipoPeca.TORRE, posicaoTorresPretos],
-    [TipoPeca_1.TipoPeca.CAVALO, posicaoCavalosPretos],
-    [TipoPeca_1.TipoPeca.BISPO, posicaoBisposPretos],
-    [TipoPeca_1.TipoPeca.RAINHA, posicaoRainhaPreto],
-    [TipoPeca_1.TipoPeca.REI, posicaoReiPreto],
+var blackQueenPosition = [{ line: 7, column: 3 }];
+var blackKingPosition = [{ line: 7, column: 4 }];
+exports.BlackPiecesPositionMap = new Map([
+    [PieceKind_1.PieceKind.PAWN, blackPawnPosition],
+    [PieceKind_1.PieceKind.ROOK, blackRookPosition],
+    [PieceKind_1.PieceKind.KNIGHT, blackKnightPosition],
+    [PieceKind_1.PieceKind.BISHOP, blackBishopsPosition],
+    [PieceKind_1.PieceKind.QUEEN, blackQueenPosition],
+    [PieceKind_1.PieceKind.KING, blackKingPosition],
 ]);
 
-},{"./TipoPeca":4}],4:[function(require,module,exports){
+},{"./PieceKind":4}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var TipoPeca;
-(function (TipoPeca) {
-    TipoPeca["PEAO"] = "chess-pawn";
-    TipoPeca["CAVALO"] = "chess-knight";
-    TipoPeca["REI"] = "chess-king";
-    TipoPeca["RAINHA"] = "chess-queen";
-    TipoPeca["BISPO"] = "chess-bishop";
-    TipoPeca["TORRE"] = "chess-rook";
-    TipoPeca["VAZIO"] = "";
-})(TipoPeca = exports.TipoPeca || (exports.TipoPeca = {}));
+var PieceKind;
+(function (PieceKind) {
+    PieceKind["PAWN"] = "chess-pawn";
+    PieceKind["KNIGHT"] = "chess-knight";
+    PieceKind["KING"] = "chess-king";
+    PieceKind["QUEEN"] = "chess-queen";
+    PieceKind["BISHOP"] = "chess-bishop";
+    PieceKind["ROOK"] = "chess-rook";
+    PieceKind["EMPTY"] = "";
+})(PieceKind = exports.PieceKind || (exports.PieceKind = {}));
 
 },{}],5:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var DefinidorCores;
-(function (DefinidorCores) {
-    function definirCorDoItem(_a) {
-        var linha = _a.linha, coluna = _a.coluna;
-        var cor = linha % 2 === 0 ? "white" : "pink";
-        var pares = cor;
-        var impares = cor == "pink" ? "white" : "pink";
-        return coluna % 2 === 0 ? pares : impares;
-    }
-    DefinidorCores.definirCorDoItem = definirCorDoItem;
-})(DefinidorCores = exports.DefinidorCores || (exports.DefinidorCores = {}));
-
-},{}],6:[function(require,module,exports){
-"use strict";
-var _a;
-Object.defineProperty(exports, "__esModule", { value: true });
-var PosicoesIniciais_1 = require("../definitions/PosicoesIniciais");
-var TipoPeca_1 = require("../definitions/TipoPeca");
-var DefinidorCores_1 = require("./DefinidorCores");
-var ItemTabuleiro_1 = require("./ItemTabuleiro");
-var Bispo_1 = require("./peca/Bispo");
-var Cavalo_1 = require("./peca/Cavalo");
-var Peao_1 = require("./peca/Peao");
-var Rainha_1 = require("./peca/Rainha");
-var Rei_1 = require("./peca/Rei");
-var Torre_1 = require("./peca/Torre");
-var MovimentoDiagonal_1 = require("./movimento/MovimentoDiagonal");
-var MovimentoHorizontal_1 = require("./movimento/MovimentoHorizontal");
-var MovimentoVertical_1 = require("./movimento/MovimentoVertical");
-var MovimentoL_1 = require("./movimento/MovimentoL");
-exports.InstanciadorTipoMap = new Map([
-    [TipoPeca_1.TipoPeca.PEAO, Peao_1.Peao],
-    [TipoPeca_1.TipoPeca.CAVALO, Cavalo_1.Cavalo],
-    [TipoPeca_1.TipoPeca.BISPO, Bispo_1.Bispo],
-    [TipoPeca_1.TipoPeca.RAINHA, Rainha_1.Rainha],
-    [TipoPeca_1.TipoPeca.REI, Rei_1.Rei],
-    [TipoPeca_1.TipoPeca.TORRE, Torre_1.Torre],
-]);
-exports.InstanciadorMovimentoMap = (_a = {},
-    _a[2] = MovimentoDiagonal_1.MovimentoDiagonal,
-    _a[0] = MovimentoHorizontal_1.MovimentoHorizontal,
-    _a[1] = MovimentoVertical_1.MovimentoVertical,
-    _a[3] = MovimentoL_1.MovimentoL,
-    _a);
-var InstanciadorPecas;
-(function (InstanciadorPecas) {
-    function instanciar(tipo, corPeca) {
-        var map = corPeca === "grey" ? PosicoesIniciais_1.MapPosicaoPecasBrancas : PosicoesIniciais_1.MapPosicaoPecasPretas;
-        return map.get(tipo).map(function (posicao) {
-            var clazz = exports.InstanciadorTipoMap.get(tipo);
-            var item = new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.DefinidorCores.definirCorDoItem(posicao));
-            var peca = new clazz(corPeca);
-            item.atribuirPeca(peca);
-            return item;
-        });
-    }
-    InstanciadorPecas.instanciar = instanciar;
-})(InstanciadorPecas = exports.InstanciadorPecas || (exports.InstanciadorPecas = {}));
-
-},{"../definitions/PosicoesIniciais":3,"../definitions/TipoPeca":4,"./DefinidorCores":5,"./ItemTabuleiro":7,"./movimento/MovimentoDiagonal":11,"./movimento/MovimentoHorizontal":12,"./movimento/MovimentoL":13,"./movimento/MovimentoVertical":14,"./peca/Bispo":15,"./peca/Cavalo":16,"./peca/Peao":17,"./peca/Rainha":19,"./peca/Rei":20,"./peca/Torre":21}],7:[function(require,module,exports){
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var lodash_1 = __importDefault(require("lodash"));
-var ItemTabuleiro = (function () {
-    function ItemTabuleiro(posicao, cor) {
-        var _this = this;
-        this.posicao = posicao;
-        this.cor = cor;
-        this.onClick = function (event) {
-            if (!_this.isDestacado) {
-                if (_this.peca) {
-                    _this.tabuleiro.setPecaEmMovimento(_this.peca);
-                    _this.setDestaque(true);
-                }
-            }
-            else {
-                if (!_this.peca) {
-                    if (_this.tabuleiro.isPecaEmMovimento()) {
-                        _this.tabuleiro.moverPeca(_this);
-                    }
-                }
-                else {
-                    if (_this.tabuleiro.isPecaEmMovimento()) {
-                        if (!lodash_1.default.isEqual(_this.peca, _this.tabuleiro.pecaEmMovimento)) {
-                            _this.tabuleiro.moverPeca(_this);
-                        }
-                    }
-                    _this.setDestaque(false);
-                }
-            }
-        };
-    }
-    ItemTabuleiro.prototype.atribuirPeca = function (peca) {
-        this.peca = peca;
-        if (peca) {
-            this.peca.adicionarAoItem(this);
-        }
-    };
-    ItemTabuleiro.prototype.atribuirElemento = function (elemento) {
-        this.elemento = elemento;
-    };
-    ItemTabuleiro.prototype.adicionarAoTabuleiro = function (tabuleiro) {
-        this.tabuleiro = tabuleiro;
-    };
-    ItemTabuleiro.prototype.setTabuleiro = function (tabuleiro) {
-        this.tabuleiro = tabuleiro;
-    };
-    ItemTabuleiro.prototype.getCor = function () {
-        return this.cor;
-    };
-    ItemTabuleiro.prototype.getPeca = function () {
-        return this.peca;
-    };
-    ItemTabuleiro.prototype.getPosicao = function () {
-        return this.posicao;
-    };
-    ItemTabuleiro.prototype.getTabuleiro = function () {
-        return this.tabuleiro;
-    };
-    ItemTabuleiro.prototype.setDestaque = function (isDestacado) {
-        this.isDestacado = isDestacado;
-        this.atualizarClasse();
-        if (this.isDestacado) {
-            if (lodash_1.default.isEqual(this.peca, this.tabuleiro.pecaEmMovimento)) {
-                this.simularMovimento();
-            }
-        }
-        else {
-            this.removerDestaques();
-        }
-    };
-    ItemTabuleiro.prototype.removerDestaque = function () {
-        this.isDestacado = false;
-        this.atualizarClasse();
-    };
-    ItemTabuleiro.prototype.removerDestaques = function () {
-        this.tabuleiro.removerDestaques();
-    };
-    ItemTabuleiro.prototype.simularMovimento = function () {
-        if (this.peca) {
-            var posicoes = this.peca.simularMovimento();
-            this.tabuleiro.destacarPosicoes(posicoes);
-        }
-    };
-    ItemTabuleiro.prototype.atualizarClasse = function () {
-        var styleClass = this.elemento.getAttribute('class');
-        var jaDestacado = styleClass.includes('destaque');
-        if (jaDestacado && !this.isDestacado)
-            styleClass = styleClass.replace('destaque', '');
-        var destaqueClass = this.isDestacado && !jaDestacado ? 'destaque' : '';
-        this.elemento.setAttribute('class', styleClass + " " + destaqueClass);
-    };
-    return ItemTabuleiro;
-}());
-exports.ItemTabuleiro = ItemTabuleiro;
-
-},{"lodash":49}],8:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var ModificadorImpl = (function () {
-    function ModificadorImpl(quantidade, apply) {
-        this.quantidade = quantidade;
-        this.apply = apply;
-        this.quantidade = quantidade;
-        this.apply = apply.bind(this, quantidade);
-    }
-    ModificadorImpl.soma = function (quantidade, propriedade) { return propriedade + quantidade; };
-    ModificadorImpl.subtracao = function (quantidade, propriedade) { return propriedade - quantidade; };
-    return ModificadorImpl;
-}());
-exports.ModificadorImpl = ModificadorImpl;
-
-},{}],9:[function(require,module,exports){
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -420,127 +235,466 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 var lodash_1 = __importDefault(require("lodash"));
-var PosicoesIniciais_1 = require("../definitions/PosicoesIniciais");
-var TipoPeca_1 = require("../definitions/TipoPeca");
+var InitialPositions_1 = require("../definitions/InitialPositions");
+var PieceKind_1 = require("../definitions/PieceKind");
 var DOMGenerator_1 = require("../DOMGenerator");
-var DefinidorCores_1 = require("./DefinidorCores");
-var InstanciadorPecas_1 = require("./InstanciadorPecas");
-var ItemTabuleiro_1 = require("./ItemTabuleiro");
-var initilizarMatriz = function () {
-    var itens = [];
-    itens[0] = [];
-    itens[1] = [];
-    itens[2] = [];
-    itens[3] = [];
-    itens[4] = [];
-    itens[5] = [];
-    itens[6] = [];
-    itens[7] = [];
-    return itens;
+var ColorAdapter_1 = require("./ColorAdapter");
+var PieceBuilder_1 = require("./PieceBuilder");
+var BoardItem_1 = require("./BoardItem");
+var config_1 = require("../config");
+var initMatrix = function () {
+    var matrix = [];
+    matrix[0] = [];
+    matrix[1] = [];
+    matrix[2] = [];
+    matrix[3] = [];
+    matrix[4] = [];
+    matrix[5] = [];
+    matrix[6] = [];
+    matrix[7] = [];
+    return matrix;
 };
-var Tabuleiro = (function () {
-    function Tabuleiro() {
+var Board = (function () {
+    function Board() {
         var _this = this;
-        this.posicoes = initilizarMatriz();
-        this.gerarTabuleiroInicial = function () {
-            var brancas = _this.gerarPecas("black");
-            var pretas = _this.gerarPecas("grey");
-            var vazias = _this.gerarPecasVazias();
-            brancas.concat(pretas).concat(vazias).forEach(_this.adicionarItem);
+        this.matrix = initMatrix();
+        this.initBoard = function () {
+            var whites = _this.buildPieces("black");
+            var blacks = _this.buildPieces("grey");
+            var empties = _this.buildEmptyPieces();
+            whites
+                .concat(blacks)
+                .concat(empties)
+                .forEach(_this.addItem);
             return _this;
         };
-        this.salvar = function () { return __awaiter(_this, void 0, void 0, function () {
-            var conteudo, url, config, data;
+        this.save = function () { return __awaiter(_this, void 0, void 0, function () {
+            var content, config, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.percorrerTabuleiro(function (item) {
-                            item.setTabuleiro(null);
-                            if (item.getPeca()) {
-                                item.getPeca().adicionarAoItem(null);
+                        this.executeForAll(function (item) {
+                            item.setBoard(null);
+                            if (item.getPiece()) {
+                                item.getPiece().addToItem(null);
                             }
                         });
-                        conteudo = JSON.stringify(this);
-                        url = 'http://localhost:3000/salvar';
+                        content = JSON.stringify(this);
                         config = { headers: { 'Content-Type': 'application/json' } };
-                        data = { json: conteudo };
-                        return [4, axios_1.default.post(url, data, config)];
+                        data = { json: content };
+                        return [4, axios_1.default.post(config_1.API.SAVE_URL, data, config)];
                     case 1:
                         _a.sent();
                         return [2];
                 }
             });
         }); };
-        this.isPosicaoValida = function (posicao) {
-            return _this.isPosicaoExistente(posicao) && !_this.isPosicaoOcupada(posicao);
+        this.isValidPosition = function (position) {
+            return _this.isPositionInMatrixRange(position) && !_this.getPieceByPosition(position);
         };
-        this.adicionarItem = function (item) {
-            var _a = item.getPosicao(), linha = _a.linha, coluna = _a.coluna;
-            _this.posicoes[linha][coluna] = item;
-            item.adicionarAoTabuleiro(_this);
+        this.addItem = function (item) {
+            var _a = item.getPosition(), line = _a.line, column = _a.column;
+            _this.matrix[line][column] = item;
+            item.addToBoard(_this);
         };
     }
-    Tabuleiro.prototype.getItem = function (_a) {
-        var linha = _a.linha, coluna = _a.coluna;
-        var posicaoExiste = this.isPosicaoExistente({ linha: linha, coluna: coluna });
-        return posicaoExiste ? this.posicoes[linha][coluna] : null;
+    Board.prototype.getItem = function (_a) {
+        var line = _a.line, column = _a.column;
+        var positionExists = this.isPositionInMatrixRange({ line: line, column: column });
+        return positionExists ? this.matrix[line][column] : null;
     };
-    Tabuleiro.prototype.destacarPosicoes = function (posicoes) {
+    Board.prototype.highlightPositions = function (positions) {
         var _this = this;
-        posicoes.forEach(function (posicao) {
-            return _this.getItem(posicao).setDestaque(true);
-        });
+        positions.forEach(function (position) { return _this.getItem(position).setHighlight(true); });
     };
-    Tabuleiro.prototype.removerDestaques = function () {
-        var removerDestaque = function (item) { return item.removerDestaque(); };
-        this.percorrerTabuleiro(removerDestaque);
+    Board.prototype.clearHighlights = function () {
+        this.executeForAll(function (item) { return item.removeHighlight(); });
     };
-    Tabuleiro.prototype.isBloqueadaPorOponente = function (posicao, posicaoInicial) {
-        var bloqueante = this.isPosicaoExistente(posicao) && this.isPosicaoOcupada(posicao);
-        var corBloqueante = bloqueante && this.isPosicaoOcupada(posicao).getCor();
-        var corBloqueada = this.getItem(posicaoInicial).getPeca().getCor();
-        return (corBloqueante) && (corBloqueada !== corBloqueante);
+    Board.prototype.isPositionBlockedByOpponent = function (position, initialPosition) {
+        var blockingPiece = this.isPositionInMatrixRange(position) && this.getPieceByPosition(position);
+        var blockingColor = blockingPiece && this.getPieceByPosition(position).getCor();
+        var blockedColor = this.getItem(initialPosition)
+            .getPiece()
+            .getCor();
+        return blockingColor && blockedColor !== blockingColor;
     };
-    Tabuleiro.prototype.setPecaEmMovimento = function (peca) {
-        if (this.pecaEmMovimento && !lodash_1.default.isEqual(this.pecaEmMovimento, peca)) {
-            this.removerDestaques();
+    Board.prototype.setPecaEmMovimento = function (piece) {
+        if (this.currentMovingPieces && !lodash_1.default.isEqual(this.currentMovingPieces, piece)) {
+            this.clearHighlights();
         }
-        this.pecaEmMovimento = peca;
+        this.currentMovingPieces = piece;
     };
-    Tabuleiro.prototype.isPecaEmMovimento = function () {
-        return !!this.pecaEmMovimento;
+    Board.prototype.isMovingPiece = function () {
+        return !!this.currentMovingPieces;
     };
-    Tabuleiro.prototype.moverPeca = function (itemClicado) {
-        var itemDaPeca = this.pecaEmMovimento.getItemTabuleiro();
-        itemClicado.atribuirPeca(this.pecaEmMovimento);
-        this.pecaEmMovimento = null;
-        itemDaPeca.atribuirPeca(null);
+    Board.prototype.movePiece = function (clickedItem) {
+        var pieceItem = this.currentMovingPieces.getBoardItem();
+        clickedItem.addPiece(this.currentMovingPieces);
+        this.currentMovingPieces = null;
+        pieceItem.addPiece(null);
         DOMGenerator_1.DOMGenerator.getInstance().refresh();
     };
-    Tabuleiro.prototype.percorrerTabuleiro = function (callback) {
-        for (var linha = 0; linha < 8; linha++)
-            for (var coluna = 0; coluna < 8; coluna++)
-                callback(this.getItem({ linha: linha, coluna: coluna }), { linha: linha, coluna: coluna });
+    Board.prototype.executeForAll = function (callback) {
+        for (var line = 0; line < 8; line++)
+            for (var column = 0; column < 8; column++)
+                callback(this.getItem({ line: line, column: column }), { line: line, column: column });
     };
-    Tabuleiro.prototype.isPosicaoExistente = function (posicao) {
-        return (posicao.coluna < 8 && posicao.coluna >= 0) && (posicao.linha >= 0 && posicao.linha < 8);
+    Board.prototype.isPositionInMatrixRange = function (position) {
+        return position.column < 8 && position.column >= 0 && position.line >= 0 && position.line < 8;
     };
-    Tabuleiro.prototype.isPosicaoOcupada = function (posicao) {
-        return this.isPosicaoExistente(posicao) ? this.getItem(posicao).getPeca() : null;
+    Board.prototype.getPieceByPosition = function (position) {
+        return this.isPositionInMatrixRange(position) ? this.getItem(position).getPiece() : null;
     };
-    Tabuleiro.prototype.gerarPecas = function (cor) {
-        return Object.values(TipoPeca_1.TipoPeca)
-            .filter(function (value) { return !!value; })
-            .reduce(function (agg, tipo) { return agg.concat(InstanciadorPecas_1.InstanciadorPecas.instanciar(tipo, cor)); }, []);
+    Board.prototype.buildPieces = function (cor) {
+        return Object.values(PieceKind_1.PieceKind)
+            .filter(Boolean)
+            .reduce(function (agg, kind) { return agg.concat(PieceBuilder_1.PieceBuilder.build(kind, cor)); }, []);
     };
-    Tabuleiro.prototype.gerarPecasVazias = function () {
-        return PosicoesIniciais_1.MapPosicaoPecasBrancas.get(TipoPeca_1.TipoPeca.VAZIO).map(function (posicao) { return new ItemTabuleiro_1.ItemTabuleiro(posicao, DefinidorCores_1.DefinidorCores.definirCorDoItem(posicao)); });
+    Board.prototype.buildEmptyPieces = function () {
+        return InitialPositions_1.WhitePiecesPositionMap.get(PieceKind_1.PieceKind.EMPTY).map(function (position) { return new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position)); });
     };
-    return Tabuleiro;
+    return Board;
 }());
-exports.Tabuleiro = Tabuleiro;
+exports.Board = Board;
 
-},{"../DOMGenerator":1,"../definitions/PosicoesIniciais":3,"../definitions/TipoPeca":4,"./DefinidorCores":5,"./InstanciadorPecas":6,"./ItemTabuleiro":7,"axios":23,"lodash":49}],10:[function(require,module,exports){
+},{"../DOMGenerator":1,"../config":2,"../definitions/InitialPositions":3,"../definitions/PieceKind":4,"./BoardItem":6,"./ColorAdapter":7,"./PieceBuilder":9,"axios":23,"lodash":49}],6:[function(require,module,exports){
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __importDefault(require("lodash"));
+var BoardItem = (function () {
+    function BoardItem(position, color) {
+        var _this = this;
+        this.position = position;
+        this.color = color;
+        this.onClick = function () {
+            if (!_this.isHighlighted) {
+                if (_this.piece) {
+                    _this.board.setPecaEmMovimento(_this.piece);
+                    _this.setHighlight(true);
+                }
+            }
+            else {
+                if (!_this.piece) {
+                    if (_this.board.isMovingPiece()) {
+                        _this.board.movePiece(_this);
+                    }
+                }
+                else {
+                    if (_this.board.isMovingPiece()) {
+                        if (!lodash_1.default.isEqual(_this.piece, _this.board.currentMovingPieces)) {
+                            _this.board.movePiece(_this);
+                        }
+                    }
+                    _this.setHighlight(false);
+                }
+            }
+        };
+    }
+    BoardItem.prototype.addPiece = function (piece) {
+        this.piece = piece;
+        if (piece) {
+            this.piece.addToItem(this);
+        }
+    };
+    BoardItem.prototype.setElement = function (element) {
+        this.element = element;
+    };
+    BoardItem.prototype.addToBoard = function (board) {
+        this.board = board;
+    };
+    BoardItem.prototype.setBoard = function (board) {
+        this.board = board;
+    };
+    BoardItem.prototype.getColor = function () {
+        return this.color;
+    };
+    BoardItem.prototype.getPiece = function () {
+        return this.piece;
+    };
+    BoardItem.prototype.getPosition = function () {
+        return this.position;
+    };
+    BoardItem.prototype.getBoard = function () {
+        return this.board;
+    };
+    BoardItem.prototype.setHighlight = function (isDestacado) {
+        this.isHighlighted = isDestacado;
+        this.updateStyles();
+        if (this.isHighlighted) {
+            if (lodash_1.default.isEqual(this.piece, this.board.currentMovingPieces)) {
+                this.simulateMovement();
+            }
+        }
+        else {
+            this.removeHighlightFromBoard();
+        }
+    };
+    BoardItem.prototype.removeHighlight = function () {
+        this.isHighlighted = false;
+        this.updateStyles();
+    };
+    BoardItem.prototype.removeHighlightFromBoard = function () {
+        this.board.clearHighlights();
+    };
+    BoardItem.prototype.simulateMovement = function () {
+        if (this.piece) {
+            var positions = this.piece.simulateMovement();
+            this.board.highlightPositions(positions);
+        }
+    };
+    BoardItem.prototype.updateStyles = function () {
+        var styleClass = this.element.getAttribute('class');
+        var alreadyHighlighted = styleClass.includes('destaque');
+        if (alreadyHighlighted && !this.isHighlighted)
+            styleClass = styleClass.replace('destaque', '');
+        var highlightClass = this.isHighlighted && !alreadyHighlighted ? 'destaque' : '';
+        this.element.setAttribute('class', styleClass + " " + highlightClass);
+    };
+    return BoardItem;
+}());
+exports.BoardItem = BoardItem;
+
+},{"lodash":49}],7:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var ColorAdapter;
+(function (ColorAdapter) {
+    function defineItemColor(_a) {
+        var line = _a.line, column = _a.column;
+        var color = line % 2 === 0 ? "white" : "pink";
+        var even = color;
+        var odds = color == "pink" ? "white" : "pink";
+        return column % 2 === 0 ? even : odds;
+    }
+    ColorAdapter.defineItemColor = defineItemColor;
+})(ColorAdapter = exports.ColorAdapter || (exports.ColorAdapter = {}));
+
+},{}],8:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var ModifierImpl = (function () {
+    function ModifierImpl(quantity, apply) {
+        this.quantity = quantity;
+        this.apply = apply;
+        this.quantity = quantity;
+        this.apply = apply.bind(this, quantity);
+    }
+    ModifierImpl.sum = function (quantity, property) { return property + quantity; };
+    ModifierImpl.minus = function (quantity, property) { return property - quantity; };
+    return ModifierImpl;
+}());
+exports.ModifierImpl = ModifierImpl;
+
+},{}],9:[function(require,module,exports){
+"use strict";
+var _a;
+Object.defineProperty(exports, "__esModule", { value: true });
+var InitialPositions_1 = require("../definitions/InitialPositions");
+var PieceKind_1 = require("../definitions/PieceKind");
+var ColorAdapter_1 = require("./ColorAdapter");
+var BoardItem_1 = require("./BoardItem");
+var DiagonalMovement_1 = require("./movement/DiagonalMovement");
+var HorizontalMovement_1 = require("./movement/HorizontalMovement");
+var LMovement_1 = require("./movement/LMovement");
+var VerticalMovement_1 = require("./movement/VerticalMovement");
+var Bishop_1 = require("./piece/Bishop");
+var Knight_1 = require("./piece/Knight");
+var Pawn_1 = require("./piece/Pawn");
+var Queen_1 = require("./piece/Queen");
+var King_1 = require("./piece/King");
+var Rook_1 = require("./piece/Rook");
+exports.PieceBuilderMap = new Map([
+    [PieceKind_1.PieceKind.PAWN, Pawn_1.Pawn],
+    [PieceKind_1.PieceKind.KNIGHT, Knight_1.Knight],
+    [PieceKind_1.PieceKind.BISHOP, Bishop_1.Bishop],
+    [PieceKind_1.PieceKind.QUEEN, Queen_1.Queen],
+    [PieceKind_1.PieceKind.KING, King_1.King],
+    [PieceKind_1.PieceKind.ROOK, Rook_1.Rook],
+]);
+exports.MovementBuilderMap = (_a = {},
+    _a[2] = DiagonalMovement_1.DiagonalMovement,
+    _a[0] = HorizontalMovement_1.HorizontalMovement,
+    _a[1] = VerticalMovement_1.VerticalMovement,
+    _a[3] = LMovement_1.LMovement,
+    _a);
+var PieceBuilder;
+(function (PieceBuilder) {
+    function build(kind, pieceColor) {
+        var map = pieceColor === "grey" ? InitialPositions_1.WhitePiecesPositionMap : InitialPositions_1.BlackPiecesPositionMap;
+        return map.get(kind).map(function (position) {
+            var clazz = exports.PieceBuilderMap.get(kind);
+            var item = new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position));
+            var peca = new clazz(pieceColor);
+            item.addPiece(peca);
+            return item;
+        });
+    }
+    PieceBuilder.build = build;
+})(PieceBuilder = exports.PieceBuilder || (exports.PieceBuilder = {}));
+
+},{"../definitions/InitialPositions":3,"../definitions/PieceKind":4,"./BoardItem":6,"./ColorAdapter":7,"./movement/DiagonalMovement":10,"./movement/HorizontalMovement":11,"./movement/LMovement":12,"./movement/VerticalMovement":14,"./piece/Bishop":15,"./piece/King":16,"./piece/Knight":17,"./piece/Pawn":18,"./piece/Queen":20,"./piece/Rook":21}],10:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ModifierImpl_1 = require("../ModifierImpl");
+var Movement_1 = require("./Movement");
+var DiagonalMovement = (function (_super) {
+    __extends(DiagonalMovement, _super);
+    function DiagonalMovement() {
+        return _super.call(this, 2) || this;
+    }
+    DiagonalMovement.prototype.getMovementOffsets = function () {
+        return [
+            {
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+            },
+            {
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+            },
+            {
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+            },
+            {
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+            },
+        ];
+    };
+    return DiagonalMovement;
+}(Movement_1.Movement));
+exports.DiagonalMovement = DiagonalMovement;
+
+},{"../ModifierImpl":8,"./Movement":13}],11:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ModifierImpl_1 = require("../ModifierImpl");
+var Movement_1 = require("./Movement");
+var HorizontalMovement = (function (_super) {
+    __extends(HorizontalMovement, _super);
+    function HorizontalMovement() {
+        return _super.call(this, 0) || this;
+    }
+    HorizontalMovement.prototype.getMovementOffsets = function () {
+        return [
+            {
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                lineModifier: new ModifierImpl_1.ModifierImpl(0, ModifierImpl_1.ModifierImpl.sum),
+            },
+            {
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                lineModifier: new ModifierImpl_1.ModifierImpl(0, ModifierImpl_1.ModifierImpl.sum),
+            },
+        ];
+    };
+    return HorizontalMovement;
+}(Movement_1.Movement));
+exports.HorizontalMovement = HorizontalMovement;
+
+},{"../ModifierImpl":8,"./Movement":13}],12:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ModifierImpl_1 = require("../ModifierImpl");
+var Movement_1 = require("./Movement");
+var LMovement = (function (_super) {
+    __extends(LMovement, _super);
+    function LMovement() {
+        return _super.call(this, 3) || this;
+    }
+    LMovement.prototype.getMovementOffsets = function () {
+        return [
+            {
+                lineModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+            },
+            {
+                lineModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+            },
+            {
+                lineModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.minus),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+            },
+            {
+                lineModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.minus),
+                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+            },
+            {
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.sum),
+            },
+            {
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                columnModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.sum),
+            },
+            {
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                columnModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.minus),
+            },
+            {
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.minus),
+            },
+        ];
+    };
+    LMovement.prototype.executeSimulation = function (initialPosition, board) {
+        var _this = this;
+        return this.getMovementOffsets()
+            .map(function (offset) { return _this.createNewPositionBasedOnOffset(initialPosition, offset); })
+            .filter(function (position) { return board.isPositionInMatrixRange(position); })
+            .filter(function (position) {
+            return !board.getPieceByPosition(position) ||
+                board.isPositionBlockedByOpponent(position, initialPosition);
+        });
+    };
+    return LMovement;
+}(Movement_1.Movement));
+exports.LMovement = LMovement;
+
+},{"../ModifierImpl":8,"./Movement":13}],13:[function(require,module,exports){
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -558,47 +712,47 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var Movimento = (function () {
-    function Movimento(tipo) {
-        this.tipo = tipo;
+var Movement = (function () {
+    function Movement(kind) {
+        this.kind = kind;
     }
-    Movimento.prototype.getTipo = function () {
-        return this.tipo;
+    Movement.prototype.getKind = function () {
+        return this.kind;
     };
-    Movimento.prototype.simularMovimento = function (posicao, tabuleiro) {
-        var bindedGetter = this.getPosicoesValidasPorOffset.bind(this, posicao, tabuleiro);
-        var posicoes = this.getOffsetMovimentos().map(bindedGetter);
-        return lodash_1.default.flatten(posicoes);
+    Movement.prototype.executeSimulation = function (position, board) {
+        var boundGetter = this.getValidPositionsForEachOffset.bind(this, position, board);
+        var positions = this.getMovementOffsets().map(boundGetter);
+        return lodash_1.default.flatten(positions);
     };
-    Movimento.prototype.getPosicoesValidasPorOffset = function (posicaoInicial, tabuleiro, offset) {
-        var isPosicaoValida = true;
-        var posicao = __assign({}, posicaoInicial);
-        var posicoes = [];
-        while (isPosicaoValida) {
-            posicao = this.criarNovaPosicaoBaseadaEmOffset(posicao, offset);
-            isPosicaoValida = tabuleiro.isPosicaoValida(posicao);
-            if (isPosicaoValida) {
-                posicoes.push(posicao);
+    Movement.prototype.getValidPositionsForEachOffset = function (initialPosition, board, offset) {
+        var isValidPosition = true;
+        var position = __assign({}, initialPosition);
+        var positions = [];
+        while (isValidPosition) {
+            position = this.createNewPositionBasedOnOffset(position, offset);
+            isValidPosition = board.isValidPosition(position);
+            if (isValidPosition) {
+                positions.push(position);
             }
-            else if (tabuleiro.isBloqueadaPorOponente(posicao, posicaoInicial)) {
-                posicoes.push(posicao);
+            else if (board.isPositionBlockedByOpponent(position, initialPosition)) {
+                positions.push(position);
             }
         }
-        return posicoes;
+        return positions;
     };
-    Movimento.prototype.criarNovaPosicaoBaseadaEmOffset = function (_a, _b) {
-        var linha = _a.linha, coluna = _a.coluna;
-        var modificadorColuna = _b.modificadorColuna, modificadorLinha = _b.modificadorLinha;
+    Movement.prototype.createNewPositionBasedOnOffset = function (_a, _b) {
+        var line = _a.line, column = _a.column;
+        var columnModifier = _b.columnModifier, lineModifier = _b.lineModifier;
         return {
-            linha: modificadorLinha.apply(linha),
-            coluna: modificadorColuna.apply(coluna),
+            line: lineModifier.apply(line),
+            column: columnModifier.apply(column),
         };
     };
-    return Movimento;
+    return Movement;
 }());
-exports.Movimento = Movimento;
+exports.Movement = Movement;
 
-},{"lodash":49}],11:[function(require,module,exports){
+},{"lodash":49}],14:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -614,189 +768,30 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ModificadorImpl_1 = require("../ModificadorImpl");
-var Movimento_1 = require("./Movimento");
-var MovimentoDiagonal = (function (_super) {
-    __extends(MovimentoDiagonal, _super);
-    function MovimentoDiagonal() {
-        return _super.call(this, 2) || this;
-    }
-    MovimentoDiagonal.prototype.getOffsetMovimentos = function () {
-        return [
-            {
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
-            },
-            {
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
-            },
-            {
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
-            },
-            {
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
-            },
-        ];
-    };
-    return MovimentoDiagonal;
-}(Movimento_1.Movimento));
-exports.MovimentoDiagonal = MovimentoDiagonal;
-
-},{"../ModificadorImpl":8,"./Movimento":10}],12:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ModificadorImpl_1 = require("../ModificadorImpl");
-var Movimento_1 = require("./Movimento");
-var MovimentoHorizontal = (function (_super) {
-    __extends(MovimentoHorizontal, _super);
-    function MovimentoHorizontal() {
-        return _super.call(this, 0) || this;
-    }
-    MovimentoHorizontal.prototype.getOffsetMovimentos = function () {
-        return [
-            {
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(0, ModificadorImpl_1.ModificadorImpl.soma),
-            },
-            {
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(0, ModificadorImpl_1.ModificadorImpl.soma),
-            },
-        ];
-    };
-    return MovimentoHorizontal;
-}(Movimento_1.Movimento));
-exports.MovimentoHorizontal = MovimentoHorizontal;
-
-},{"../ModificadorImpl":8,"./Movimento":10}],13:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ModificadorImpl_1 = require("../ModificadorImpl");
-var Movimento_1 = require("./Movimento");
-var MovimentoL = (function (_super) {
-    __extends(MovimentoL, _super);
-    function MovimentoL() {
-        return _super.call(this, 3) || this;
-    }
-    MovimentoL.prototype.getOffsetMovimentos = function () {
-        return [
-            {
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.soma),
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
-            },
-            {
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.soma),
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
-            },
-            {
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.subtracao),
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
-            },
-            {
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.subtracao),
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
-            },
-            {
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.soma),
-            },
-            {
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.soma),
-            },
-            {
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.subtracao),
-            },
-            {
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(2, ModificadorImpl_1.ModificadorImpl.subtracao),
-            },
-        ];
-    };
-    MovimentoL.prototype.simularMovimento = function (posicaoInicial, tabuleiro) {
-        var _this = this;
-        return this.getOffsetMovimentos()
-            .map(function (offset) { return _this.criarNovaPosicaoBaseadaEmOffset(posicaoInicial, offset); })
-            .filter(function (posicao) { return tabuleiro.isPosicaoExistente(posicao); })
-            .filter(function (posicao) {
-            return !tabuleiro.isPosicaoOcupada(posicao) ||
-                tabuleiro.isBloqueadaPorOponente(posicao, posicaoInicial);
-        });
-    };
-    return MovimentoL;
-}(Movimento_1.Movimento));
-exports.MovimentoL = MovimentoL;
-
-},{"../ModificadorImpl":8,"./Movimento":10}],14:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ModificadorImpl_1 = require("../ModificadorImpl");
-var Movimento_1 = require("./Movimento");
-var MovimentoVertical = (function (_super) {
-    __extends(MovimentoVertical, _super);
-    function MovimentoVertical() {
+var ModifierImpl_1 = require("../ModifierImpl");
+var Movement_1 = require("./Movement");
+var VerticalMovement = (function (_super) {
+    __extends(VerticalMovement, _super);
+    function VerticalMovement() {
         return _super.call(this, 1) || this;
     }
-    MovimentoVertical.prototype.getOffsetMovimentos = function () {
+    VerticalMovement.prototype.getMovementOffsets = function () {
         return [
             {
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(0, ModificadorImpl_1.ModificadorImpl.soma),
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.soma),
+                columnModifier: new ModifierImpl_1.ModifierImpl(0, ModifierImpl_1.ModifierImpl.sum),
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
             },
             {
-                modificadorColuna: new ModificadorImpl_1.ModificadorImpl(0, ModificadorImpl_1.ModificadorImpl.subtracao),
-                modificadorLinha: new ModificadorImpl_1.ModificadorImpl(1, ModificadorImpl_1.ModificadorImpl.subtracao),
+                columnModifier: new ModifierImpl_1.ModifierImpl(0, ModifierImpl_1.ModifierImpl.minus),
+                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
             }
         ];
     };
-    return MovimentoVertical;
-}(Movimento_1.Movimento));
-exports.MovimentoVertical = MovimentoVertical;
+    return VerticalMovement;
+}(Movement_1.Movement));
+exports.VerticalMovement = VerticalMovement;
 
-},{"../ModificadorImpl":8,"./Movimento":10}],15:[function(require,module,exports){
+},{"../ModifierImpl":8,"./Movement":13}],15:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -812,22 +807,74 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var TipoPeca_1 = require("../../definitions/TipoPeca");
-var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
-var Peca_1 = require("./Peca");
-var Bispo = (function (_super) {
-    __extends(Bispo, _super);
-    function Bispo(cor) {
+var PieceKind_1 = require("../../definitions/PieceKind");
+var DiagonalMovement_1 = require("../movement/DiagonalMovement");
+var Piece_1 = require("./Piece");
+var Bishop = (function (_super) {
+    __extends(Bishop, _super);
+    function Bishop(color) {
         var _this = this;
-        var movimentos = [new MovimentoDiagonal_1.MovimentoDiagonal()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.BISPO, cor, movimentos, true) || this;
+        var movements = [new DiagonalMovement_1.DiagonalMovement()];
+        _this = _super.call(this, PieceKind_1.PieceKind.BISHOP, color, movements, true) || this;
         return _this;
     }
-    return Bispo;
-}(Peca_1.Peca));
-exports.Bispo = Bispo;
+    return Bishop;
+}(Piece_1.Piece));
+exports.Bishop = Bishop;
 
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":11,"./Peca":18}],16:[function(require,module,exports){
+},{"../../definitions/PieceKind":4,"../movement/DiagonalMovement":10,"./Piece":19}],16:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __importDefault(require("lodash"));
+var PieceKind_1 = require("../../definitions/PieceKind");
+var DiagonalMovement_1 = require("../movement/DiagonalMovement");
+var HorizontalMovement_1 = require("../movement/HorizontalMovement");
+var VerticalMovement_1 = require("../movement/VerticalMovement");
+var Piece_1 = require("./Piece");
+var King = (function (_super) {
+    __extends(King, _super);
+    function King(colors) {
+        var _this = this;
+        var movements = [new VerticalMovement_1.VerticalMovement(), new HorizontalMovement_1.HorizontalMovement(), new DiagonalMovement_1.DiagonalMovement()];
+        _this = _super.call(this, PieceKind_1.PieceKind.KING, colors, movements, true) || this;
+        return _this;
+    }
+    King.prototype.simulateMovement = function () {
+        var initialPosition = this.getBoardItem().getPosition();
+        var board = this.getBoard();
+        var positions = this.movements.map(function (movements) {
+            return movements
+                .getMovementOffsets()
+                .map(function (offset) { return movements.createNewPositionBasedOnOffset(initialPosition, offset); })
+                .filter(function (position) { return board.isPositionInMatrixRange(position); })
+                .filter(function (position) {
+                return !board.getPieceByPosition(position) ||
+                    board.isPositionBlockedByOpponent(position, initialPosition);
+            });
+        });
+        return lodash_1.default.flatten(positions);
+    };
+    return King;
+}(Piece_1.Piece));
+exports.King = King;
+
+},{"../../definitions/PieceKind":4,"../movement/DiagonalMovement":10,"../movement/HorizontalMovement":11,"../movement/VerticalMovement":14,"./Piece":19,"lodash":49}],17:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -843,22 +890,22 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var TipoPeca_1 = require("../../definitions/TipoPeca");
-var MovimentoL_1 = require("../movimento/MovimentoL");
-var Peca_1 = require("./Peca");
-var Cavalo = (function (_super) {
-    __extends(Cavalo, _super);
-    function Cavalo(cor) {
+var PieceKind_1 = require("../../definitions/PieceKind");
+var LMovement_1 = require("../movement/LMovement");
+var Piece_1 = require("./Piece");
+var Knight = (function (_super) {
+    __extends(Knight, _super);
+    function Knight(cor) {
         var _this = this;
-        var movimentos = [new MovimentoL_1.MovimentoL()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.CAVALO, cor, movimentos, true) || this;
+        var movements = [new LMovement_1.LMovement()];
+        _this = _super.call(this, PieceKind_1.PieceKind.KNIGHT, cor, movements, true) || this;
         return _this;
     }
-    return Cavalo;
-}(Peca_1.Peca));
-exports.Cavalo = Cavalo;
+    return Knight;
+}(Piece_1.Piece));
+exports.Knight = Knight;
 
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoL":13,"./Peca":18}],17:[function(require,module,exports){
+},{"../../definitions/PieceKind":4,"../movement/LMovement":12,"./Piece":19}],18:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -896,178 +943,95 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var TipoPeca_1 = require("../../definitions/TipoPeca");
-var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
-var Peca_1 = require("./Peca");
-var Peao = (function (_super) {
-    __extends(Peao, _super);
-    function Peao(cor) {
-        var _this = this;
-        var movimentos = [new MovimentoVertical_1.MovimentoVertical()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.PEAO, cor, movimentos, false) || this;
-        return _this;
+var PieceKind_1 = require("../../definitions/PieceKind");
+var VerticalMovement_1 = require("../movement/VerticalMovement");
+var Piece_1 = require("./Piece");
+var Pawn = (function (_super) {
+    __extends(Pawn, _super);
+    function Pawn(color) {
+        return _super.call(this, PieceKind_1.PieceKind.PAWN, color, [new VerticalMovement_1.VerticalMovement()], false) || this;
     }
-    Peao.prototype.simularMovimento = function () {
-        var posicaoAtual = this.itemTabuleiro.getPosicao();
-        var novaPosicao = this.getNovaPosicaoByCor(posicaoAtual);
-        var possiveisAtaques = this.getAtaqueByCor(posicaoAtual);
-        return lodash_1.default.compact(__spreadArrays([novaPosicao], possiveisAtaques));
+    Pawn.prototype.simulateMovement = function () {
+        var currentPosition = this.boardItem.getPosition();
+        var newPosition = this.getNewPositionByColor(currentPosition);
+        var possibleAttacks = this.getAttacksByColor(currentPosition);
+        return lodash_1.default.compact(__spreadArrays([newPosition], possibleAttacks));
     };
-    Peao.prototype.getNovaPosicaoByCor = function (_a) {
-        var linha = _a.linha, coluna = _a.coluna;
-        var novaLinha = this.cor === "grey" ? ++linha : --linha;
-        var novaPosicao = { linha: novaLinha, coluna: coluna };
-        var isOcupada = this.getTabuleiro().isPosicaoOcupada(novaPosicao);
-        return !isOcupada && novaPosicao || null;
+    Pawn.prototype.getNewPositionByColor = function (_a) {
+        var line = _a.line, column = _a.column;
+        var newLine = this.color === "grey" ? ++line : --line;
+        var newPosition = { line: newLine, column: column };
+        var isOccupied = this.getBoard().getPieceByPosition(newPosition);
+        return (!isOccupied && newPosition) || null;
     };
-    Peao.prototype.getAtaqueByCor = function (posicaoAtual) {
+    Pawn.prototype.getAttacksByColor = function (currentPosition) {
         var _this = this;
-        var clone = __assign({}, posicaoAtual);
-        var novaLinha = this.cor === "grey" ? ++clone.linha : --clone.linha;
-        var novaPosicao = { linha: novaLinha, coluna: clone.coluna };
-        var linha = novaPosicao.linha, coluna = novaPosicao.coluna;
-        var diagonalDireita = { linha: linha, coluna: coluna + 1 };
-        var diagonalEsquerda = { linha: linha, coluna: coluna - 1 };
-        var ataques = [diagonalDireita, diagonalEsquerda];
-        return ataques.filter(function (posicao) { return _this.getTabuleiro().isBloqueadaPorOponente(posicao, posicaoAtual); });
-    };
-    return Peao;
-}(Peca_1.Peca));
-exports.Peao = Peao;
-
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoVertical":14,"./Peca":18,"lodash":49}],18:[function(require,module,exports){
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var lodash_1 = __importDefault(require("lodash"));
-var Peca = (function () {
-    function Peca(tipo, cor, movimentos, vaiPraTras) {
-        this.tipo = tipo;
-        this.cor = cor;
-        this.movimentos = movimentos;
-        this.vaiPraTras = vaiPraTras;
-    }
-    Peca.prototype.getMovimentos = function () {
-        return this.movimentos;
-    };
-    Peca.prototype.setMovimentos = function (movimentos) {
-        this.movimentos = movimentos;
-    };
-    Peca.prototype.isVaiPraTras = function () {
-        return this.vaiPraTras;
-    };
-    Peca.prototype.getItemTabuleiro = function () {
-        return this.itemTabuleiro;
-    };
-    Peca.prototype.getTabuleiro = function () {
-        return this.itemTabuleiro.getTabuleiro();
-    };
-    Peca.prototype.simularMovimento = function () {
-        var _this = this;
-        var posicaoAtual = this.getItemTabuleiro().getPosicao();
-        var posicoes = this.movimentos.map(function (movimento) { return movimento.simularMovimento(posicaoAtual, _this.getTabuleiro()); });
-        return lodash_1.default.flatten(posicoes);
-    };
-    Peca.prototype.adicionarAoItem = function (item) {
-        this.itemTabuleiro = item;
-    };
-    Peca.prototype.getCor = function () {
-        return this.cor;
-    };
-    Peca.prototype.getTipo = function () {
-        return this.tipo;
-    };
-    return Peca;
-}());
-exports.Peca = Peca;
-
-},{"lodash":49}],19:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var TipoPeca_1 = require("../../definitions/TipoPeca");
-var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
-var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
-var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
-var Peca_1 = require("./Peca");
-var Rainha = (function (_super) {
-    __extends(Rainha, _super);
-    function Rainha(cor) {
-        var _this = this;
-        var movimentos = [new MovimentoVertical_1.MovimentoVertical(), new MovimentoHorizontal_1.MovimentoHorizontal(), new MovimentoDiagonal_1.MovimentoDiagonal()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.RAINHA, cor, movimentos, true) || this;
-        return _this;
-    }
-    return Rainha;
-}(Peca_1.Peca));
-exports.Rainha = Rainha;
-
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":11,"../movimento/MovimentoHorizontal":12,"../movimento/MovimentoVertical":14,"./Peca":18}],20:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var lodash_1 = __importDefault(require("lodash"));
-var TipoPeca_1 = require("../../definitions/TipoPeca");
-var MovimentoDiagonal_1 = require("../movimento/MovimentoDiagonal");
-var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
-var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
-var Peca_1 = require("./Peca");
-var Rei = (function (_super) {
-    __extends(Rei, _super);
-    function Rei(cor) {
-        var _this = this;
-        var movimentos = [new MovimentoVertical_1.MovimentoVertical(), new MovimentoHorizontal_1.MovimentoHorizontal(), new MovimentoDiagonal_1.MovimentoDiagonal()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.REI, cor, movimentos, true) || this;
-        return _this;
-    }
-    Rei.prototype.simularMovimento = function () {
-        var posicaoInicial = this.getItemTabuleiro().getPosicao();
-        var tabuleiro = this.getTabuleiro();
-        var posicoes = this.movimentos.map(function (movimento) {
-            return movimento.getOffsetMovimentos()
-                .map(function (offset) { return movimento.criarNovaPosicaoBaseadaEmOffset(posicaoInicial, offset); })
-                .filter(function (posicao) { return tabuleiro.isPosicaoExistente(posicao); })
-                .filter(function (posicao) {
-                return !tabuleiro.isPosicaoOcupada(posicao) ||
-                    tabuleiro.isBloqueadaPorOponente(posicao, posicaoInicial);
-            });
+        var clone = __assign({}, currentPosition);
+        var newLine = this.color === "grey" ? ++clone.line : --clone.line;
+        var newPosition = { line: newLine, column: clone.column };
+        var line = newPosition.line, column = newPosition.column;
+        var rightDiagonal = { line: line, column: column + 1 };
+        var leftDiagonal = { line: line, column: column - 1 };
+        var attacks = [rightDiagonal, leftDiagonal];
+        return attacks.filter(function (position) {
+            return _this.getBoard().isPositionBlockedByOpponent(position, currentPosition);
         });
-        return lodash_1.default.flatten(posicoes);
     };
-    return Rei;
-}(Peca_1.Peca));
-exports.Rei = Rei;
+    return Pawn;
+}(Piece_1.Piece));
+exports.Pawn = Pawn;
 
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoDiagonal":11,"../movimento/MovimentoHorizontal":12,"../movimento/MovimentoVertical":14,"./Peca":18,"lodash":49}],21:[function(require,module,exports){
+},{"../../definitions/PieceKind":4,"../movement/VerticalMovement":14,"./Piece":19,"lodash":49}],19:[function(require,module,exports){
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __importDefault(require("lodash"));
+var Piece = (function () {
+    function Piece(kind, color, movements, isAllowedToGoBackwards) {
+        this.kind = kind;
+        this.color = color;
+        this.movements = movements;
+        this.isAllowedToGoBackwards = isAllowedToGoBackwards;
+    }
+    Piece.prototype.getMovements = function () {
+        return this.movements;
+    };
+    Piece.prototype.setMovements = function (movements) {
+        this.movements = movements;
+    };
+    Piece.prototype.canGoBackwards = function () {
+        return this.isAllowedToGoBackwards;
+    };
+    Piece.prototype.getBoardItem = function () {
+        return this.boardItem;
+    };
+    Piece.prototype.getBoard = function () {
+        return this.boardItem.getBoard();
+    };
+    Piece.prototype.simulateMovement = function () {
+        var _this = this;
+        var currentPosition = this.getBoardItem().getPosition();
+        var positions = this.movements.map(function (movement) {
+            return movement.executeSimulation(currentPosition, _this.getBoard());
+        });
+        return lodash_1.default.flatten(positions);
+    };
+    Piece.prototype.addToItem = function (item) {
+        this.boardItem = item;
+    };
+    Piece.prototype.getCor = function () {
+        return this.color;
+    };
+    Piece.prototype.getKind = function () {
+        return this.kind;
+    };
+    return Piece;
+}());
+exports.Piece = Piece;
+
+},{"lodash":49}],20:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1083,23 +1047,56 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var TipoPeca_1 = require("../../definitions/TipoPeca");
-var MovimentoHorizontal_1 = require("../movimento/MovimentoHorizontal");
-var MovimentoVertical_1 = require("../movimento/MovimentoVertical");
-var Peca_1 = require("./Peca");
-var Torre = (function (_super) {
-    __extends(Torre, _super);
-    function Torre(cor) {
+var PieceKind_1 = require("../../definitions/PieceKind");
+var DiagonalMovement_1 = require("../movement/DiagonalMovement");
+var HorizontalMovement_1 = require("../movement/HorizontalMovement");
+var VerticalMovement_1 = require("../movement/VerticalMovement");
+var Piece_1 = require("./Piece");
+var Queen = (function (_super) {
+    __extends(Queen, _super);
+    function Queen(cor) {
         var _this = this;
-        var movimentos = [new MovimentoVertical_1.MovimentoVertical(), new MovimentoHorizontal_1.MovimentoHorizontal()];
-        _this = _super.call(this, TipoPeca_1.TipoPeca.TORRE, cor, movimentos, true) || this;
+        var movements = [new VerticalMovement_1.VerticalMovement(), new HorizontalMovement_1.HorizontalMovement(), new DiagonalMovement_1.DiagonalMovement()];
+        _this = _super.call(this, PieceKind_1.PieceKind.QUEEN, cor, movements, true) || this;
         return _this;
     }
-    return Torre;
-}(Peca_1.Peca));
-exports.Torre = Torre;
+    return Queen;
+}(Piece_1.Piece));
+exports.Queen = Queen;
 
-},{"../../definitions/TipoPeca":4,"../movimento/MovimentoHorizontal":12,"../movimento/MovimentoVertical":14,"./Peca":18}],22:[function(require,module,exports){
+},{"../../definitions/PieceKind":4,"../movement/DiagonalMovement":10,"../movement/HorizontalMovement":11,"../movement/VerticalMovement":14,"./Piece":19}],21:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var PieceKind_1 = require("../../definitions/PieceKind");
+var HorizontalMovement_1 = require("../movement/HorizontalMovement");
+var VerticalMovement_1 = require("../movement/VerticalMovement");
+var Piece_1 = require("./Piece");
+var Rook = (function (_super) {
+    __extends(Rook, _super);
+    function Rook(cor) {
+        var _this = this;
+        var movements = [new VerticalMovement_1.VerticalMovement(), new HorizontalMovement_1.HorizontalMovement()];
+        _this = _super.call(this, PieceKind_1.PieceKind.ROOK, cor, movements, true) || this;
+        return _this;
+    }
+    return Rook;
+}(Piece_1.Piece));
+exports.Rook = Rook;
+
+},{"../../definitions/PieceKind":4,"../movement/HorizontalMovement":11,"../movement/VerticalMovement":14,"./Piece":19}],22:[function(require,module,exports){
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -1142,33 +1139,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
-var InstanciadorPecas_1 = require("./domain/InstanciadorPecas");
-var ItemTabuleiro_1 = require("./domain/ItemTabuleiro");
-var Tabuleiro_1 = require("./domain/Tabuleiro");
+var PieceBuilder_1 = require("./domain/PieceBuilder");
+var BoardItem_1 = require("./domain/BoardItem");
+var Board_1 = require("./domain/Board");
 var DOMGenerator_1 = require("./DOMGenerator");
 var config_1 = require("./config");
 var buildBoardModel = function (loaded) {
-    var board = new Tabuleiro_1.Tabuleiro();
+    var board = new Board_1.Board();
     return Object.assign(board, loaded);
 };
 var buildModelItem = function (loaded) {
-    var boardItem = new ItemTabuleiro_1.ItemTabuleiro(loaded.posicao, loaded.cor);
+    var boardItem = new BoardItem_1.BoardItem(loaded.posicao, loaded.cor);
     return Object.assign(boardItem, loaded);
 };
 var buildModelPiece = function (loaded) {
-    var clazz = InstanciadorPecas_1.InstanciadorTipoMap.get(loaded.tipo);
+    var clazz = PieceBuilder_1.PieceBuilderMap.get(loaded.tipo);
     var piece = new clazz(loaded.cor);
     var model = Object.assign(piece, loaded);
-    var movements = model.getMovimentos().map(function (mov) { return buildMovementModel(mov); });
-    model.setMovimentos(movements);
+    var movements = model.getMovements().map(function (mov) { return buildMovementModel(mov); });
+    model.setMovements(movements);
     return model;
 };
 var buildMovementModel = function (loaded) {
-    var clazz = InstanciadorPecas_1.InstanciadorMovimentoMap[loaded.tipo];
+    var clazz = PieceBuilder_1.MovementBuilderMap[loaded.tipo];
     var movement = new clazz();
     return Object.assign(movement, loaded);
 };
-var initialBoard = new Tabuleiro_1.Tabuleiro().gerarTabuleiroInicial();
+var initialBoard = new Board_1.Board().initBoard();
 var newGame = function () {
     DOMGenerator_1.DOMGenerator.getInstance().injectBoard(initialBoard);
     DOMGenerator_1.DOMGenerator.getInstance().refresh();
@@ -1177,19 +1174,19 @@ var loadGame = function () { return __awaiter(void 0, void 0, void 0, function (
     var response, board;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4, axios_1.default.get(config_1.API.URL)];
+            case 0: return [4, axios_1.default.get(config_1.API.LOAD_URL)];
             case 1:
                 response = _a.sent();
                 board = buildBoardModel(response.data);
-                board.percorrerTabuleiro(function (item, _a) {
-                    var linha = _a.linha, coluna = _a.coluna;
+                board.executeForAll(function (item, _a) {
+                    var linha = _a.line, coluna = _a.column;
                     var itemModel = buildModelItem(item);
-                    if (itemModel.getPeca()) {
-                        var pieceModel = buildModelPiece(itemModel.getPeca());
-                        itemModel.atribuirPeca(pieceModel);
+                    if (itemModel.getPiece()) {
+                        var pieceModel = buildModelPiece(itemModel.getPiece());
+                        itemModel.addPiece(pieceModel);
                     }
-                    board.posicoes[linha][coluna] = itemModel;
-                    itemModel.adicionarAoTabuleiro(board);
+                    board.matrix[linha][coluna] = itemModel;
+                    itemModel.addToBoard(board);
                 });
                 DOMGenerator_1.DOMGenerator.getInstance().injectBoard(board);
                 DOMGenerator_1.DOMGenerator.getInstance().refresh();
@@ -1205,10 +1202,10 @@ loadGameButton.addEventListener('click', loadGame);
 saveGameButton.addEventListener('click', function () {
     return DOMGenerator_1.DOMGenerator.getInstance()
         .getBoard()
-        .salvar();
+        .save();
 });
 
-},{"./DOMGenerator":1,"./config":2,"./domain/InstanciadorPecas":6,"./domain/ItemTabuleiro":7,"./domain/Tabuleiro":9,"axios":23}],23:[function(require,module,exports){
+},{"./DOMGenerator":1,"./config":2,"./domain/Board":5,"./domain/BoardItem":6,"./domain/PieceBuilder":9,"axios":23}],23:[function(require,module,exports){
 module.exports = require('./lib/axios');
 },{"./lib/axios":25}],24:[function(require,module,exports){
 'use strict';
