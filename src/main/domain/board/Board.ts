@@ -2,7 +2,7 @@ import axios from 'axios'
 import _ from 'lodash'
 import { Color } from '../../definitions/Color'
 import { Position } from '../../definitions/Movement'
-import { WhitePiecesPositionMap } from '../../definitions/InitialPositions'
+import { WhitePiecesPositionMap } from '../InitialPositions'
 import { PieceKind } from '../../definitions/PieceKind'
 import { DOMGenerator } from '../../DOMGenerator'
 import { ColorAdapter } from '../ColorAdapter'
@@ -28,7 +28,11 @@ export class Board {
   public matrix: Array<Array<BoardItem>> = initMatrix()
   public currentMovingPieces: Piece
 
-  public initBoard = (): Board => {
+  static copy(board: Board): Board {
+    return Object.assign(new Board(), board)
+  }
+
+  public init = (): Board => {
     const whites = this.buildPieces(Color.WHITE)
     const pinks = this.buildPieces(Color.DARK_PINK)
     const empties = this.buildEmptyPieces()

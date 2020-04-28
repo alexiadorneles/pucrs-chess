@@ -1,5 +1,5 @@
 import { Color } from '../definitions/Color'
-import { WhitePiecesPositionMap, BlackPiecesPositionMap } from '../definitions/InitialPositions'
+import { WhitePiecesPositionMap, BlackPiecesPositionMap } from './InitialPositions'
 import { MovementKind } from '../definitions/Movement'
 import { PieceKind } from '../definitions/PieceKind'
 import { ColorAdapter } from './ColorAdapter'

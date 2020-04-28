@@ -1,7 +1,7 @@
 "use strict";
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-var InitialPositions_1 = require("../definitions/InitialPositions");
+var InitialPositions_1 = require("./InitialPositions");
 var PieceKind_1 = require("../definitions/PieceKind");
 var ColorAdapter_1 = require("./ColorAdapter");
 var BoardItem_1 = require("./board/BoardItem");

@@ -1,5 +1,5 @@
-import { Position } from './Movement'
-import { PieceKind } from './PieceKind'
+import { Position } from '../definitions/Movement'
+import { PieceKind } from '../definitions/PieceKind'
 
 const whitePawnPosition: Position[] = [
   { line: 1, column: 0 },

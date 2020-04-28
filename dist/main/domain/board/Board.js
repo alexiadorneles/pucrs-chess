@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 var lodash_1 = __importDefault(require("lodash"));
-var InitialPositions_1 = require("../../definitions/InitialPositions");
+var InitialPositions_1 = require("../InitialPositions");
 var PieceKind_1 = require("../../definitions/PieceKind");
 var DOMGenerator_1 = require("../../DOMGenerator");
 var ColorAdapter_1 = require("../ColorAdapter");
@@ -64,7 +64,7 @@ var Board = (function () {
     function Board() {
         var _this = this;
         this.matrix = initMatrix();
-        this.initBoard = function () {
+        this.init = function () {
             var whites = _this.buildPieces("white");
             var pinks = _this.buildPieces("dark-pink");
             var empties = _this.buildEmptyPieces();
@@ -104,6 +104,9 @@ var Board = (function () {
             item.addToBoard(_this);
         };
     }
+    Board.copy = function (board) {
+        return Object.assign(new Board(), board);
+    };
     Board.prototype.getItem = function (_a) {
         var line = _a.line, column = _a.column;
         var positionExists = this.isPositionInMatrixRange({ line: line, column: column });

@@ -76,7 +76,139 @@ exports.API = {
 },{}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var PieceKind_1 = require("./PieceKind");
+var PieceKind;
+(function (PieceKind) {
+    PieceKind["PAWN"] = "chess-pawn";
+    PieceKind["KNIGHT"] = "chess-knight";
+    PieceKind["KING"] = "chess-king";
+    PieceKind["QUEEN"] = "chess-queen";
+    PieceKind["BISHOP"] = "chess-bishop";
+    PieceKind["ROOK"] = "chess-rook";
+    PieceKind["EMPTY"] = "";
+})(PieceKind = exports.PieceKind || (exports.PieceKind = {}));
+
+},{}],4:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Board_1 = require("./board/Board");
+var BoardItem_1 = require("./board/BoardItem");
+var Piece_1 = require("./piece/Piece");
+var ChessFactoryImpl = (function () {
+    function ChessFactoryImpl() {
+    }
+    ChessFactoryImpl.prototype.createBoardFromJSON = function (loaded) {
+        var board = Board_1.Board.copy(loaded);
+        board.executeForAll(function (item, _a) {
+            var line = _a.line, column = _a.column;
+            var itemModel = BoardItem_1.BoardItem.copy(item);
+            if (itemModel.getPiece()) {
+                itemModel.addPiece(Piece_1.Piece.copy(itemModel.getPiece()));
+            }
+            board.matrix[line][column] = itemModel;
+            itemModel.addToBoard(board);
+        });
+        return board;
+    };
+    return ChessFactoryImpl;
+}());
+exports.ChessFactoryImpl = ChessFactoryImpl;
+
+},{"./board/Board":10,"./board/BoardItem":11,"./piece/Piece":21}],5:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var ColorAdapter;
+(function (ColorAdapter) {
+    function defineItemColor(_a) {
+        var line = _a.line, column = _a.column;
+        var color = line % 2 === 0 ? "black" : "pink";
+        var even = color;
+        var odds = color == "pink" ? "black" : "pink";
+        return column % 2 === 0 ? even : odds;
+    }
+    ColorAdapter.defineItemColor = defineItemColor;
+})(ColorAdapter = exports.ColorAdapter || (exports.ColorAdapter = {}));
+
+},{}],6:[function(require,module,exports){
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var Board_1 = require("./board/Board");
+var axios_1 = __importDefault(require("axios"));
+var config_1 = require("../config");
+var GameStateHandler = (function () {
+    function GameStateHandler(chessFactory, domGenerator) {
+        this.chessFactory = chessFactory;
+        this.domGenerator = domGenerator;
+        this.newGame = this.newGame.bind(this);
+        this.loadGame = this.loadGame.bind(this);
+    }
+    GameStateHandler.prototype.newGame = function () {
+        var initialBoard = new Board_1.Board().init();
+        this.domGenerator.injectBoard(initialBoard);
+        this.domGenerator.refresh();
+    };
+    GameStateHandler.prototype.loadGame = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, board;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, axios_1.default.get(config_1.API.LOAD_URL)];
+                    case 1:
+                        response = _a.sent();
+                        board = this.chessFactory.createBoardFromJSON(response.data);
+                        this.domGenerator.injectBoard(board);
+                        this.domGenerator.refresh();
+                        return [2];
+                }
+            });
+        });
+    };
+    return GameStateHandler;
+}());
+exports.GameStateHandler = GameStateHandler;
+
+},{"../config":2,"./board/Board":10,"axios":25}],7:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var PieceKind_1 = require("../definitions/PieceKind");
 var whitePawnPosition = [
     { line: 1, column: 0 },
     { line: 1, column: 1 },
@@ -177,36 +309,7 @@ exports.BlackPiecesPositionMap = new Map([
     [PieceKind_1.PieceKind.KING, pinkKingPosition],
 ]);
 
-},{"./PieceKind":4}],4:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var PieceKind;
-(function (PieceKind) {
-    PieceKind["PAWN"] = "chess-pawn";
-    PieceKind["KNIGHT"] = "chess-knight";
-    PieceKind["KING"] = "chess-king";
-    PieceKind["QUEEN"] = "chess-queen";
-    PieceKind["BISHOP"] = "chess-bishop";
-    PieceKind["ROOK"] = "chess-rook";
-    PieceKind["EMPTY"] = "";
-})(PieceKind = exports.PieceKind || (exports.PieceKind = {}));
-
-},{}],5:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var ColorAdapter;
-(function (ColorAdapter) {
-    function defineItemColor(_a) {
-        var line = _a.line, column = _a.column;
-        var color = line % 2 === 0 ? "black" : "pink";
-        var even = color;
-        var odds = color == "pink" ? "black" : "pink";
-        return column % 2 === 0 ? even : odds;
-    }
-    ColorAdapter.defineItemColor = defineItemColor;
-})(ColorAdapter = exports.ColorAdapter || (exports.ColorAdapter = {}));
-
-},{}],6:[function(require,module,exports){
+},{"../definitions/PieceKind":3}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ModifierImpl = (function () {
@@ -222,11 +325,11 @@ var ModifierImpl = (function () {
 }());
 exports.ModifierImpl = ModifierImpl;
 
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-var InitialPositions_1 = require("../definitions/InitialPositions");
+var InitialPositions_1 = require("./InitialPositions");
 var PieceKind_1 = require("../definitions/PieceKind");
 var ColorAdapter_1 = require("./ColorAdapter");
 var BoardItem_1 = require("./board/BoardItem");
@@ -269,7 +372,7 @@ var PieceBuilder;
     PieceBuilder.build = build;
 })(PieceBuilder = exports.PieceBuilder || (exports.PieceBuilder = {}));
 
-},{"../definitions/InitialPositions":3,"../definitions/PieceKind":4,"./ColorAdapter":5,"./board/BoardItem":9,"./movement/DiagonalMovement":10,"./movement/HorizontalMovement":11,"./movement/LMovement":12,"./movement/VerticalMovement":14,"./piece/Bishop":15,"./piece/King":16,"./piece/Knight":17,"./piece/Pawn":18,"./piece/Queen":20,"./piece/Rook":21}],8:[function(require,module,exports){
+},{"../definitions/PieceKind":3,"./ColorAdapter":5,"./InitialPositions":7,"./board/BoardItem":11,"./movement/DiagonalMovement":12,"./movement/HorizontalMovement":13,"./movement/LMovement":14,"./movement/VerticalMovement":16,"./piece/Bishop":17,"./piece/King":18,"./piece/Knight":19,"./piece/Pawn":20,"./piece/Queen":22,"./piece/Rook":23}],10:[function(require,module,exports){
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -313,7 +416,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 var lodash_1 = __importDefault(require("lodash"));
-var InitialPositions_1 = require("../../definitions/InitialPositions");
+var InitialPositions_1 = require("../InitialPositions");
 var PieceKind_1 = require("../../definitions/PieceKind");
 var DOMGenerator_1 = require("../../DOMGenerator");
 var ColorAdapter_1 = require("../ColorAdapter");
@@ -336,7 +439,7 @@ var Board = (function () {
     function Board() {
         var _this = this;
         this.matrix = initMatrix();
-        this.initBoard = function () {
+        this.init = function () {
             var whites = _this.buildPieces("white");
             var pinks = _this.buildPieces("dark-pink");
             var empties = _this.buildEmptyPieces();
@@ -376,6 +479,9 @@ var Board = (function () {
             item.addToBoard(_this);
         };
     }
+    Board.copy = function (board) {
+        return Object.assign(new Board(), board);
+    };
     Board.prototype.getItem = function (_a) {
         var line = _a.line, column = _a.column;
         var positionExists = this.isPositionInMatrixRange({ line: line, column: column });
@@ -435,7 +541,7 @@ var Board = (function () {
 }());
 exports.Board = Board;
 
-},{"../../DOMGenerator":1,"../../config":2,"../../definitions/InitialPositions":3,"../../definitions/PieceKind":4,"../ColorAdapter":5,"../PieceBuilder":7,"./BoardItem":9,"axios":23,"lodash":49}],9:[function(require,module,exports){
+},{"../../DOMGenerator":1,"../../config":2,"../../definitions/PieceKind":3,"../ColorAdapter":5,"../InitialPositions":7,"../PieceBuilder":9,"./BoardItem":11,"axios":25,"lodash":51}],11:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -471,6 +577,9 @@ var BoardItem = (function () {
             }
         };
     }
+    BoardItem.copy = function (item) {
+        return Object.assign(new BoardItem(item.position, item.color), item);
+    };
     BoardItem.prototype.addPiece = function (piece) {
         this.piece = piece;
         if (piece) {
@@ -535,7 +644,7 @@ var BoardItem = (function () {
 }());
 exports.BoardItem = BoardItem;
 
-},{"lodash":49}],10:[function(require,module,exports){
+},{"lodash":51}],12:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -582,7 +691,7 @@ var DiagonalMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.DiagonalMovement = DiagonalMovement;
 
-},{"../ModifierImpl":6,"./Movement":13}],11:[function(require,module,exports){
+},{"../ModifierImpl":8,"./Movement":15}],13:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -621,7 +730,7 @@ var HorizontalMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.HorizontalMovement = HorizontalMovement;
 
-},{"../ModifierImpl":6,"./Movement":13}],12:[function(require,module,exports){
+},{"../ModifierImpl":8,"./Movement":15}],14:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -694,7 +803,7 @@ var LMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.LMovement = LMovement;
 
-},{"../ModifierImpl":6,"./Movement":13}],13:[function(require,module,exports){
+},{"../ModifierImpl":8,"./Movement":15}],15:[function(require,module,exports){
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -712,10 +821,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
+var PieceBuilder_1 = require("../PieceBuilder");
 var Movement = (function () {
     function Movement(kind) {
         this.kind = kind;
     }
+    Movement.copy = function (movement) {
+        var model = new PieceBuilder_1.MovementBuilderMap[movement.kind]();
+        return Object.assign(model, movement);
+    };
     Movement.prototype.getKind = function () {
         return this.kind;
     };
@@ -752,7 +866,7 @@ var Movement = (function () {
 }());
 exports.Movement = Movement;
 
-},{"lodash":49}],14:[function(require,module,exports){
+},{"../PieceBuilder":9,"lodash":51}],16:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -791,7 +905,7 @@ var VerticalMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.VerticalMovement = VerticalMovement;
 
-},{"../ModifierImpl":6,"./Movement":13}],15:[function(require,module,exports){
+},{"../ModifierImpl":8,"./Movement":15}],17:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -822,7 +936,7 @@ var Bishop = (function (_super) {
 }(Piece_1.Piece));
 exports.Bishop = Bishop;
 
-},{"../../definitions/PieceKind":4,"../movement/DiagonalMovement":10,"./Piece":19}],16:[function(require,module,exports){
+},{"../../definitions/PieceKind":3,"../movement/DiagonalMovement":12,"./Piece":21}],18:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -874,7 +988,7 @@ var King = (function (_super) {
 }(Piece_1.Piece));
 exports.King = King;
 
-},{"../../definitions/PieceKind":4,"../movement/DiagonalMovement":10,"../movement/HorizontalMovement":11,"../movement/VerticalMovement":14,"./Piece":19,"lodash":49}],17:[function(require,module,exports){
+},{"../../definitions/PieceKind":3,"../movement/DiagonalMovement":12,"../movement/HorizontalMovement":13,"../movement/VerticalMovement":16,"./Piece":21,"lodash":51}],19:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -905,7 +1019,7 @@ var Knight = (function (_super) {
 }(Piece_1.Piece));
 exports.Knight = Knight;
 
-},{"../../definitions/PieceKind":4,"../movement/LMovement":12,"./Piece":19}],18:[function(require,module,exports){
+},{"../../definitions/PieceKind":3,"../movement/LMovement":14,"./Piece":21}],20:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -981,13 +1095,15 @@ var Pawn = (function (_super) {
 }(Piece_1.Piece));
 exports.Pawn = Pawn;
 
-},{"../../definitions/PieceKind":4,"../movement/VerticalMovement":14,"./Piece":19,"lodash":49}],19:[function(require,module,exports){
+},{"../../definitions/PieceKind":3,"../movement/VerticalMovement":16,"./Piece":21,"lodash":51}],21:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
+var Movement_1 = require("../movement/Movement");
+var PieceBuilder_1 = require("../PieceBuilder");
 var Piece = (function () {
     function Piece(kind, color, movements, isAllowedToGoBackwards) {
         this.kind = kind;
@@ -995,6 +1111,13 @@ var Piece = (function () {
         this.movements = movements;
         this.isAllowedToGoBackwards = isAllowedToGoBackwards;
     }
+    Piece.copy = function (piece) {
+        var instantiationFn = PieceBuilder_1.PieceBuilderMap.get(piece.kind);
+        var model = Object.assign(new instantiationFn(piece.color), piece);
+        var movements = model.getMovements().map(function (mov) { return Movement_1.Movement.copy(mov); });
+        model.movements = movements;
+        return model;
+    };
     Piece.prototype.getMovements = function () {
         return this.movements;
     };
@@ -1031,7 +1154,7 @@ var Piece = (function () {
 }());
 exports.Piece = Piece;
 
-},{"lodash":49}],20:[function(require,module,exports){
+},{"../PieceBuilder":9,"../movement/Movement":15,"lodash":51}],22:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1064,7 +1187,7 @@ var Queen = (function (_super) {
 }(Piece_1.Piece));
 exports.Queen = Queen;
 
-},{"../../definitions/PieceKind":4,"../movement/DiagonalMovement":10,"../movement/HorizontalMovement":11,"../movement/VerticalMovement":14,"./Piece":19}],21:[function(require,module,exports){
+},{"../../definitions/PieceKind":3,"../movement/DiagonalMovement":12,"../movement/HorizontalMovement":13,"../movement/VerticalMovement":16,"./Piece":21}],23:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1096,118 +1219,25 @@ var Rook = (function (_super) {
 }(Piece_1.Piece));
 exports.Rook = Rook;
 
-},{"../../definitions/PieceKind":4,"../movement/HorizontalMovement":11,"../movement/VerticalMovement":14,"./Piece":19}],22:[function(require,module,exports){
+},{"../../definitions/PieceKind":3,"../movement/HorizontalMovement":13,"../movement/VerticalMovement":16,"./Piece":21}],24:[function(require,module,exports){
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var axios_1 = __importDefault(require("axios"));
-var PieceBuilder_1 = require("./domain/PieceBuilder");
-var BoardItem_1 = require("./domain/board/BoardItem");
-var Board_1 = require("./domain/board/Board");
 var DOMGenerator_1 = require("./DOMGenerator");
-var config_1 = require("./config");
-var buildBoardModel = function (loaded) {
-    var board = new Board_1.Board();
-    return Object.assign(board, loaded);
-};
-var buildModelItem = function (loaded) {
-    var boardItem = new BoardItem_1.BoardItem(loaded.position, loaded.color);
-    return Object.assign(boardItem, loaded);
-};
-var buildModelPiece = function (loaded) {
-    var clazz = PieceBuilder_1.PieceBuilderMap.get(loaded.kind);
-    var piece = new clazz(loaded.color);
-    var model = Object.assign(piece, loaded);
-    var movements = model.getMovements().map(function (mov) { return buildMovementModel(mov); });
-    model.setMovements(movements);
-    return model;
-};
-var buildMovementModel = function (loaded) {
-    var clazz = PieceBuilder_1.MovementBuilderMap[loaded.kind];
-    var movement = new clazz();
-    return Object.assign(movement, loaded);
-};
-var initialBoard = new Board_1.Board().initBoard();
-var newGame = function () {
-    DOMGenerator_1.DOMGenerator.getInstance().injectBoard(initialBoard);
-    DOMGenerator_1.DOMGenerator.getInstance().refresh();
-};
-var loadGame = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var response, board;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4, axios_1.default.get(config_1.API.LOAD_URL)];
-            case 1:
-                response = _a.sent();
-                board = buildBoardModel(response.data);
-                board.executeForAll(function (item, _a) {
-                    var line = _a.line, column = _a.column;
-                    var itemModel = buildModelItem(item);
-                    if (itemModel.getPiece()) {
-                        var pieceModel = buildModelPiece(itemModel.getPiece());
-                        itemModel.addPiece(pieceModel);
-                    }
-                    board.matrix[line][column] = itemModel;
-                    itemModel.addToBoard(board);
-                });
-                DOMGenerator_1.DOMGenerator.getInstance().injectBoard(board);
-                DOMGenerator_1.DOMGenerator.getInstance().refresh();
-                return [2];
-        }
-    });
-}); };
+var GameStateHandler_1 = require("./domain/GameStateHandler");
+var ChessFactory_1 = require("./domain/ChessFactory");
+var domGeneratorInstance = DOMGenerator_1.DOMGenerator.getInstance();
+var chessFactory = new ChessFactory_1.ChessFactoryImpl();
+var gameStateHandler = new GameStateHandler_1.GameStateHandler(chessFactory, domGeneratorInstance);
 var newGameButton = document.getElementById('novoJogo');
 var loadGameButton = document.getElementById('carregarJogo');
 var saveGameButton = document.getElementById('salvarJogo');
-newGameButton.addEventListener('click', newGame);
-loadGameButton.addEventListener('click', loadGame);
-saveGameButton.addEventListener('click', function () {
-    return DOMGenerator_1.DOMGenerator.getInstance()
-        .getBoard()
-        .save();
-});
+newGameButton.addEventListener('click', gameStateHandler.newGame);
+loadGameButton.addEventListener('click', gameStateHandler.loadGame);
+saveGameButton.addEventListener('click', function () { return domGeneratorInstance.getBoard().save(); });
 
-},{"./DOMGenerator":1,"./config":2,"./domain/PieceBuilder":7,"./domain/board/Board":8,"./domain/board/BoardItem":9,"axios":23}],23:[function(require,module,exports){
+},{"./DOMGenerator":1,"./domain/ChessFactory":4,"./domain/GameStateHandler":6}],25:[function(require,module,exports){
 module.exports = require('./lib/axios');
-},{"./lib/axios":25}],24:[function(require,module,exports){
+},{"./lib/axios":27}],26:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1383,7 +1413,7 @@ module.exports = function xhrAdapter(config) {
   });
 };
 
-},{"../core/createError":31,"./../core/settle":35,"./../helpers/buildURL":39,"./../helpers/cookies":41,"./../helpers/isURLSameOrigin":43,"./../helpers/parseHeaders":45,"./../utils":47}],25:[function(require,module,exports){
+},{"../core/createError":33,"./../core/settle":37,"./../helpers/buildURL":41,"./../helpers/cookies":43,"./../helpers/isURLSameOrigin":45,"./../helpers/parseHeaders":47,"./../utils":49}],27:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -1438,7 +1468,7 @@ module.exports = axios;
 // Allow use of default import syntax in TypeScript
 module.exports.default = axios;
 
-},{"./cancel/Cancel":26,"./cancel/CancelToken":27,"./cancel/isCancel":28,"./core/Axios":29,"./core/mergeConfig":34,"./defaults":37,"./helpers/bind":38,"./helpers/spread":46,"./utils":47}],26:[function(require,module,exports){
+},{"./cancel/Cancel":28,"./cancel/CancelToken":29,"./cancel/isCancel":30,"./core/Axios":31,"./core/mergeConfig":36,"./defaults":39,"./helpers/bind":40,"./helpers/spread":48,"./utils":49}],28:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1459,7 +1489,7 @@ Cancel.prototype.__CANCEL__ = true;
 
 module.exports = Cancel;
 
-},{}],27:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 'use strict';
 
 var Cancel = require('./Cancel');
@@ -1518,14 +1548,14 @@ CancelToken.source = function source() {
 
 module.exports = CancelToken;
 
-},{"./Cancel":26}],28:[function(require,module,exports){
+},{"./Cancel":28}],30:[function(require,module,exports){
 'use strict';
 
 module.exports = function isCancel(value) {
   return !!(value && value.__CANCEL__);
 };
 
-},{}],29:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1613,7 +1643,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = Axios;
 
-},{"../helpers/buildURL":39,"./../utils":47,"./InterceptorManager":30,"./dispatchRequest":32,"./mergeConfig":34}],30:[function(require,module,exports){
+},{"../helpers/buildURL":41,"./../utils":49,"./InterceptorManager":32,"./dispatchRequest":34,"./mergeConfig":36}],32:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1667,7 +1697,7 @@ InterceptorManager.prototype.forEach = function forEach(fn) {
 
 module.exports = InterceptorManager;
 
-},{"./../utils":47}],31:[function(require,module,exports){
+},{"./../utils":49}],33:[function(require,module,exports){
 'use strict';
 
 var enhanceError = require('./enhanceError');
@@ -1687,7 +1717,7 @@ module.exports = function createError(message, config, code, request, response) 
   return enhanceError(error, config, code, request, response);
 };
 
-},{"./enhanceError":33}],32:[function(require,module,exports){
+},{"./enhanceError":35}],34:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1775,7 +1805,7 @@ module.exports = function dispatchRequest(config) {
   });
 };
 
-},{"../cancel/isCancel":28,"../defaults":37,"./../helpers/combineURLs":40,"./../helpers/isAbsoluteURL":42,"./../utils":47,"./transformData":36}],33:[function(require,module,exports){
+},{"../cancel/isCancel":30,"../defaults":39,"./../helpers/combineURLs":42,"./../helpers/isAbsoluteURL":44,"./../utils":49,"./transformData":38}],35:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1819,7 +1849,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
   return error;
 };
 
-},{}],34:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -1872,7 +1902,7 @@ module.exports = function mergeConfig(config1, config2) {
   return config;
 };
 
-},{"../utils":47}],35:[function(require,module,exports){
+},{"../utils":49}],37:[function(require,module,exports){
 'use strict';
 
 var createError = require('./createError');
@@ -1899,7 +1929,7 @@ module.exports = function settle(resolve, reject, response) {
   }
 };
 
-},{"./createError":31}],36:[function(require,module,exports){
+},{"./createError":33}],38:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1921,7 +1951,7 @@ module.exports = function transformData(data, headers, fns) {
   return data;
 };
 
-},{"./../utils":47}],37:[function(require,module,exports){
+},{"./../utils":49}],39:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -2023,7 +2053,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 }).call(this,require('_process'))
-},{"./adapters/http":24,"./adapters/xhr":24,"./helpers/normalizeHeaderName":44,"./utils":47,"_process":50}],38:[function(require,module,exports){
+},{"./adapters/http":26,"./adapters/xhr":26,"./helpers/normalizeHeaderName":46,"./utils":49,"_process":52}],40:[function(require,module,exports){
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -2036,7 +2066,7 @@ module.exports = function bind(fn, thisArg) {
   };
 };
 
-},{}],39:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2109,7 +2139,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
   return url;
 };
 
-},{"./../utils":47}],40:[function(require,module,exports){
+},{"./../utils":49}],42:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2125,7 +2155,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
     : baseURL;
 };
 
-},{}],41:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2180,7 +2210,7 @@ module.exports = (
     })()
 );
 
-},{"./../utils":47}],42:[function(require,module,exports){
+},{"./../utils":49}],44:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2196,7 +2226,7 @@ module.exports = function isAbsoluteURL(url) {
   return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
 };
 
-},{}],43:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2266,7 +2296,7 @@ module.exports = (
     })()
 );
 
-},{"./../utils":47}],44:[function(require,module,exports){
+},{"./../utils":49}],46:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -2280,7 +2310,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
   });
 };
 
-},{"../utils":47}],45:[function(require,module,exports){
+},{"../utils":49}],47:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2335,7 +2365,7 @@ module.exports = function parseHeaders(headers) {
   return parsed;
 };
 
-},{"./../utils":47}],46:[function(require,module,exports){
+},{"./../utils":49}],48:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2364,7 +2394,7 @@ module.exports = function spread(callback) {
   };
 };
 
-},{}],47:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 'use strict';
 
 var bind = require('./helpers/bind');
@@ -2700,7 +2730,7 @@ module.exports = {
   trim: trim
 };
 
-},{"./helpers/bind":38,"is-buffer":48}],48:[function(require,module,exports){
+},{"./helpers/bind":40,"is-buffer":50}],50:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -2713,7 +2743,7 @@ module.exports = function isBuffer (obj) {
     typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
 }
 
-},{}],49:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -19829,7 +19859,7 @@ module.exports = function isBuffer (obj) {
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],50:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -20015,4 +20045,4 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[22]);
+},{}]},{},[24]);

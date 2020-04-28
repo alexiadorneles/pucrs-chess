@@ -1,72 +1,20 @@
 import axios from 'axios'
+import { API } from './config'
+import { JSONObject } from './definitions/JSONObject'
 import { Position } from './definitions/Movement'
-import { MovementBuilderMap, PieceBuilderMap } from './domain/PieceBuilder'
-import { BoardItem } from './domain/board/BoardItem'
-import { Movement } from './domain/movement/Movement'
-import { Piece } from './domain/piece/Piece'
 import { Board } from './domain/board/Board'
 import { DOMGenerator } from './DOMGenerator'
-import { API } from './config'
+import { GameStateHandler } from './domain/GameStateHandler'
+import { ChessFactoryImpl } from './domain/ChessFactory'
 
-type JSONObject = { [key in string]: any }
-
-const buildBoardModel = (loaded: JSONObject) => {
-  const board = new Board()
-  return Object.assign(board, loaded)
-}
-
-const buildModelItem = (loaded: JSONObject): BoardItem => {
-  const boardItem = new BoardItem(loaded.position, loaded.color)
-  return Object.assign(boardItem, loaded)
-}
-
-const buildModelPiece = (loaded: JSONObject): Piece => {
-  const clazz = PieceBuilderMap.get(loaded.kind)
-  const piece = new clazz(loaded.color)
-  const model: Piece = Object.assign(piece, loaded)
-  const movements = model.getMovements().map(mov => buildMovementModel(mov))
-  model.setMovements(movements)
-  return model
-}
-
-const buildMovementModel = (loaded: JSONObject) => {
-  const clazz = MovementBuilderMap[loaded.kind]
-  const movement: Movement = new clazz()
-  return Object.assign(movement, loaded)
-}
-
-const initialBoard = new Board().initBoard()
-const newGame = () => {
-  DOMGenerator.getInstance().injectBoard(initialBoard)
-  DOMGenerator.getInstance().refresh()
-}
-
-const loadGame = async () => {
-  const response = await axios.get(API.LOAD_URL)
-  const board = buildBoardModel(response.data)
-
-  board.executeForAll((item: JSONObject, { line, column }: Position) => {
-    const itemModel = buildModelItem(item)
-    if (itemModel.getPiece()) {
-      const pieceModel = buildModelPiece(itemModel.getPiece())
-      itemModel.addPiece(pieceModel)
-    }
-    board.matrix[line][column] = itemModel
-    itemModel.addToBoard(board)
-  })
-
-  DOMGenerator.getInstance().injectBoard(board)
-  DOMGenerator.getInstance().refresh()
-}
+const domGeneratorInstance = DOMGenerator.getInstance()
+const chessFactory = new ChessFactoryImpl()
+const gameStateHandler = new GameStateHandler(chessFactory, domGeneratorInstance)
 
 const newGameButton = document.getElementById('novoJogo')
 const loadGameButton = document.getElementById('carregarJogo')
 const saveGameButton = document.getElementById('salvarJogo')
 
-newGameButton.addEventListener('click', newGame)
-loadGameButton.addEventListener('click', loadGame)
-saveGameButton.addEventListener('click', () =>
-  DOMGenerator.getInstance()
-    .getBoard()
-    .save(),
-)
+newGameButton.addEventListener('click', gameStateHandler.newGame)
+loadGameButton.addEventListener('click', gameStateHandler.loadGame)
+saveGameButton.addEventListener('click', () => domGeneratorInstance.getBoard().save())

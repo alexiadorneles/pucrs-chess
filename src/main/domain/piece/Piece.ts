@@ -5,6 +5,7 @@ import { Position } from '../../definitions/Movement'
 import { PieceKind } from '../../definitions/PieceKind'
 import { BoardItem } from '../board/BoardItem'
 import { Movement } from '../movement/Movement'
+import { PieceBuilderMap } from '../PieceBuilder'
 
 export abstract class Piece {
   protected boardItem: BoardItem
@@ -23,6 +24,14 @@ export abstract class Piece {
     this.color = color
     this.movements = movements
     this.isAllowedToGoBackwards = isAllowedToGoBackwards
+  }
+
+  static copy(piece: Piece): Piece {
+    const instantiationFn = PieceBuilderMap.get(piece.kind)
+    const model = Object.assign(new instantiationFn(piece.color), piece)
+    const movements = model.getMovements().map(mov => Movement.copy(mov))
+    model.movements = movements
+    return model
   }
 
   public getMovements(): Movement[] {

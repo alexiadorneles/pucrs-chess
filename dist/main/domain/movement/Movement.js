@@ -15,10 +15,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
+var PieceBuilder_1 = require("../PieceBuilder");
 var Movement = (function () {
     function Movement(kind) {
         this.kind = kind;
     }
+    Movement.copy = function (movement) {
+        var model = new PieceBuilder_1.MovementBuilderMap[movement.kind]();
+        return Object.assign(model, movement);
+    };
     Movement.prototype.getKind = function () {
         return this.kind;
     };
