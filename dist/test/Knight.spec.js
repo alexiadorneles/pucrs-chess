@@ -30,7 +30,7 @@ context('Knight', function () {
             sinon_1.default.replace(board, 'getItem', function (position) { return new BoardItem_1.BoardItem(position, "white"); });
             var knight = new Knight_1.Knight("white");
             var item = new BoardItem_1.BoardItem({ line: 0, column: 1 }, "dark-pink");
-            item.addPiece(knight);
+            item.setPiece(knight);
             board.addItem(item);
             var expected = [
                 { line: 1, column: 3 },
@@ -45,7 +45,7 @@ context('Knight', function () {
             sinon_1.default.replace(board, 'getItem', function (position) { return new BoardItem_1.BoardItem(position, "white"); });
             var knight = new Knight_1.Knight("white");
             var item = new BoardItem_1.BoardItem({ line: 2, column: 2 }, "dark-pink");
-            item.addPiece(knight);
+            item.setPiece(knight);
             board.addItem(item);
             var expected = [
                 { line: 0, column: 1 },
@@ -63,16 +63,16 @@ context('Knight', function () {
         it('quando pieces are in the way, return only valid', function () {
             var knight = new Knight_1.Knight("white");
             var knightItem = new BoardItem_1.BoardItem({ line: 2, column: 2 }, "dark-pink");
-            knightItem.addPiece(knight);
+            knightItem.setPiece(knight);
             var queen = new Queen_1.Queen("white");
             var queenItem = new BoardItem_1.BoardItem({ line: 0, column: 3 }, "dark-pink");
-            queenItem.addPiece(queen);
+            queenItem.setPiece(queen);
             var pawn = new Pawn_1.Pawn("white");
             var pawnItem = new BoardItem_1.BoardItem({ line: 1, column: 0 }, "dark-pink");
-            pawnItem.addPiece(pawn);
+            pawnItem.setPiece(pawn);
             var otherPawn = new Pawn_1.Pawn("white");
             var otherPawnItem = new BoardItem_1.BoardItem({ line: 1, column: 4 }, "dark-pink");
-            otherPawnItem.addPiece(otherPawn);
+            otherPawnItem.setPiece(otherPawn);
             sinon_1.default.replace(Board_1.Board.prototype, 'getItem', function (position) {
                 var items = [knightItem, queenItem, pawnItem, otherPawnItem];
                 var item = items.find(function (item) { return lodash_1.default.isEqual(item.getPosition(), position); });

@@ -37,7 +37,7 @@ var PieceBuilder;
             var clazz = exports.PieceBuilderMap.get(kind);
             var item = new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position));
             var piece = new clazz(pieceColor);
-            item.addPiece(piece);
+            item.setPiece(piece);
             return item;
         });
     }

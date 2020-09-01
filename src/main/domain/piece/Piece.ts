@@ -26,14 +26,6 @@ export abstract class Piece {
     this.isAllowedToGoBackwards = isAllowedToGoBackwards
   }
 
-  static copy(piece: Piece): Piece {
-    const instantiationFn = PieceBuilderMap.get(piece.kind)
-    const model = Object.assign(new instantiationFn(piece.color), piece)
-    const movements = model.getMovements().map(mov => Movement.copy(mov))
-    model.movements = movements
-    return model
-  }
-
   public getMovements(): Movement[] {
     return this.movements
   }
@@ -66,7 +58,7 @@ export abstract class Piece {
     this.boardItem = item
   }
 
-  public getCor(): Color {
+  public getColor(): Color {
     return this.color
   }
 

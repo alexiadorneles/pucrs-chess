@@ -1,15 +1,15 @@
 import axios from 'axios'
 import _ from 'lodash'
+import { API } from '../../constants/config'
+import { WhitePiecesPositionMap } from '../../constants/InitialPositions'
 import { Color } from '../../definitions/Color'
 import { Position } from '../../definitions/Movement'
-import { WhitePiecesPositionMap } from '../../constants/InitialPositions'
 import { PieceKind } from '../../definitions/PieceKind'
 import { DOMGenerator } from '../../DOMGenerator'
 import { ColorAdapter } from '../adapter/ColorAdapter'
+import { Piece } from '../piece/Piece'
 import { PieceBuilder } from '../PieceBuilder'
 import { BoardItem } from './BoardItem'
-import { Piece } from '../piece/Piece'
-import { API } from '../../constants/config'
 
 const initMatrix = (): BoardItem[][] => {
   const matrix = []
@@ -28,10 +28,6 @@ export class Board {
   public matrix: Array<Array<BoardItem>> = initMatrix()
   public currentMovingPieces: Piece
 
-  static copy(board: Board): Board {
-    return Object.assign(new Board(), board)
-  }
-
   public init = (): Board => {
     const whites = this.buildPieces(Color.WHITE)
     const pinks = this.buildPieces(Color.DARK_PINK)
@@ -41,6 +37,10 @@ export class Board {
       .concat(empties)
       .forEach(this.addItem)
     return this
+  }
+
+  public getAllItems(): BoardItem[] {
+    return _.flatten(this.matrix)
   }
 
   public getItem({ line, column }: Position): BoardItem | null {
@@ -72,10 +72,10 @@ export class Board {
   public isPositionBlockedByOpponent(position: Position, initialPosition: Position): boolean {
     const blockingPiece =
       this.isPositionInMatrixRange(position) && this.getPieceByPosition(position)
-    const blockingColor = blockingPiece && this.getPieceByPosition(position).getCor()
+    const blockingColor = blockingPiece && this.getPieceByPosition(position).getColor()
     const blockedColor = this.getItem(initialPosition)
       .getPiece()
-      .getCor()
+      .getColor()
     return blockingColor && blockedColor !== blockingColor
   }
 
@@ -92,9 +92,9 @@ export class Board {
 
   public movePiece(clickedItem: BoardItem): void {
     const pieceItem = this.currentMovingPieces.getBoardItem()
-    clickedItem.addPiece(this.currentMovingPieces)
+    clickedItem.setPiece(this.currentMovingPieces)
     this.currentMovingPieces = null
-    pieceItem.addPiece(null)
+    pieceItem.setPiece(null)
     DOMGenerator.getInstance().refresh()
   }
 

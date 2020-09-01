@@ -33,7 +33,7 @@ context('Knight', () => {
       sinon.replace(board, 'getItem', position => new BoardItem(position, Color.WHITE))
       const knight = new Knight(Color.WHITE)
       const item = new BoardItem({ line: 0, column: 1 }, Color.DARK_PINK)
-      item.addPiece(knight)
+      item.setPiece(knight)
       board.addItem(item)
       // act
       const expected: Position[] = [
@@ -51,7 +51,7 @@ context('Knight', () => {
       sinon.replace(board, 'getItem', position => new BoardItem(position, Color.WHITE))
       const knight = new Knight(Color.WHITE)
       const item = new BoardItem({ line: 2, column: 2 }, Color.DARK_PINK)
-      item.addPiece(knight)
+      item.setPiece(knight)
       board.addItem(item)
       // act
       const expected = [
@@ -72,19 +72,19 @@ context('Knight', () => {
       // arrange
       const knight = new Knight(Color.WHITE)
       const knightItem = new BoardItem({ line: 2, column: 2 }, Color.DARK_PINK)
-      knightItem.addPiece(knight)
+      knightItem.setPiece(knight)
 
       const queen = new Queen(Color.WHITE)
       const queenItem = new BoardItem({ line: 0, column: 3 }, Color.DARK_PINK)
-      queenItem.addPiece(queen)
+      queenItem.setPiece(queen)
 
       const pawn = new Pawn(Color.WHITE)
       const pawnItem = new BoardItem({ line: 1, column: 0 }, Color.DARK_PINK)
-      pawnItem.addPiece(pawn)
+      pawnItem.setPiece(pawn)
 
       const otherPawn = new Pawn(Color.WHITE)
       const otherPawnItem = new BoardItem({ line: 1, column: 4 }, Color.DARK_PINK)
-      otherPawnItem.addPiece(otherPawn)
+      otherPawnItem.setPiece(otherPawn)
 
       sinon.replace(Board.prototype, 'getItem', position => {
         const items = [knightItem, queenItem, pawnItem, otherPawnItem]

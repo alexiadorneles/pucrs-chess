@@ -32,7 +32,7 @@ context('Queen', function () {
             var queen = new Queen_1.Queen("white");
             var queenItem = { line: 0, column: 3 };
             var item = new BoardItem_1.BoardItem(queenItem, "dark-pink");
-            item.addPiece(queen);
+            item.setPiece(queen);
             sinon_1.default.replace(board, 'getItem', function (position) {
                 return lodash_1.default.isEqual(queenItem, position) ? item : new BoardItem_1.BoardItem(position, "white");
             });
@@ -69,7 +69,7 @@ context('Queen', function () {
             var queenItem = { line: 3, column: 3 };
             var queen = new Queen_1.Queen("white");
             var item = new BoardItem_1.BoardItem(queenItem, "dark-pink");
-            item.addPiece(queen);
+            item.setPiece(queen);
             sinon_1.default.replace(board, 'getItem', function (position) {
                 return lodash_1.default.isEqual(queenItem, position) ? item : new BoardItem_1.BoardItem(position, "white");
             });
@@ -110,28 +110,28 @@ context('Queen', function () {
         it('when pieces in the way, should return only', function () {
             var queen = new Queen_1.Queen("white");
             var queenItem = new BoardItem_1.BoardItem({ line: 2, column: 2 }, "dark-pink");
-            queenItem.addPiece(queen);
+            queenItem.setPiece(queen);
             var pawn = new Pawn_1.Pawn("white");
             var pawnItem = new BoardItem_1.BoardItem({ line: 2, column: 1 }, "dark-pink");
-            pawnItem.addPiece(pawn);
+            pawnItem.setPiece(pawn);
             var pawnTwo = new Pawn_1.Pawn("white");
             var pawnTwoItem = new BoardItem_1.BoardItem({ line: 3, column: 3 }, "dark-pink");
-            pawnTwoItem.addPiece(pawnTwo);
+            pawnTwoItem.setPiece(pawnTwo);
             var pawnThree = new Pawn_1.Pawn("white");
             var pawnThreeItem = new BoardItem_1.BoardItem({ line: 2, column: 4 }, "dark-pink");
-            pawnThreeItem.addPiece(pawnThree);
+            pawnThreeItem.setPiece(pawnThree);
             var pawnFour = new Pawn_1.Pawn("white");
             var pawnFourItem = new BoardItem_1.BoardItem({ line: 1, column: 2 }, "dark-pink");
-            pawnFourItem.addPiece(pawnFour);
+            pawnFourItem.setPiece(pawnFour);
             var rook = new Rook_1.Rook("white");
             var rookItem = new BoardItem_1.BoardItem({ line: 0, column: 0 }, "dark-pink");
-            rookItem.addPiece(rook);
+            rookItem.setPiece(rook);
             var rei = new King_1.King("white");
             var itemRei = new BoardItem_1.BoardItem({ line: 0, column: 4 }, "dark-pink");
-            itemRei.addPiece(rei);
+            itemRei.setPiece(rei);
             var opponentPawn = new Pawn_1.Pawn("white");
             var opponentPawnItem = new BoardItem_1.BoardItem({ line: 6, column: 2 }, "white");
-            opponentPawnItem.addPiece(opponentPawn);
+            opponentPawnItem.setPiece(opponentPawn);
             var items = [
                 queenItem,
                 pawnItem,

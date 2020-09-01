@@ -41,13 +41,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 var lodash_1 = __importDefault(require("lodash"));
+var config_1 = require("../../constants/config");
 var InitialPositions_1 = require("../../constants/InitialPositions");
 var PieceKind_1 = require("../../definitions/PieceKind");
 var DOMGenerator_1 = require("../../DOMGenerator");
 var ColorAdapter_1 = require("../adapter/ColorAdapter");
 var PieceBuilder_1 = require("../PieceBuilder");
 var BoardItem_1 = require("./BoardItem");
-var config_1 = require("../../constants/config");
 var initMatrix = function () {
     var matrix = [];
     matrix[0] = [];
@@ -104,8 +104,8 @@ var Board = (function () {
             item.addToBoard(_this);
         };
     }
-    Board.copy = function (board) {
-        return Object.assign(new Board(), board);
+    Board.prototype.getAllItems = function () {
+        return lodash_1.default.flatten(this.matrix);
     };
     Board.prototype.getItem = function (_a) {
         var line = _a.line, column = _a.column;
@@ -121,10 +121,10 @@ var Board = (function () {
     };
     Board.prototype.isPositionBlockedByOpponent = function (position, initialPosition) {
         var blockingPiece = this.isPositionInMatrixRange(position) && this.getPieceByPosition(position);
-        var blockingColor = blockingPiece && this.getPieceByPosition(position).getCor();
+        var blockingColor = blockingPiece && this.getPieceByPosition(position).getColor();
         var blockedColor = this.getItem(initialPosition)
             .getPiece()
-            .getCor();
+            .getColor();
         return blockingColor && blockedColor !== blockingColor;
     };
     Board.prototype.setCurrentMovingPiece = function (piece) {
@@ -138,9 +138,9 @@ var Board = (function () {
     };
     Board.prototype.movePiece = function (clickedItem) {
         var pieceItem = this.currentMovingPieces.getBoardItem();
-        clickedItem.addPiece(this.currentMovingPieces);
+        clickedItem.setPiece(this.currentMovingPieces);
         this.currentMovingPieces = null;
-        pieceItem.addPiece(null);
+        pieceItem.setPiece(null);
         DOMGenerator_1.DOMGenerator.getInstance().refresh();
     };
     Board.prototype.executeForAll = function (callback) {

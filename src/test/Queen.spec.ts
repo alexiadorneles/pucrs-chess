@@ -35,7 +35,7 @@ context('Queen', () => {
       const queen = new Queen(Color.WHITE)
       const queenItem = { line: 0, column: 3 }
       const item = new BoardItem(queenItem, Color.DARK_PINK)
-      item.addPiece(queen)
+      item.setPiece(queen)
       sinon.replace(board, 'getItem', position => {
         return _.isEqual(queenItem, position) ? item : new BoardItem(position, Color.WHITE)
       })
@@ -79,7 +79,7 @@ context('Queen', () => {
       const queenItem = { line: 3, column: 3 }
       const queen = new Queen(Color.WHITE)
       const item = new BoardItem(queenItem, Color.DARK_PINK)
-      item.addPiece(queen)
+      item.setPiece(queen)
       sinon.replace(board, 'getItem', position => {
         return _.isEqual(queenItem, position) ? item : new BoardItem(position, Color.WHITE)
       })
@@ -131,35 +131,35 @@ context('Queen', () => {
       // arrange
       const queen = new Queen(Color.WHITE)
       const queenItem = new BoardItem({ line: 2, column: 2 }, Color.DARK_PINK)
-      queenItem.addPiece(queen)
+      queenItem.setPiece(queen)
 
       const pawn = new Pawn(Color.WHITE)
       const pawnItem = new BoardItem({ line: 2, column: 1 }, Color.DARK_PINK)
-      pawnItem.addPiece(pawn)
+      pawnItem.setPiece(pawn)
 
       const pawnTwo = new Pawn(Color.WHITE)
       const pawnTwoItem = new BoardItem({ line: 3, column: 3 }, Color.DARK_PINK)
-      pawnTwoItem.addPiece(pawnTwo)
+      pawnTwoItem.setPiece(pawnTwo)
 
       const pawnThree = new Pawn(Color.WHITE)
       const pawnThreeItem = new BoardItem({ line: 2, column: 4 }, Color.DARK_PINK)
-      pawnThreeItem.addPiece(pawnThree)
+      pawnThreeItem.setPiece(pawnThree)
 
       const pawnFour = new Pawn(Color.WHITE)
       const pawnFourItem = new BoardItem({ line: 1, column: 2 }, Color.DARK_PINK)
-      pawnFourItem.addPiece(pawnFour)
+      pawnFourItem.setPiece(pawnFour)
 
       const rook = new Rook(Color.WHITE)
       const rookItem = new BoardItem({ line: 0, column: 0 }, Color.DARK_PINK)
-      rookItem.addPiece(rook)
+      rookItem.setPiece(rook)
 
       const rei = new King(Color.WHITE)
       const itemRei = new BoardItem({ line: 0, column: 4 }, Color.DARK_PINK)
-      itemRei.addPiece(rei)
+      itemRei.setPiece(rei)
 
       const opponentPawn = new Pawn(Color.WHITE)
       const opponentPawnItem = new BoardItem({ line: 6, column: 2 }, Color.WHITE)
-      opponentPawnItem.addPiece(opponentPawn)
+      opponentPawnItem.setPiece(opponentPawn)
 
       const items = [
         queenItem,

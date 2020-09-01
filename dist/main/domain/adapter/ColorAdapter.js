@@ -1,13 +1,22 @@
 "use strict";
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
+var ColorOppositeMap = (_a = {},
+    _a["black"] = "pink",
+    _a["pink"] = "black",
+    _a["dark-pink"] = "white",
+    _a["white"] = "dark-pink",
+    _a);
+var isEven = function (number) { return number % 2 === 0; };
 var ColorAdapter;
 (function (ColorAdapter) {
     function defineItemColor(_a) {
         var line = _a.line, column = _a.column;
-        var color = line % 2 === 0 ? "black" : "pink";
-        var even = color;
-        var odds = color == "pink" ? "black" : "pink";
-        return column % 2 === 0 ? even : odds;
+        var color = isEven(line) ? "black" : "pink";
+        return isEven(column) ? color : getOppositeColor(color);
     }
     ColorAdapter.defineItemColor = defineItemColor;
+    function getOppositeColor(color) {
+        return ColorOppositeMap[color];
+    }
 })(ColorAdapter = exports.ColorAdapter || (exports.ColorAdapter = {}));

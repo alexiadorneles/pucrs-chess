@@ -28,7 +28,7 @@ context('Pawn', function () {
             });
             var pawn = new Pawn_1.Pawn("white");
             var item = new BoardItem_1.BoardItem(pawnPosition, "dark-pink");
-            item.addPiece(pawn);
+            item.setPiece(pawn);
             board.addItem(item);
             var expected = [{ line: 2, column: 2 }];
             var result = pawn.simulateMovement();

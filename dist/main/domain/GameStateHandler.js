@@ -39,7 +39,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Board_1 = require("./board/Board");
 var axios_1 = __importDefault(require("axios"));
 var config_1 = require("../constants/config");
 var GameStateHandler = (function () {
@@ -48,9 +47,10 @@ var GameStateHandler = (function () {
         this.domGenerator = domGenerator;
         this.newGame = this.newGame.bind(this);
         this.loadGame = this.loadGame.bind(this);
+        this.saveGame = this.saveGame.bind(this);
     }
     GameStateHandler.prototype.newGame = function () {
-        var initialBoard = new Board_1.Board().init();
+        var initialBoard = this.chessFactory.createInitialBoard();
         this.domGenerator.injectBoard(initialBoard);
         this.domGenerator.refresh();
     };
@@ -65,6 +65,25 @@ var GameStateHandler = (function () {
                         board = this.chessFactory.createBoardFromJSON(response.data);
                         this.domGenerator.injectBoard(board);
                         this.domGenerator.refresh();
+                        return [2];
+                }
+            });
+        });
+    };
+    GameStateHandler.prototype.saveGame = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var content, config, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.domGenerator.getBoard().cleanCircularReferences();
+                        content = JSON.stringify(this.domGenerator.getBoard().board);
+                        config = { headers: { 'Content-Type': 'application/json' } };
+                        data = { json: content };
+                        return [4, axios_1.default.post(config_1.API.SAVE_URL, data, config)];
+                    case 1:
+                        _a.sent();
+                        alert('Jogo salvo');
                         return [2];
                 }
             });

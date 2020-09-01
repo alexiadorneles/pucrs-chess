@@ -30,7 +30,7 @@ context('Pawn', () => {
       })
       const pawn = new Pawn(Color.WHITE)
       const item = new BoardItem(pawnPosition, Color.DARK_PINK)
-      item.addPiece(pawn)
+      item.setPiece(pawn)
       board.addItem(item)
       // act
       const expected: Position[] = [{ line: 2, column: 2 }]

@@ -19,47 +19,8 @@ var DOMGenerator = (function () {
     DOMGenerator.prototype.refresh = function () {
         var root = document.getElementById('root');
         root.innerHTML = '';
-        var lines = 8;
-        var columns = 8;
-        var lineElements = [];
-        var columnElements = [];
-        var _loop_1 = function (line) {
-            columnElements = [];
-            for (var column = 0; column < columns; column++) {
-                var item = this_1.board.getItem({ line: line, column: column });
-                var element = this_1.createElement(item);
-                columnElements.push(element);
-            }
-            var lineElement = document.createElement('div');
-            lineElement.setAttribute('class', 'chess-line');
-            columnElements.forEach(function (columnElement) { return lineElement.appendChild(columnElement); });
-            lineElements.push(lineElement);
-        };
-        var this_1 = this;
-        for (var line = 0; line < lines; line++) {
-            _loop_1(line);
-        }
-        lineElements.forEach(function (element) { return root.appendChild(element); });
-    };
-    DOMGenerator.prototype.createElement = function (item) {
-        var div = document.createElement('div');
-        div.setAttribute('class', 'container');
-        var square = document.createElement('span');
-        square.setAttribute('class', "fas fa-square-full chess-square " + item.getColor());
-        square.addEventListener('click', item.onClick);
-        item.setElement(square);
-        var pieceIcon = this.createPieceIcon(item.getPiece());
-        pieceIcon.addEventListener('click', item.onClick);
-        div.appendChild(pieceIcon);
-        div.appendChild(square);
-        return div;
-    };
-    DOMGenerator.prototype.createPieceIcon = function (piece) {
-        var pieceType = (piece && piece.getKind()) || '';
-        var pieceColor = (piece && piece.getCor()) || '';
-        var pieceIcon = document.createElement('i');
-        pieceIcon.setAttribute('class', "fas fa-" + pieceType + " piece " + pieceColor);
-        return pieceIcon;
+        var board = this.board.createElement();
+        root.appendChild(board);
     };
     return DOMGenerator;
 }());
@@ -67,145 +28,164 @@ exports.DOMGenerator = DOMGenerator;
 
 },{}],2:[function(require,module,exports){
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.API = {
-    LOAD_URL: 'http://localhost:9090/load',
-    SAVE_URL: 'http://localhost:9090/save',
-};
-
-},{}],3:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var PieceKind;
-(function (PieceKind) {
-    PieceKind["PAWN"] = "chess-pawn";
-    PieceKind["KNIGHT"] = "chess-knight";
-    PieceKind["KING"] = "chess-king";
-    PieceKind["QUEEN"] = "chess-queen";
-    PieceKind["BISHOP"] = "chess-bishop";
-    PieceKind["ROOK"] = "chess-rook";
-    PieceKind["EMPTY"] = "";
-})(PieceKind = exports.PieceKind || (exports.PieceKind = {}));
-
-},{}],4:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var Board_1 = require("./board/Board");
-var BoardItem_1 = require("./board/BoardItem");
-var Piece_1 = require("./piece/Piece");
-var ChessFactoryImpl = (function () {
-    function ChessFactoryImpl() {
-    }
-    ChessFactoryImpl.prototype.createBoardFromJSON = function (loaded) {
-        var board = Board_1.Board.copy(loaded);
-        board.executeForAll(function (item, _a) {
-            var line = _a.line, column = _a.column;
-            var itemModel = BoardItem_1.BoardItem.copy(item);
-            if (itemModel.getPiece()) {
-                itemModel.addPiece(Piece_1.Piece.copy(itemModel.getPiece()));
-            }
-            board.matrix[line][column] = itemModel;
-            itemModel.addToBoard(board);
-        });
-        return board;
-    };
-    return ChessFactoryImpl;
-}());
-exports.ChessFactoryImpl = ChessFactoryImpl;
-
-},{"./board/Board":10,"./board/BoardItem":11,"./piece/Piece":21}],5:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var ColorAdapter;
-(function (ColorAdapter) {
-    function defineItemColor(_a) {
-        var line = _a.line, column = _a.column;
-        var color = line % 2 === 0 ? "black" : "pink";
-        var even = color;
-        var odds = color == "pink" ? "black" : "pink";
-        return column % 2 === 0 ? even : odds;
-    }
-    ColorAdapter.defineItemColor = defineItemColor;
-})(ColorAdapter = exports.ColorAdapter || (exports.ColorAdapter = {}));
-
-},{}],6:[function(require,module,exports){
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Board_1 = require("./board/Board");
-var axios_1 = __importDefault(require("axios"));
-var config_1 = require("../config");
-var GameStateHandler = (function () {
-    function GameStateHandler(chessFactory, domGenerator) {
-        this.chessFactory = chessFactory;
-        this.domGenerator = domGenerator;
-        this.newGame = this.newGame.bind(this);
-        this.loadGame = this.loadGame.bind(this);
+var Board_1 = require("../domain/board/Board");
+var lodash_1 = __importDefault(require("lodash"));
+var BoardItemComposite_1 = require("./BoardItemComposite");
+var BoardComposite = (function () {
+    function BoardComposite(board, replicationFactory) {
+        this.board = board;
+        this.replicationFactory = replicationFactory;
+        if (!(this.board instanceof Board_1.Board)) {
+            this.board = this.replicationFactory.createBoardReplicationAdapter().replicate(board);
+        }
+        this.board.init();
     }
-    GameStateHandler.prototype.newGame = function () {
-        var initialBoard = new Board_1.Board().init();
-        this.domGenerator.injectBoard(initialBoard);
-        this.domGenerator.refresh();
-    };
-    GameStateHandler.prototype.loadGame = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var response, board;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, axios_1.default.get(config_1.API.LOAD_URL)];
-                    case 1:
-                        response = _a.sent();
-                        board = this.chessFactory.createBoardFromJSON(response.data);
-                        this.domGenerator.injectBoard(board);
-                        this.domGenerator.refresh();
-                        return [2];
-                }
-            });
+    BoardComposite.prototype.createElement = function () {
+        var board = document.createElement('div');
+        var itemsMatrix = lodash_1.default.chunk(this.getChildren(), 8);
+        var columns = itemsMatrix.map(function (item) { return item.map(function (boardItem) { return boardItem.createElement(); }); });
+        var lines = columns.map(function (column) {
+            var lineElement = document.createElement('div');
+            lineElement.setAttribute('class', 'chess-line');
+            column.forEach(function (element) { return lineElement.appendChild(element); });
+            return lineElement;
         });
+        lines.forEach(function (line) { return board.appendChild(line); });
+        return board;
     };
-    return GameStateHandler;
+    BoardComposite.prototype.clone = function () {
+        var replicationAdapter = this.replicationFactory.createBoardReplicationAdapter();
+        var board = replicationAdapter.replicate(this.board);
+        var composite = new BoardComposite(board, this.replicationFactory);
+        composite.getChildren();
+        return composite;
+    };
+    BoardComposite.prototype.getChildren = function () {
+        var _this = this;
+        var items = this.board.getAllItems();
+        return items.map(function (item) { return new BoardItemComposite_1.BoardItemComposite(item, _this.replicationFactory); });
+    };
+    BoardComposite.prototype.setChildren = function (children) {
+    };
+    BoardComposite.prototype.cleanCircularReferences = function () {
+        this.getChildren().forEach(function (child) { return child.cleanCircularReferences(); });
+    };
+    return BoardComposite;
 }());
-exports.GameStateHandler = GameStateHandler;
+exports.BoardComposite = BoardComposite;
 
-},{"../config":2,"./board/Board":10,"axios":25}],7:[function(require,module,exports){
+},{"../domain/board/Board":14,"./BoardItemComposite":3,"lodash":56}],3:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var PieceComposite_1 = require("./PieceComposite");
+var BoardItemComposite = (function () {
+    function BoardItemComposite(boardItem, replicationFactory) {
+        this.boardItem = boardItem;
+        this.replicationFactory = replicationFactory;
+        this.cleanCircularReferences = this.cleanCircularReferences.bind(this);
+    }
+    BoardItemComposite.prototype.createElement = function () {
+        var div = document.createElement('div');
+        div.setAttribute('class', 'container');
+        var square = document.createElement('span');
+        square.setAttribute('class', "fas fa-square-full chess-square " + this.boardItem.getColor());
+        square.addEventListener('click', this.boardItem.onClick);
+        this.boardItem.setElement(square);
+        var piece = this.getChildren()[0];
+        if (piece) {
+            var pieceElement = piece.createElement();
+            pieceElement.addEventListener('click', this.boardItem.onClick);
+            div.appendChild(square);
+            div.appendChild(pieceElement);
+        }
+        else {
+            div.appendChild(square);
+        }
+        return div;
+    };
+    BoardItemComposite.prototype.clone = function () {
+        var replicationAdapter = this.replicationFactory.createItemReplicationAdapter();
+        var item = replicationAdapter.replicate(this.boardItem);
+        return new BoardItemComposite(item, this.replicationFactory);
+    };
+    BoardItemComposite.prototype.getChildren = function () {
+        var piece = this.boardItem.getPiece();
+        return piece ? [new PieceComposite_1.PieceComposite(piece, this.replicationFactory)] : [];
+    };
+    BoardItemComposite.prototype.setChildren = function (children) { };
+    BoardItemComposite.prototype.cleanCircularReferences = function () {
+        this.boardItem.setBoard(null);
+        var children = this.getChildren();
+        children.forEach(function (children) { return children.cleanCircularReferences(); });
+    };
+    return BoardItemComposite;
+}());
+exports.BoardItemComposite = BoardItemComposite;
+
+},{"./PieceComposite":5}],4:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var MovementComposite = (function () {
+    function MovementComposite(movement, replicationFactory) {
+        this.movement = movement;
+        this.replicationFactory = replicationFactory;
+    }
+    MovementComposite.prototype.createElement = function () {
+        return null;
+    };
+    MovementComposite.prototype.clone = function () {
+        var replicationAdapter = this.replicationFactory.createMovementReplicationAdapter();
+        var movement = replicationAdapter.replicate(this.movement);
+        return new MovementComposite(movement, this.replicationFactory);
+    };
+    MovementComposite.prototype.getChildren = function () {
+        return [];
+    };
+    MovementComposite.prototype.setChildren = function (children) { };
+    return MovementComposite;
+}());
+exports.MovementComposite = MovementComposite;
+
+},{}],5:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var MovementComposite_1 = require("./MovementComposite");
+var PieceComposite = (function () {
+    function PieceComposite(piece, replicationFactory) {
+        this.piece = piece;
+        this.replicationFactory = replicationFactory;
+        this.cleanCircularReferences = this.cleanCircularReferences.bind(this);
+    }
+    PieceComposite.prototype.createElement = function () {
+        var pieceType = (this.piece && this.piece.getKind()) || '';
+        var pieceColor = (this.piece && this.piece.getColor()) || '';
+        var pieceIcon = document.createElement('i');
+        pieceIcon.setAttribute('class', "fas fa-" + pieceType + " piece " + pieceColor);
+        return pieceIcon;
+    };
+    PieceComposite.prototype.clone = function () {
+        var replicationAdapter = this.replicationFactory.createPieceReplicationAdapter();
+        var piece = replicationAdapter.replicate(this.piece);
+        return new PieceComposite(piece, this.replicationFactory);
+    };
+    PieceComposite.prototype.getChildren = function () {
+        var _this = this;
+        var movements = this.piece.getMovements();
+        return movements.map(function (movement) { return new MovementComposite_1.MovementComposite(movement, _this.replicationFactory); });
+    };
+    PieceComposite.prototype.setChildren = function (children) { };
+    PieceComposite.prototype.cleanCircularReferences = function () {
+        this.piece.addToItem(null);
+    };
+    return PieceComposite;
+}());
+exports.PieceComposite = PieceComposite;
+
+},{"./MovementComposite":4}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var PieceKind_1 = require("../definitions/PieceKind");
@@ -300,7 +280,7 @@ var pinkBishopsPosition = [
 ];
 var pinkQueenPosition = [{ line: 7, column: 3 }];
 var pinkKingPosition = [{ line: 7, column: 4 }];
-exports.BlackPiecesPositionMap = new Map([
+exports.PinkPiecesPositionMap = new Map([
     [PieceKind_1.PieceKind.PAWN, pinkPawnPosition],
     [PieceKind_1.PieceKind.ROOK, pinkRookPosition],
     [PieceKind_1.PieceKind.KNIGHT, pinkKnightPosition],
@@ -309,29 +289,131 @@ exports.BlackPiecesPositionMap = new Map([
     [PieceKind_1.PieceKind.KING, pinkKingPosition],
 ]);
 
-},{"../definitions/PieceKind":3}],8:[function(require,module,exports){
+},{"../definitions/PieceKind":8}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ModifierImpl = (function () {
-    function ModifierImpl(quantity, apply) {
-        this.quantity = quantity;
-        this.apply = apply;
-        this.quantity = quantity;
-        this.apply = apply.bind(this, quantity);
-    }
-    ModifierImpl.sum = function (quantity, property) { return property + quantity; };
-    ModifierImpl.minus = function (quantity, property) { return property - quantity; };
-    return ModifierImpl;
-}());
-exports.ModifierImpl = ModifierImpl;
+exports.API = {
+    LOAD_URL: 'http://localhost:9090/load',
+    SAVE_URL: 'http://localhost:9090/save',
+};
+
+},{}],8:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var PieceKind;
+(function (PieceKind) {
+    PieceKind["PAWN"] = "chess-pawn";
+    PieceKind["KNIGHT"] = "chess-knight";
+    PieceKind["KING"] = "chess-king";
+    PieceKind["QUEEN"] = "chess-queen";
+    PieceKind["BISHOP"] = "chess-bishop";
+    PieceKind["ROOK"] = "chess-rook";
+    PieceKind["EMPTY"] = "";
+})(PieceKind = exports.PieceKind || (exports.PieceKind = {}));
 
 },{}],9:[function(require,module,exports){
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var axios_1 = __importDefault(require("axios"));
+var config_1 = require("../constants/config");
+var GameStateHandler = (function () {
+    function GameStateHandler(chessFactory, domGenerator) {
+        this.chessFactory = chessFactory;
+        this.domGenerator = domGenerator;
+        this.newGame = this.newGame.bind(this);
+        this.loadGame = this.loadGame.bind(this);
+        this.saveGame = this.saveGame.bind(this);
+    }
+    GameStateHandler.prototype.newGame = function () {
+        var initialBoard = this.chessFactory.createInitialBoard();
+        this.domGenerator.injectBoard(initialBoard);
+        this.domGenerator.refresh();
+    };
+    GameStateHandler.prototype.loadGame = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, board;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, axios_1.default.get(config_1.API.LOAD_URL)];
+                    case 1:
+                        response = _a.sent();
+                        board = this.chessFactory.createBoardFromJSON(response.data);
+                        this.domGenerator.injectBoard(board);
+                        this.domGenerator.refresh();
+                        return [2];
+                }
+            });
+        });
+    };
+    GameStateHandler.prototype.saveGame = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var content, config, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.domGenerator.getBoard().cleanCircularReferences();
+                        content = JSON.stringify(this.domGenerator.getBoard().board);
+                        config = { headers: { 'Content-Type': 'application/json' } };
+                        data = { json: content };
+                        return [4, axios_1.default.post(config_1.API.SAVE_URL, data, config)];
+                    case 1:
+                        _a.sent();
+                        alert('Jogo salvo');
+                        return [2];
+                }
+            });
+        });
+    };
+    return GameStateHandler;
+}());
+exports.GameStateHandler = GameStateHandler;
+
+},{"../constants/config":7,"axios":30}],10:[function(require,module,exports){
+"use strict";
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-var InitialPositions_1 = require("./InitialPositions");
+var InitialPositions_1 = require("../constants/InitialPositions");
 var PieceKind_1 = require("../definitions/PieceKind");
-var ColorAdapter_1 = require("./ColorAdapter");
+var ColorAdapter_1 = require("./adapter/ColorAdapter");
 var BoardItem_1 = require("./board/BoardItem");
 var DiagonalMovement_1 = require("./movement/DiagonalMovement");
 var HorizontalMovement_1 = require("./movement/HorizontalMovement");
@@ -360,19 +442,136 @@ exports.MovementBuilderMap = (_a = {},
 var PieceBuilder;
 (function (PieceBuilder) {
     function build(kind, pieceColor) {
-        var map = pieceColor === "white" ? InitialPositions_1.WhitePiecesPositionMap : InitialPositions_1.BlackPiecesPositionMap;
+        var map = pieceColor === "white" ? InitialPositions_1.WhitePiecesPositionMap : InitialPositions_1.PinkPiecesPositionMap;
         return map.get(kind).map(function (position) {
             var clazz = exports.PieceBuilderMap.get(kind);
             var item = new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position));
             var piece = new clazz(pieceColor);
-            item.addPiece(piece);
+            item.setPiece(piece);
             return item;
         });
     }
     PieceBuilder.build = build;
 })(PieceBuilder = exports.PieceBuilder || (exports.PieceBuilder = {}));
 
-},{"../definitions/PieceKind":3,"./ColorAdapter":5,"./InitialPositions":7,"./board/BoardItem":11,"./movement/DiagonalMovement":12,"./movement/HorizontalMovement":13,"./movement/LMovement":14,"./movement/VerticalMovement":16,"./piece/Bishop":17,"./piece/King":18,"./piece/Knight":19,"./piece/Pawn":20,"./piece/Queen":22,"./piece/Rook":23}],10:[function(require,module,exports){
+},{"../constants/InitialPositions":6,"../definitions/PieceKind":8,"./adapter/ColorAdapter":11,"./board/BoardItem":15,"./movement/DiagonalMovement":16,"./movement/HorizontalMovement":17,"./movement/LMovement":18,"./movement/VerticalMovement":20,"./piece/Bishop":21,"./piece/King":22,"./piece/Knight":23,"./piece/Pawn":24,"./piece/Queen":26,"./piece/Rook":27}],11:[function(require,module,exports){
+"use strict";
+var _a;
+Object.defineProperty(exports, "__esModule", { value: true });
+var ColorOppositeMap = (_a = {},
+    _a["black"] = "pink",
+    _a["pink"] = "black",
+    _a["dark-pink"] = "white",
+    _a["white"] = "dark-pink",
+    _a);
+var isEven = function (number) { return number % 2 === 0; };
+var ColorAdapter;
+(function (ColorAdapter) {
+    function defineItemColor(_a) {
+        var line = _a.line, column = _a.column;
+        var color = isEven(line) ? "black" : "pink";
+        return isEven(column) ? color : getOppositeColor(color);
+    }
+    ColorAdapter.defineItemColor = defineItemColor;
+    function getOppositeColor(color) {
+        return ColorOppositeMap[color];
+    }
+})(ColorAdapter = exports.ColorAdapter || (exports.ColorAdapter = {}));
+
+},{}],12:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var MovementAdapter = (function () {
+    function MovementAdapter(quantity, apply) {
+        this.quantity = quantity;
+        this.apply = apply;
+        this.quantity = quantity;
+        this.apply = apply.bind(this, quantity);
+    }
+    MovementAdapter.sum = function (quantity, property) { return property + quantity; };
+    MovementAdapter.minus = function (quantity, property) { return property - quantity; };
+    return MovementAdapter;
+}());
+exports.MovementAdapter = MovementAdapter;
+
+},{}],13:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Board_1 = require("../board/Board");
+var BoardItem_1 = require("../board/BoardItem");
+var PieceBuilder_1 = require("../PieceBuilder");
+var BoardReplicationAdapter = (function () {
+    function BoardReplicationAdapter(itemReplication) {
+        this.itemReplication = itemReplication;
+        this.replicate = this.replicate.bind(this);
+    }
+    BoardReplicationAdapter.prototype.replicate = function (object) {
+        var board = Object.assign(new Board_1.Board(), object);
+        board.items = board.getAllItems().map(this.itemReplication.replicate);
+        return board;
+    };
+    return BoardReplicationAdapter;
+}());
+exports.BoardReplicationAdapter = BoardReplicationAdapter;
+var BoardItemReplicationAdapter = (function () {
+    function BoardItemReplicationAdapter(pieceReplication) {
+        this.pieceReplication = pieceReplication;
+        this.replicate = this.replicate.bind(this);
+    }
+    BoardItemReplicationAdapter.prototype.replicate = function (object) {
+        var item = Object.assign(new BoardItem_1.BoardItem(object.position, object.color), object);
+        this.pieceReplication.replicate(item.getPiece());
+        return item;
+    };
+    return BoardItemReplicationAdapter;
+}());
+exports.BoardItemReplicationAdapter = BoardItemReplicationAdapter;
+var PieceReplicationAdapter = (function () {
+    function PieceReplicationAdapter(movementReplication) {
+        this.movementReplication = movementReplication;
+        this.replicate = this.replicate.bind(this);
+    }
+    PieceReplicationAdapter.prototype.replicate = function (object) {
+        if (!object)
+            return;
+        var instantiationFn = PieceBuilder_1.PieceBuilderMap.get(object.kind);
+        var piece = Object.assign(new instantiationFn(object.color), object);
+        piece.setMovements(piece.getMovements().map(this.movementReplication.replicate));
+        return piece;
+    };
+    return PieceReplicationAdapter;
+}());
+exports.PieceReplicationAdapter = PieceReplicationAdapter;
+var MovementReplicationAdapter = (function () {
+    function MovementReplicationAdapter() {
+    }
+    MovementReplicationAdapter.prototype.replicate = function (object) {
+        var model = new PieceBuilder_1.MovementBuilderMap[object.kind]();
+        return Object.assign(model, object);
+    };
+    return MovementReplicationAdapter;
+}());
+exports.MovementReplicationAdapter = MovementReplicationAdapter;
+var ReplicationAdapterFactory = (function () {
+    function ReplicationAdapterFactory() {
+    }
+    ReplicationAdapterFactory.prototype.createBoardReplicationAdapter = function () {
+        return new BoardReplicationAdapter(this.createItemReplicationAdapter());
+    };
+    ReplicationAdapterFactory.prototype.createItemReplicationAdapter = function () {
+        return new BoardItemReplicationAdapter(this.createPieceReplicationAdapter());
+    };
+    ReplicationAdapterFactory.prototype.createPieceReplicationAdapter = function () {
+        return new PieceReplicationAdapter(this.createMovementReplicationAdapter());
+    };
+    ReplicationAdapterFactory.prototype.createMovementReplicationAdapter = function () {
+        return new MovementReplicationAdapter();
+    };
+    return ReplicationAdapterFactory;
+}());
+exports.ReplicationAdapterFactory = ReplicationAdapterFactory;
+
+},{"../PieceBuilder":10,"../board/Board":14,"../board/BoardItem":15}],14:[function(require,module,exports){
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -416,13 +615,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 var lodash_1 = __importDefault(require("lodash"));
-var InitialPositions_1 = require("../InitialPositions");
+var config_1 = require("../../constants/config");
+var InitialPositions_1 = require("../../constants/InitialPositions");
 var PieceKind_1 = require("../../definitions/PieceKind");
 var DOMGenerator_1 = require("../../DOMGenerator");
-var ColorAdapter_1 = require("../ColorAdapter");
+var ColorAdapter_1 = require("../adapter/ColorAdapter");
 var PieceBuilder_1 = require("../PieceBuilder");
 var BoardItem_1 = require("./BoardItem");
-var config_1 = require("../../config");
 var initMatrix = function () {
     var matrix = [];
     matrix[0] = [];
@@ -479,8 +678,8 @@ var Board = (function () {
             item.addToBoard(_this);
         };
     }
-    Board.copy = function (board) {
-        return Object.assign(new Board(), board);
+    Board.prototype.getAllItems = function () {
+        return lodash_1.default.flatten(this.matrix);
     };
     Board.prototype.getItem = function (_a) {
         var line = _a.line, column = _a.column;
@@ -496,10 +695,10 @@ var Board = (function () {
     };
     Board.prototype.isPositionBlockedByOpponent = function (position, initialPosition) {
         var blockingPiece = this.isPositionInMatrixRange(position) && this.getPieceByPosition(position);
-        var blockingColor = blockingPiece && this.getPieceByPosition(position).getCor();
+        var blockingColor = blockingPiece && this.getPieceByPosition(position).getColor();
         var blockedColor = this.getItem(initialPosition)
             .getPiece()
-            .getCor();
+            .getColor();
         return blockingColor && blockedColor !== blockingColor;
     };
     Board.prototype.setCurrentMovingPiece = function (piece) {
@@ -513,9 +712,9 @@ var Board = (function () {
     };
     Board.prototype.movePiece = function (clickedItem) {
         var pieceItem = this.currentMovingPieces.getBoardItem();
-        clickedItem.addPiece(this.currentMovingPieces);
+        clickedItem.setPiece(this.currentMovingPieces);
         this.currentMovingPieces = null;
-        pieceItem.addPiece(null);
+        pieceItem.setPiece(null);
         DOMGenerator_1.DOMGenerator.getInstance().refresh();
     };
     Board.prototype.executeForAll = function (callback) {
@@ -541,7 +740,7 @@ var Board = (function () {
 }());
 exports.Board = Board;
 
-},{"../../DOMGenerator":1,"../../config":2,"../../definitions/PieceKind":3,"../ColorAdapter":5,"../InitialPositions":7,"../PieceBuilder":9,"./BoardItem":11,"axios":25,"lodash":51}],11:[function(require,module,exports){
+},{"../../DOMGenerator":1,"../../constants/InitialPositions":6,"../../constants/config":7,"../../definitions/PieceKind":8,"../PieceBuilder":10,"../adapter/ColorAdapter":11,"./BoardItem":15,"axios":30,"lodash":56}],15:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -577,10 +776,7 @@ var BoardItem = (function () {
             }
         };
     }
-    BoardItem.copy = function (item) {
-        return Object.assign(new BoardItem(item.position, item.color), item);
-    };
-    BoardItem.prototype.addPiece = function (piece) {
+    BoardItem.prototype.setPiece = function (piece) {
         this.piece = piece;
         if (piece) {
             this.piece.addToItem(this);
@@ -644,7 +840,7 @@ var BoardItem = (function () {
 }());
 exports.BoardItem = BoardItem;
 
-},{"lodash":51}],12:[function(require,module,exports){
+},{"lodash":56}],16:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -660,7 +856,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ModifierImpl_1 = require("../ModifierImpl");
+var MovementAdapter_1 = require("../adapter/MovementAdapter");
 var Movement_1 = require("./Movement");
 var DiagonalMovement = (function (_super) {
     __extends(DiagonalMovement, _super);
@@ -670,20 +866,20 @@ var DiagonalMovement = (function (_super) {
     DiagonalMovement.prototype.getMovementOffsets = function () {
         return [
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                lineModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
             },
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                lineModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
             },
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                lineModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
             },
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                lineModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
             },
         ];
     };
@@ -691,7 +887,7 @@ var DiagonalMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.DiagonalMovement = DiagonalMovement;
 
-},{"../ModifierImpl":8,"./Movement":15}],13:[function(require,module,exports){
+},{"../adapter/MovementAdapter":12,"./Movement":19}],17:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -707,7 +903,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ModifierImpl_1 = require("../ModifierImpl");
+var MovementAdapter_1 = require("../adapter/MovementAdapter");
 var Movement_1 = require("./Movement");
 var HorizontalMovement = (function (_super) {
     __extends(HorizontalMovement, _super);
@@ -717,12 +913,12 @@ var HorizontalMovement = (function (_super) {
     HorizontalMovement.prototype.getMovementOffsets = function () {
         return [
             {
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
-                lineModifier: new ModifierImpl_1.ModifierImpl(0, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
+                lineModifier: new MovementAdapter_1.MovementAdapter(0, MovementAdapter_1.MovementAdapter.sum),
             },
             {
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
-                lineModifier: new ModifierImpl_1.ModifierImpl(0, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
+                lineModifier: new MovementAdapter_1.MovementAdapter(0, MovementAdapter_1.MovementAdapter.sum),
             },
         ];
     };
@@ -730,7 +926,7 @@ var HorizontalMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.HorizontalMovement = HorizontalMovement;
 
-},{"../ModifierImpl":8,"./Movement":15}],14:[function(require,module,exports){
+},{"../adapter/MovementAdapter":12,"./Movement":19}],18:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -746,7 +942,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ModifierImpl_1 = require("../ModifierImpl");
+var MovementAdapter_1 = require("../adapter/MovementAdapter");
 var Movement_1 = require("./Movement");
 var LMovement = (function (_super) {
     __extends(LMovement, _super);
@@ -756,36 +952,36 @@ var LMovement = (function (_super) {
     LMovement.prototype.getMovementOffsets = function () {
         return [
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.sum),
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                lineModifier: new MovementAdapter_1.MovementAdapter(2, MovementAdapter_1.MovementAdapter.sum),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
             },
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.sum),
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                lineModifier: new MovementAdapter_1.MovementAdapter(2, MovementAdapter_1.MovementAdapter.sum),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
             },
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.minus),
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                lineModifier: new MovementAdapter_1.MovementAdapter(2, MovementAdapter_1.MovementAdapter.minus),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
             },
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.minus),
-                columnModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                lineModifier: new MovementAdapter_1.MovementAdapter(2, MovementAdapter_1.MovementAdapter.minus),
+                columnModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
             },
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
-                columnModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.sum),
+                lineModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
+                columnModifier: new MovementAdapter_1.MovementAdapter(2, MovementAdapter_1.MovementAdapter.sum),
             },
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
-                columnModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.sum),
+                lineModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
+                columnModifier: new MovementAdapter_1.MovementAdapter(2, MovementAdapter_1.MovementAdapter.sum),
             },
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
-                columnModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.minus),
+                lineModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
+                columnModifier: new MovementAdapter_1.MovementAdapter(2, MovementAdapter_1.MovementAdapter.minus),
             },
             {
-                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
-                columnModifier: new ModifierImpl_1.ModifierImpl(2, ModifierImpl_1.ModifierImpl.minus),
+                lineModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
+                columnModifier: new MovementAdapter_1.MovementAdapter(2, MovementAdapter_1.MovementAdapter.minus),
             },
         ];
     };
@@ -803,7 +999,7 @@ var LMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.LMovement = LMovement;
 
-},{"../ModifierImpl":8,"./Movement":15}],15:[function(require,module,exports){
+},{"../adapter/MovementAdapter":12,"./Movement":19}],19:[function(require,module,exports){
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -821,15 +1017,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var PieceBuilder_1 = require("../PieceBuilder");
 var Movement = (function () {
     function Movement(kind) {
         this.kind = kind;
     }
-    Movement.copy = function (movement) {
-        var model = new PieceBuilder_1.MovementBuilderMap[movement.kind]();
-        return Object.assign(model, movement);
-    };
     Movement.prototype.getKind = function () {
         return this.kind;
     };
@@ -866,7 +1057,7 @@ var Movement = (function () {
 }());
 exports.Movement = Movement;
 
-},{"../PieceBuilder":9,"lodash":51}],16:[function(require,module,exports){
+},{"lodash":56}],20:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -882,7 +1073,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ModifierImpl_1 = require("../ModifierImpl");
+var MovementAdapter_1 = require("../adapter/MovementAdapter");
 var Movement_1 = require("./Movement");
 var VerticalMovement = (function (_super) {
     __extends(VerticalMovement, _super);
@@ -892,12 +1083,12 @@ var VerticalMovement = (function (_super) {
     VerticalMovement.prototype.getMovementOffsets = function () {
         return [
             {
-                columnModifier: new ModifierImpl_1.ModifierImpl(0, ModifierImpl_1.ModifierImpl.sum),
-                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.sum),
+                columnModifier: new MovementAdapter_1.MovementAdapter(0, MovementAdapter_1.MovementAdapter.sum),
+                lineModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.sum),
             },
             {
-                columnModifier: new ModifierImpl_1.ModifierImpl(0, ModifierImpl_1.ModifierImpl.minus),
-                lineModifier: new ModifierImpl_1.ModifierImpl(1, ModifierImpl_1.ModifierImpl.minus),
+                columnModifier: new MovementAdapter_1.MovementAdapter(0, MovementAdapter_1.MovementAdapter.minus),
+                lineModifier: new MovementAdapter_1.MovementAdapter(1, MovementAdapter_1.MovementAdapter.minus),
             }
         ];
     };
@@ -905,7 +1096,7 @@ var VerticalMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.VerticalMovement = VerticalMovement;
 
-},{"../ModifierImpl":8,"./Movement":15}],17:[function(require,module,exports){
+},{"../adapter/MovementAdapter":12,"./Movement":19}],21:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -936,7 +1127,7 @@ var Bishop = (function (_super) {
 }(Piece_1.Piece));
 exports.Bishop = Bishop;
 
-},{"../../definitions/PieceKind":3,"../movement/DiagonalMovement":12,"./Piece":21}],18:[function(require,module,exports){
+},{"../../definitions/PieceKind":8,"../movement/DiagonalMovement":16,"./Piece":25}],22:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -988,7 +1179,7 @@ var King = (function (_super) {
 }(Piece_1.Piece));
 exports.King = King;
 
-},{"../../definitions/PieceKind":3,"../movement/DiagonalMovement":12,"../movement/HorizontalMovement":13,"../movement/VerticalMovement":16,"./Piece":21,"lodash":51}],19:[function(require,module,exports){
+},{"../../definitions/PieceKind":8,"../movement/DiagonalMovement":16,"../movement/HorizontalMovement":17,"../movement/VerticalMovement":20,"./Piece":25,"lodash":56}],23:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1019,7 +1210,7 @@ var Knight = (function (_super) {
 }(Piece_1.Piece));
 exports.Knight = Knight;
 
-},{"../../definitions/PieceKind":3,"../movement/LMovement":14,"./Piece":21}],20:[function(require,module,exports){
+},{"../../definitions/PieceKind":8,"../movement/LMovement":18,"./Piece":25}],24:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1095,15 +1286,13 @@ var Pawn = (function (_super) {
 }(Piece_1.Piece));
 exports.Pawn = Pawn;
 
-},{"../../definitions/PieceKind":3,"../movement/VerticalMovement":16,"./Piece":21,"lodash":51}],21:[function(require,module,exports){
+},{"../../definitions/PieceKind":8,"../movement/VerticalMovement":20,"./Piece":25,"lodash":56}],25:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var Movement_1 = require("../movement/Movement");
-var PieceBuilder_1 = require("../PieceBuilder");
 var Piece = (function () {
     function Piece(kind, color, movements, isAllowedToGoBackwards) {
         this.kind = kind;
@@ -1111,13 +1300,6 @@ var Piece = (function () {
         this.movements = movements;
         this.isAllowedToGoBackwards = isAllowedToGoBackwards;
     }
-    Piece.copy = function (piece) {
-        var instantiationFn = PieceBuilder_1.PieceBuilderMap.get(piece.kind);
-        var model = Object.assign(new instantiationFn(piece.color), piece);
-        var movements = model.getMovements().map(function (mov) { return Movement_1.Movement.copy(mov); });
-        model.movements = movements;
-        return model;
-    };
     Piece.prototype.getMovements = function () {
         return this.movements;
     };
@@ -1144,7 +1326,7 @@ var Piece = (function () {
     Piece.prototype.addToItem = function (item) {
         this.boardItem = item;
     };
-    Piece.prototype.getCor = function () {
+    Piece.prototype.getColor = function () {
         return this.color;
     };
     Piece.prototype.getKind = function () {
@@ -1154,7 +1336,7 @@ var Piece = (function () {
 }());
 exports.Piece = Piece;
 
-},{"../PieceBuilder":9,"../movement/Movement":15,"lodash":51}],22:[function(require,module,exports){
+},{"lodash":56}],26:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1187,7 +1369,7 @@ var Queen = (function (_super) {
 }(Piece_1.Piece));
 exports.Queen = Queen;
 
-},{"../../definitions/PieceKind":3,"../movement/DiagonalMovement":12,"../movement/HorizontalMovement":13,"../movement/VerticalMovement":16,"./Piece":21}],23:[function(require,module,exports){
+},{"../../definitions/PieceKind":8,"../movement/DiagonalMovement":16,"../movement/HorizontalMovement":17,"../movement/VerticalMovement":20,"./Piece":25}],27:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1219,25 +1401,45 @@ var Rook = (function (_super) {
 }(Piece_1.Piece));
 exports.Rook = Rook;
 
-},{"../../definitions/PieceKind":3,"../movement/HorizontalMovement":13,"../movement/VerticalMovement":16,"./Piece":21}],24:[function(require,module,exports){
+},{"../../definitions/PieceKind":8,"../movement/HorizontalMovement":17,"../movement/VerticalMovement":20,"./Piece":25}],28:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var DOMGenerator_1 = require("./DOMGenerator");
+var BoardComposite_1 = require("../composite/BoardComposite");
+var ChessFactoryImpl = (function () {
+    function ChessFactoryImpl(boardAdapterFactory) {
+        this.boardAdapterFactory = boardAdapterFactory;
+    }
+    ChessFactoryImpl.prototype.createBoardFromJSON = function (loaded) {
+        return new BoardComposite_1.BoardComposite(loaded, this.boardAdapterFactory);
+    };
+    ChessFactoryImpl.prototype.createInitialBoard = function () {
+        return new BoardComposite_1.BoardComposite(null, this.boardAdapterFactory);
+    };
+    return ChessFactoryImpl;
+}());
+exports.ChessFactoryImpl = ChessFactoryImpl;
+
+},{"../composite/BoardComposite":2}],29:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var ChessFactory_1 = require("./factory/ChessFactory");
 var GameStateHandler_1 = require("./domain/GameStateHandler");
-var ChessFactory_1 = require("./domain/ChessFactory");
+var DOMGenerator_1 = require("./DOMGenerator");
+var ReplicableObjectAdapter_1 = require("./domain/adapter/ReplicableObjectAdapter");
 var domGeneratorInstance = DOMGenerator_1.DOMGenerator.getInstance();
-var chessFactory = new ChessFactory_1.ChessFactoryImpl();
+var adapterFactory = new ReplicableObjectAdapter_1.ReplicationAdapterFactory();
+var chessFactory = new ChessFactory_1.ChessFactoryImpl(adapterFactory);
 var gameStateHandler = new GameStateHandler_1.GameStateHandler(chessFactory, domGeneratorInstance);
 var newGameButton = document.getElementById('novoJogo');
 var loadGameButton = document.getElementById('carregarJogo');
 var saveGameButton = document.getElementById('salvarJogo');
 newGameButton.addEventListener('click', gameStateHandler.newGame);
 loadGameButton.addEventListener('click', gameStateHandler.loadGame);
-saveGameButton.addEventListener('click', function () { return domGeneratorInstance.getBoard().save(); });
+saveGameButton.addEventListener('click', gameStateHandler.saveGame);
 
-},{"./DOMGenerator":1,"./domain/ChessFactory":4,"./domain/GameStateHandler":6}],25:[function(require,module,exports){
+},{"./DOMGenerator":1,"./domain/GameStateHandler":9,"./domain/adapter/ReplicableObjectAdapter":13,"./factory/ChessFactory":28}],30:[function(require,module,exports){
 module.exports = require('./lib/axios');
-},{"./lib/axios":27}],26:[function(require,module,exports){
+},{"./lib/axios":32}],31:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1413,7 +1615,7 @@ module.exports = function xhrAdapter(config) {
   });
 };
 
-},{"../core/createError":33,"./../core/settle":37,"./../helpers/buildURL":41,"./../helpers/cookies":43,"./../helpers/isURLSameOrigin":45,"./../helpers/parseHeaders":47,"./../utils":49}],27:[function(require,module,exports){
+},{"../core/createError":38,"./../core/settle":42,"./../helpers/buildURL":46,"./../helpers/cookies":48,"./../helpers/isURLSameOrigin":50,"./../helpers/parseHeaders":52,"./../utils":54}],32:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -1468,7 +1670,7 @@ module.exports = axios;
 // Allow use of default import syntax in TypeScript
 module.exports.default = axios;
 
-},{"./cancel/Cancel":28,"./cancel/CancelToken":29,"./cancel/isCancel":30,"./core/Axios":31,"./core/mergeConfig":36,"./defaults":39,"./helpers/bind":40,"./helpers/spread":48,"./utils":49}],28:[function(require,module,exports){
+},{"./cancel/Cancel":33,"./cancel/CancelToken":34,"./cancel/isCancel":35,"./core/Axios":36,"./core/mergeConfig":41,"./defaults":44,"./helpers/bind":45,"./helpers/spread":53,"./utils":54}],33:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1489,7 +1691,7 @@ Cancel.prototype.__CANCEL__ = true;
 
 module.exports = Cancel;
 
-},{}],29:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 'use strict';
 
 var Cancel = require('./Cancel');
@@ -1548,14 +1750,14 @@ CancelToken.source = function source() {
 
 module.exports = CancelToken;
 
-},{"./Cancel":28}],30:[function(require,module,exports){
+},{"./Cancel":33}],35:[function(require,module,exports){
 'use strict';
 
 module.exports = function isCancel(value) {
   return !!(value && value.__CANCEL__);
 };
 
-},{}],31:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1643,7 +1845,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = Axios;
 
-},{"../helpers/buildURL":41,"./../utils":49,"./InterceptorManager":32,"./dispatchRequest":34,"./mergeConfig":36}],32:[function(require,module,exports){
+},{"../helpers/buildURL":46,"./../utils":54,"./InterceptorManager":37,"./dispatchRequest":39,"./mergeConfig":41}],37:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1697,7 +1899,7 @@ InterceptorManager.prototype.forEach = function forEach(fn) {
 
 module.exports = InterceptorManager;
 
-},{"./../utils":49}],33:[function(require,module,exports){
+},{"./../utils":54}],38:[function(require,module,exports){
 'use strict';
 
 var enhanceError = require('./enhanceError');
@@ -1717,7 +1919,7 @@ module.exports = function createError(message, config, code, request, response) 
   return enhanceError(error, config, code, request, response);
 };
 
-},{"./enhanceError":35}],34:[function(require,module,exports){
+},{"./enhanceError":40}],39:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1805,7 +2007,7 @@ module.exports = function dispatchRequest(config) {
   });
 };
 
-},{"../cancel/isCancel":30,"../defaults":39,"./../helpers/combineURLs":42,"./../helpers/isAbsoluteURL":44,"./../utils":49,"./transformData":38}],35:[function(require,module,exports){
+},{"../cancel/isCancel":35,"../defaults":44,"./../helpers/combineURLs":47,"./../helpers/isAbsoluteURL":49,"./../utils":54,"./transformData":43}],40:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1849,7 +2051,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
   return error;
 };
 
-},{}],36:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -1902,7 +2104,7 @@ module.exports = function mergeConfig(config1, config2) {
   return config;
 };
 
-},{"../utils":49}],37:[function(require,module,exports){
+},{"../utils":54}],42:[function(require,module,exports){
 'use strict';
 
 var createError = require('./createError');
@@ -1929,7 +2131,7 @@ module.exports = function settle(resolve, reject, response) {
   }
 };
 
-},{"./createError":33}],38:[function(require,module,exports){
+},{"./createError":38}],43:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1951,7 +2153,7 @@ module.exports = function transformData(data, headers, fns) {
   return data;
 };
 
-},{"./../utils":49}],39:[function(require,module,exports){
+},{"./../utils":54}],44:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -2053,7 +2255,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 }).call(this,require('_process'))
-},{"./adapters/http":26,"./adapters/xhr":26,"./helpers/normalizeHeaderName":46,"./utils":49,"_process":52}],40:[function(require,module,exports){
+},{"./adapters/http":31,"./adapters/xhr":31,"./helpers/normalizeHeaderName":51,"./utils":54,"_process":57}],45:[function(require,module,exports){
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -2066,7 +2268,7 @@ module.exports = function bind(fn, thisArg) {
   };
 };
 
-},{}],41:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2139,7 +2341,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
   return url;
 };
 
-},{"./../utils":49}],42:[function(require,module,exports){
+},{"./../utils":54}],47:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2155,7 +2357,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
     : baseURL;
 };
 
-},{}],43:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2210,7 +2412,7 @@ module.exports = (
     })()
 );
 
-},{"./../utils":49}],44:[function(require,module,exports){
+},{"./../utils":54}],49:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2226,7 +2428,7 @@ module.exports = function isAbsoluteURL(url) {
   return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
 };
 
-},{}],45:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2296,7 +2498,7 @@ module.exports = (
     })()
 );
 
-},{"./../utils":49}],46:[function(require,module,exports){
+},{"./../utils":54}],51:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -2310,7 +2512,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
   });
 };
 
-},{"../utils":49}],47:[function(require,module,exports){
+},{"../utils":54}],52:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2365,7 +2567,7 @@ module.exports = function parseHeaders(headers) {
   return parsed;
 };
 
-},{"./../utils":49}],48:[function(require,module,exports){
+},{"./../utils":54}],53:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2394,7 +2596,7 @@ module.exports = function spread(callback) {
   };
 };
 
-},{}],49:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 var bind = require('./helpers/bind');
@@ -2730,7 +2932,7 @@ module.exports = {
   trim: trim
 };
 
-},{"./helpers/bind":40,"is-buffer":50}],50:[function(require,module,exports){
+},{"./helpers/bind":45,"is-buffer":55}],55:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -2743,7 +2945,7 @@ module.exports = function isBuffer (obj) {
     typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
 }
 
-},{}],51:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -19859,7 +20061,7 @@ module.exports = function isBuffer (obj) {
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],52:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -20045,4 +20247,4 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[24]);
+},{}]},{},[29]);

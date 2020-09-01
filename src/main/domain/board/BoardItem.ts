@@ -11,11 +11,7 @@ export class BoardItem {
   private board: Board
   constructor(private position: Position, private color: Color) {}
 
-  static copy(item: BoardItem): BoardItem {
-    return Object.assign(new BoardItem(item.position, item.color), item)
-  }
-
-  public addPiece(piece: Piece): void {
+  public setPiece(piece: Piece): void {
     this.piece = piece
     if (piece) {
       this.piece.addToItem(this)

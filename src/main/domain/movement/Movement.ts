@@ -7,11 +7,6 @@ export abstract class Movement {
   constructor(private kind: MovementKind) {}
   public abstract getMovementOffsets(): MovementOffset[]
 
-  static copy(movement: Movement): Movement {
-    const model = new MovementBuilderMap[movement.kind]()
-    return Object.assign(model, movement)
-  }
-
   public getKind(): MovementKind {
     return this.kind
   }

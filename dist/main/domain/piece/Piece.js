@@ -4,8 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var Movement_1 = require("../movement/Movement");
-var PieceBuilder_1 = require("../PieceBuilder");
 var Piece = (function () {
     function Piece(kind, color, movements, isAllowedToGoBackwards) {
         this.kind = kind;
@@ -13,13 +11,6 @@ var Piece = (function () {
         this.movements = movements;
         this.isAllowedToGoBackwards = isAllowedToGoBackwards;
     }
-    Piece.copy = function (piece) {
-        var instantiationFn = PieceBuilder_1.PieceBuilderMap.get(piece.kind);
-        var model = Object.assign(new instantiationFn(piece.color), piece);
-        var movements = model.getMovements().map(function (mov) { return Movement_1.Movement.copy(mov); });
-        model.movements = movements;
-        return model;
-    };
     Piece.prototype.getMovements = function () {
         return this.movements;
     };
@@ -46,7 +37,7 @@ var Piece = (function () {
     Piece.prototype.addToItem = function (item) {
         this.boardItem = item;
     };
-    Piece.prototype.getCor = function () {
+    Piece.prototype.getColor = function () {
         return this.color;
     };
     Piece.prototype.getKind = function () {

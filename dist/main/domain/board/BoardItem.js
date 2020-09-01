@@ -33,10 +33,7 @@ var BoardItem = (function () {
             }
         };
     }
-    BoardItem.copy = function (item) {
-        return Object.assign(new BoardItem(item.position, item.color), item);
-    };
-    BoardItem.prototype.addPiece = function (piece) {
+    BoardItem.prototype.setPiece = function (piece) {
         this.piece = piece;
         if (piece) {
             this.piece.addToItem(this);

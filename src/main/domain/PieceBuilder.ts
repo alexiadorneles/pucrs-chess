@@ -39,7 +39,7 @@ export namespace PieceBuilder {
       const clazz = PieceBuilderMap.get(kind)
       const item = new BoardItem(position, ColorAdapter.defineItemColor(position))
       const piece = new clazz(pieceColor)
-      item.addPiece(piece)
+      item.setPiece(piece)
       return item
     })
   }
