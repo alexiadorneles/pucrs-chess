@@ -26,7 +26,7 @@ export class GameStateHandler {
 
   public async saveGame(): Promise<void> {
     this.domGenerator.getBoard().cleanCircularReferences()
-    const content = JSON.stringify(this.domGenerator.getBoard().board)
+    const content = JSON.stringify((this.domGenerator.getBoard() as any).board)
     const config = { headers: { 'Content-Type': 'application/json' } }
     const data = { json: content }
     await Axios.post(API.SAVE_URL, data, config)

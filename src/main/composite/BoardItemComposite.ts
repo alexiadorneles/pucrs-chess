@@ -1,9 +1,9 @@
-import { BoardItem } from '../domain/board/BoardItem'
 import { Composite } from '../definitions/Composite'
-import { ReplicationAdapterFactory } from '../domain/adapter/ReplicableObjectAdapter'
+import { JSONObject } from '../definitions/JSONObject'
+import { BoardItem } from '../domain/board/BoardItem'
 import { PieceComposite } from './PieceComposite'
 export class BoardItemComposite implements Composite {
-  constructor(private boardItem: BoardItem, private replicationFactory: ReplicationAdapterFactory) {
+  constructor(private boardItem: BoardItem) {
     this.cleanCircularReferences = this.cleanCircularReferences.bind(this)
   }
   public createElement(): Element {
@@ -24,14 +24,17 @@ export class BoardItemComposite implements Composite {
     }
     return div
   }
-  public clone(): Composite {
-    const replicationAdapter = this.replicationFactory.createItemReplicationAdapter()
-    const item = replicationAdapter.replicate(this.boardItem)
-    return new BoardItemComposite(item, this.replicationFactory)
+
+  public static createFromJSON(object: JSONObject): Composite {
+    const boardItem = Object.assign(new BoardItem(object.position, object.color), object)
+    const piece = boardItem.getPiece()
+    piece && PieceComposite.createFromJSON(piece)
+    return new BoardItemComposite(boardItem)
   }
+
   getChildren(): Composite[] {
     const piece = this.boardItem.getPiece()
-    return piece ? [new PieceComposite(piece, this.replicationFactory)] : []
+    return piece ? [new PieceComposite(piece)] : []
   }
   setChildren(children: Composite[]): void {}
 

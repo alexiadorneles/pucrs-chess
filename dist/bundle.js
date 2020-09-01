@@ -36,14 +36,15 @@ var Board_1 = require("../domain/board/Board");
 var lodash_1 = __importDefault(require("lodash"));
 var BoardItemComposite_1 = require("./BoardItemComposite");
 var BoardComposite = (function () {
-    function BoardComposite(board, replicationFactory) {
+    function BoardComposite(board) {
         this.board = board;
-        this.replicationFactory = replicationFactory;
-        if (!(this.board instanceof Board_1.Board)) {
-            this.board = this.replicationFactory.createBoardReplicationAdapter().replicate(board);
+        if (this.isBeingCreatedFromJSON()) {
         }
         this.board.init();
     }
+    BoardComposite.prototype.isBeingCreatedFromJSON = function () {
+        return !(this.board instanceof Board_1.Board);
+    };
     BoardComposite.prototype.createElement = function () {
         var board = document.createElement('div');
         var itemsMatrix = lodash_1.default.chunk(this.getChildren(), 8);
@@ -57,17 +58,14 @@ var BoardComposite = (function () {
         lines.forEach(function (line) { return board.appendChild(line); });
         return board;
     };
-    BoardComposite.prototype.clone = function () {
-        var replicationAdapter = this.replicationFactory.createBoardReplicationAdapter();
-        var board = replicationAdapter.replicate(this.board);
-        var composite = new BoardComposite(board, this.replicationFactory);
-        composite.getChildren();
-        return composite;
+    BoardComposite.createFromJSON = function (object) {
+        var board = Object.assign(new Board_1.Board(), object);
+        var items = board.getAllItems().map(function (item) { return BoardItemComposite_1.BoardItemComposite.createFromJSON(item); });
+        return new BoardComposite(board);
     };
     BoardComposite.prototype.getChildren = function () {
-        var _this = this;
         var items = this.board.getAllItems();
-        return items.map(function (item) { return new BoardItemComposite_1.BoardItemComposite(item, _this.replicationFactory); });
+        return items.map(function (item) { return new BoardItemComposite_1.BoardItemComposite(item); });
     };
     BoardComposite.prototype.setChildren = function (children) {
     };
@@ -81,6 +79,7 @@ exports.BoardComposite = BoardComposite;
 },{"../domain/board/Board":14,"./BoardItemComposite":3,"lodash":56}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var BoardItem_1 = require("../domain/board/BoardItem");
 var PieceComposite_1 = require("./PieceComposite");
 var BoardItemComposite = (function () {
     function BoardItemComposite(boardItem, replicationFactory) {
@@ -107,10 +106,11 @@ var BoardItemComposite = (function () {
         }
         return div;
     };
-    BoardItemComposite.prototype.clone = function () {
-        var replicationAdapter = this.replicationFactory.createItemReplicationAdapter();
-        var item = replicationAdapter.replicate(this.boardItem);
-        return new BoardItemComposite(item, this.replicationFactory);
+    BoardItemComposite.createFromJSON = function (object) {
+        var boardItem = Object.assign(new BoardItem_1.BoardItem(object.position, object.color), object);
+        var piece = boardItem.getPiece();
+        piece && PieceComposite_1.PieceComposite.createFromJSON(piece);
+        return new BoardItemComposite(boardItem);
     };
     BoardItemComposite.prototype.getChildren = function () {
         var piece = this.boardItem.getPiece();
@@ -126,21 +126,24 @@ var BoardItemComposite = (function () {
 }());
 exports.BoardItemComposite = BoardItemComposite;
 
-},{"./PieceComposite":5}],4:[function(require,module,exports){
+},{"../domain/board/BoardItem":15,"./PieceComposite":5}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var PieceBuilder_1 = require("../domain/PieceBuilder");
 var MovementComposite = (function () {
-    function MovementComposite(movement, replicationFactory) {
+    function MovementComposite(movement) {
         this.movement = movement;
-        this.replicationFactory = replicationFactory;
     }
     MovementComposite.prototype.createElement = function () {
         return null;
     };
-    MovementComposite.prototype.clone = function () {
-        var replicationAdapter = this.replicationFactory.createMovementReplicationAdapter();
-        var movement = replicationAdapter.replicate(this.movement);
-        return new MovementComposite(movement, this.replicationFactory);
+    MovementComposite.createFromJSON = function (object) {
+        var model = new PieceBuilder_1.MovementBuilderMap[object.kind]();
+        var movement = Object.assign(model, object);
+        return new MovementComposite(movement);
+    };
+    MovementComposite.prototype.cleanCircularReferences = function () {
+        throw new Error('Method not implemented.');
     };
     MovementComposite.prototype.getChildren = function () {
         return [];
@@ -150,10 +153,11 @@ var MovementComposite = (function () {
 }());
 exports.MovementComposite = MovementComposite;
 
-},{}],5:[function(require,module,exports){
+},{"../domain/PieceBuilder":10}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var MovementComposite_1 = require("./MovementComposite");
+var PieceBuilder_1 = require("../domain/PieceBuilder");
 var PieceComposite = (function () {
     function PieceComposite(piece, replicationFactory) {
         this.piece = piece;
@@ -167,15 +171,17 @@ var PieceComposite = (function () {
         pieceIcon.setAttribute('class', "fas fa-" + pieceType + " piece " + pieceColor);
         return pieceIcon;
     };
-    PieceComposite.prototype.clone = function () {
-        var replicationAdapter = this.replicationFactory.createPieceReplicationAdapter();
-        var piece = replicationAdapter.replicate(this.piece);
-        return new PieceComposite(piece, this.replicationFactory);
+    PieceComposite.createFromJSON = function (object) {
+        if (!object)
+            return;
+        var instantiationFn = PieceBuilder_1.PieceBuilderMap.get(object.kind);
+        var piece = Object.assign(new instantiationFn(object.color), object);
+        piece.setMovements(piece.getMovements().map(function (mov) { return MovementComposite_1.MovementComposite.createFromJSON(mov).movement; }));
+        return new PieceComposite(piece);
     };
     PieceComposite.prototype.getChildren = function () {
-        var _this = this;
         var movements = this.piece.getMovements();
-        return movements.map(function (movement) { return new MovementComposite_1.MovementComposite(movement, _this.replicationFactory); });
+        return movements.map(function (movement) { return new MovementComposite_1.MovementComposite(movement); });
     };
     PieceComposite.prototype.setChildren = function (children) { };
     PieceComposite.prototype.cleanCircularReferences = function () {
@@ -185,7 +191,7 @@ var PieceComposite = (function () {
 }());
 exports.PieceComposite = PieceComposite;
 
-},{"./MovementComposite":4}],6:[function(require,module,exports){
+},{"../domain/PieceBuilder":10,"./MovementComposite":4}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var PieceKind_1 = require("../definitions/PieceKind");
@@ -1405,21 +1411,22 @@ exports.Rook = Rook;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var BoardComposite_1 = require("../composite/BoardComposite");
+var Board_1 = require("../domain/board/Board");
 var ChessFactoryImpl = (function () {
     function ChessFactoryImpl(boardAdapterFactory) {
         this.boardAdapterFactory = boardAdapterFactory;
     }
     ChessFactoryImpl.prototype.createBoardFromJSON = function (loaded) {
-        return new BoardComposite_1.BoardComposite(loaded, this.boardAdapterFactory);
+        return BoardComposite_1.BoardComposite.createFromJSON(loaded);
     };
     ChessFactoryImpl.prototype.createInitialBoard = function () {
-        return new BoardComposite_1.BoardComposite(null, this.boardAdapterFactory);
+        return new BoardComposite_1.BoardComposite(new Board_1.Board());
     };
     return ChessFactoryImpl;
 }());
 exports.ChessFactoryImpl = ChessFactoryImpl;
 
-},{"../composite/BoardComposite":2}],29:[function(require,module,exports){
+},{"../composite/BoardComposite":2,"../domain/board/Board":14}],29:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ChessFactory_1 = require("./factory/ChessFactory");

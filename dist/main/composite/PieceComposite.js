@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var PieceBuilder_1 = require("../domain/PieceBuilder");
 var MovementComposite_1 = require("./MovementComposite");
 var PieceComposite = (function () {
-    function PieceComposite(piece, replicationFactory) {
+    function PieceComposite(piece) {
         this.piece = piece;
-        this.replicationFactory = replicationFactory;
         this.cleanCircularReferences = this.cleanCircularReferences.bind(this);
     }
     PieceComposite.prototype.createElement = function () {
@@ -14,15 +14,17 @@ var PieceComposite = (function () {
         pieceIcon.setAttribute('class', "fas fa-" + pieceType + " piece " + pieceColor);
         return pieceIcon;
     };
-    PieceComposite.prototype.clone = function () {
-        var replicationAdapter = this.replicationFactory.createPieceReplicationAdapter();
-        var piece = replicationAdapter.replicate(this.piece);
-        return new PieceComposite(piece, this.replicationFactory);
+    PieceComposite.createFromJSON = function (object) {
+        if (!object)
+            return;
+        var instantiationFn = PieceBuilder_1.PieceBuilderMap.get(object.kind);
+        var piece = Object.assign(new instantiationFn(object.color), object);
+        piece.setMovements(piece.getMovements().map(function (mov) { return MovementComposite_1.MovementComposite.createFromJSON(mov).movement; }));
+        return new PieceComposite(piece);
     };
     PieceComposite.prototype.getChildren = function () {
-        var _this = this;
         var movements = this.piece.getMovements();
-        return movements.map(function (movement) { return new MovementComposite_1.MovementComposite(movement, _this.replicationFactory); });
+        return movements.map(function (movement) { return new MovementComposite_1.MovementComposite(movement); });
     };
     PieceComposite.prototype.setChildren = function (children) { };
     PieceComposite.prototype.cleanCircularReferences = function () {

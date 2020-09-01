@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var BoardItem_1 = require("../domain/board/BoardItem");
 var PieceComposite_1 = require("./PieceComposite");
 var BoardItemComposite = (function () {
-    function BoardItemComposite(boardItem, replicationFactory) {
+    function BoardItemComposite(boardItem) {
         this.boardItem = boardItem;
-        this.replicationFactory = replicationFactory;
         this.cleanCircularReferences = this.cleanCircularReferences.bind(this);
     }
     BoardItemComposite.prototype.createElement = function () {
@@ -26,14 +26,15 @@ var BoardItemComposite = (function () {
         }
         return div;
     };
-    BoardItemComposite.prototype.clone = function () {
-        var replicationAdapter = this.replicationFactory.createItemReplicationAdapter();
-        var item = replicationAdapter.replicate(this.boardItem);
-        return new BoardItemComposite(item, this.replicationFactory);
+    BoardItemComposite.createFromJSON = function (object) {
+        var boardItem = Object.assign(new BoardItem_1.BoardItem(object.position, object.color), object);
+        var piece = boardItem.getPiece();
+        piece && PieceComposite_1.PieceComposite.createFromJSON(piece);
+        return new BoardItemComposite(boardItem);
     };
     BoardItemComposite.prototype.getChildren = function () {
         var piece = this.boardItem.getPiece();
-        return piece ? [new PieceComposite_1.PieceComposite(piece, this.replicationFactory)] : [];
+        return piece ? [new PieceComposite_1.PieceComposite(piece)] : [];
     };
     BoardItemComposite.prototype.setChildren = function (children) { };
     BoardItemComposite.prototype.cleanCircularReferences = function () {

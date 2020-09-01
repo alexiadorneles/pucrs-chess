@@ -1,11 +1,9 @@
-import { ChessFactoryImpl } from './factory/ChessFactory'
 import { GameStateHandler } from './domain/GameStateHandler'
 import { DOMGenerator } from './DOMGenerator'
-import { ReplicationAdapterFactory } from './domain/adapter/ReplicableObjectAdapter'
+import { ChessFactoryImpl } from './factory/ChessFactory'
 
 const domGeneratorInstance = DOMGenerator.getInstance()
-const adapterFactory = new ReplicationAdapterFactory()
-const chessFactory = new ChessFactoryImpl(adapterFactory)
+const chessFactory = new ChessFactoryImpl()
 const gameStateHandler = new GameStateHandler(chessFactory, domGeneratorInstance)
 
 const newGameButton = document.getElementById('novoJogo')

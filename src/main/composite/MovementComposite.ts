@@ -1,18 +1,26 @@
-import { Movement } from '../domain/movement/Movement'
 import { Composite } from '../definitions/Composite'
-import { ReplicationAdapterFactory } from '../domain/adapter/ReplicableObjectAdapter'
+import { JSONObject } from '../definitions/JSONObject'
+import { Movement } from '../domain/movement/Movement'
+import { MovementBuilderMap } from '../domain/PieceBuilder'
 export class MovementComposite implements Composite {
-  constructor(private movement: Movement, private replicationFactory: ReplicationAdapterFactory) { }
+  constructor(private movement?: Movement) {}
   public createElement(): Element {
-    return null;
+    return null
   }
-  public clone(): Composite {
-    const replicationAdapter = this.replicationFactory.createMovementReplicationAdapter();
-    const movement = replicationAdapter.replicate(this.movement);
-    return new MovementComposite(movement, this.replicationFactory);
+
+  public static createFromJSON(object: JSONObject): Composite {
+    const model = new MovementBuilderMap[object.kind]()
+    const movement = Object.assign(model, object)
+    return new MovementComposite(movement)
   }
+
+  cleanCircularReferences(): void {
+    throw new Error('Method not implemented.')
+  }
+
   getChildren(): Composite[] {
-    return [];
+    return []
   }
-  setChildren(children: Composite[]): void { }
+
+  setChildren(children: Composite[]): void {}
 }

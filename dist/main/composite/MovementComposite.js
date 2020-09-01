@@ -1,17 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var PieceBuilder_1 = require("../domain/PieceBuilder");
 var MovementComposite = (function () {
-    function MovementComposite(movement, replicationFactory) {
+    function MovementComposite(movement) {
         this.movement = movement;
-        this.replicationFactory = replicationFactory;
     }
     MovementComposite.prototype.createElement = function () {
         return null;
     };
-    MovementComposite.prototype.clone = function () {
-        var replicationAdapter = this.replicationFactory.createMovementReplicationAdapter();
-        var movement = replicationAdapter.replicate(this.movement);
-        return new MovementComposite(movement, this.replicationFactory);
+    MovementComposite.createFromJSON = function (object) {
+        var model = new PieceBuilder_1.MovementBuilderMap[object.kind]();
+        var movement = Object.assign(model, object);
+        return new MovementComposite(movement);
+    };
+    MovementComposite.prototype.cleanCircularReferences = function () {
+        throw new Error('Method not implemented.');
     };
     MovementComposite.prototype.getChildren = function () {
         return [];

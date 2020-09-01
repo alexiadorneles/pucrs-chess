@@ -1,12 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ChessFactory_1 = require("./factory/ChessFactory");
 var GameStateHandler_1 = require("./domain/GameStateHandler");
 var DOMGenerator_1 = require("./DOMGenerator");
-var ReplicableObjectAdapter_1 = require("./domain/adapter/ReplicableObjectAdapter");
+var ChessFactory_1 = require("./factory/ChessFactory");
 var domGeneratorInstance = DOMGenerator_1.DOMGenerator.getInstance();
-var adapterFactory = new ReplicableObjectAdapter_1.ReplicationAdapterFactory();
-var chessFactory = new ChessFactory_1.ChessFactoryImpl(adapterFactory);
+var chessFactory = new ChessFactory_1.ChessFactoryImpl();
 var gameStateHandler = new GameStateHandler_1.GameStateHandler(chessFactory, domGeneratorInstance);
 var newGameButton = document.getElementById('novoJogo');
 var loadGameButton = document.getElementById('carregarJogo');
