@@ -26,6 +26,9 @@ var PieceComposite = (function () {
         var movements = this.piece.getMovements();
         return movements.map(function (movement) { return new MovementComposite_1.MovementComposite(movement); });
     };
+    PieceComposite.prototype.getJSON = function () {
+        return this.piece;
+    };
     PieceComposite.prototype.setChildren = function (children) { };
     PieceComposite.prototype.cleanCircularReferences = function () {
         this.piece.addToItem(null);

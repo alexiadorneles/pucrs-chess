@@ -6,23 +6,16 @@ export class BoardItemComposite implements Composite {
   constructor(private boardItem: BoardItem) {
     this.cleanCircularReferences = this.cleanCircularReferences.bind(this)
   }
+
   public createElement(): Element {
-    const div = document.createElement('div')
-    div.setAttribute('class', 'container')
+    const container = document.createElement('div')
+    container.setAttribute('class', 'container')
     const square = document.createElement('span')
     square.setAttribute('class', `fas fa-square-full chess-square ${this.boardItem.getColor()}`)
     square.addEventListener('click', this.boardItem.onClick)
+    container.append(square)
     this.boardItem.setElement(square)
-    const [piece] = this.getChildren()
-    if (piece) {
-      const pieceElement = piece.createElement()
-      pieceElement.addEventListener('click', this.boardItem.onClick)
-      div.appendChild(square)
-      div.appendChild(pieceElement)
-    } else {
-      div.appendChild(square)
-    }
-    return div
+    return container
   }
 
   public static createFromJSON(object: JSONObject): Composite {
@@ -37,6 +30,10 @@ export class BoardItemComposite implements Composite {
     return piece ? [new PieceComposite(piece)] : []
   }
   setChildren(children: Composite[]): void {}
+
+  public getJSON(): JSONObject {
+    return this.boardItem
+  }
 
   public cleanCircularReferences(): void {
     this.boardItem.setBoard(null)

@@ -50,21 +50,19 @@ var GameStateHandler = (function () {
         this.saveGame = this.saveGame.bind(this);
     }
     GameStateHandler.prototype.newGame = function () {
-        var initialBoard = this.chessFactory.createInitialBoard();
-        this.domGenerator.injectBoard(initialBoard);
-        this.domGenerator.refresh();
+        this.boardComposite = this.chessFactory.createInitialBoard();
+        this.domGenerator.refresh(this.boardComposite);
     };
     GameStateHandler.prototype.loadGame = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, board;
+            var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, axios_1.default.get(config_1.API.LOAD_URL)];
                     case 1:
                         response = _a.sent();
-                        board = this.chessFactory.createBoardFromJSON(response.data);
-                        this.domGenerator.injectBoard(board);
-                        this.domGenerator.refresh();
+                        this.boardComposite = this.chessFactory.createBoardFromJSON(response.data);
+                        this.domGenerator.refresh(this.boardComposite);
                         return [2];
                 }
             });
@@ -76,8 +74,8 @@ var GameStateHandler = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.domGenerator.getBoard().cleanCircularReferences();
-                        content = JSON.stringify(this.domGenerator.getBoard().board);
+                        this.boardComposite.cleanCircularReferences();
+                        content = JSON.stringify(this.boardComposite.getJSON());
                         config = { headers: { 'Content-Type': 'application/json' } };
                         data = { json: content };
                         return [4, axios_1.default.post(config_1.API.SAVE_URL, data, config)];

@@ -15,22 +15,16 @@ export class BoardComposite implements Composite {
   }
 
   public createElement(): Element {
-    const board = document.createElement('div')
-    const itemsMatrix = _.chunk(this.getChildren(), 8)
-    const columns = itemsMatrix.map(item => item.map(boardItem => boardItem.createElement()))
-    const lines = columns.map(column => {
-      const lineElement = document.createElement('div')
-      lineElement.setAttribute('class', 'chess-line')
-      column.forEach(element => lineElement.appendChild(element))
-      return lineElement
-    })
-    lines.forEach(line => board.appendChild(line))
-    return board
+    return document.createElement('div')
   }
 
   getChildren(): Composite[] {
     const items = this.board.getAllItems()
     return items.map(item => new BoardItemComposite(item))
+  }
+
+  public getJSON(): JSONObject {
+    return this.board
   }
 
   setChildren(children: Composite[]): void {

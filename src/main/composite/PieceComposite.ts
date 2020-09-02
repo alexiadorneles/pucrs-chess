@@ -30,6 +30,10 @@ export class PieceComposite implements Composite {
     return movements.map(movement => new MovementComposite(movement))
   }
 
+  public getJSON(): JSONObject {
+    return this.piece
+  }
+
   setChildren(children: Composite[]): void {}
 
   cleanCircularReferences(): void {

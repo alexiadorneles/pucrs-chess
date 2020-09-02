@@ -18,6 +18,10 @@ export class MovementComposite implements Composite {
     throw new Error('Method not implemented.')
   }
 
+  public getJSON(): JSONObject {
+    return this.movement
+  }
+
   getChildren(): Composite[] {
     return []
   }

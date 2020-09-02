@@ -1,71 +1,76 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __importDefault(require("lodash"));
 var DOMGenerator = (function () {
     function DOMGenerator() {
     }
-    DOMGenerator.prototype.injectBoard = function (board) {
-        this.board = board;
-    };
-    DOMGenerator.prototype.getBoard = function () {
-        return this.board;
-    };
     DOMGenerator.getInstance = function () {
         if (!DOMGenerator.instance) {
             DOMGenerator.instance = new DOMGenerator();
         }
         return DOMGenerator.instance;
     };
-    DOMGenerator.prototype.refresh = function () {
+    DOMGenerator.prototype.refresh = function (boardComposite) {
         var root = document.getElementById('root');
         root.innerHTML = '';
-        var board = this.board.createElement();
+        var board = boardComposite.createElement();
+        var itemCompositeMatrix = lodash_1.default.chunk(boardComposite.getChildren(), 8);
+        var lines = this.getBoardLines(itemCompositeMatrix);
+        lines.forEach(function (line) { return board.appendChild(line); });
         root.appendChild(board);
     };
-    return DOMGenerator;
-}());
-exports.DOMGenerator = DOMGenerator;
-
-},{}],2:[function(require,module,exports){
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var Board_1 = require("../domain/board/Board");
-var lodash_1 = __importDefault(require("lodash"));
-var BoardItemComposite_1 = require("./BoardItemComposite");
-var BoardComposite = (function () {
-    function BoardComposite(board) {
-        this.board = board;
-        if (this.isBeingCreatedFromJSON()) {
-        }
-        this.board.init();
-    }
-    BoardComposite.prototype.isBeingCreatedFromJSON = function () {
-        return !(this.board instanceof Board_1.Board);
-    };
-    BoardComposite.prototype.createElement = function () {
-        var board = document.createElement('div');
-        var itemsMatrix = lodash_1.default.chunk(this.getChildren(), 8);
-        var columns = itemsMatrix.map(function (item) { return item.map(function (boardItem) { return boardItem.createElement(); }); });
-        var lines = columns.map(function (column) {
+    DOMGenerator.prototype.getBoardLines = function (items) {
+        var _this = this;
+        var columns = items.map(function (composites) { return composites.map(function (item) { return _this.getItemWithPiece(item); }); });
+        return columns.map(function (column) {
             var lineElement = document.createElement('div');
             lineElement.setAttribute('class', 'chess-line');
             column.forEach(function (element) { return lineElement.appendChild(element); });
             return lineElement;
         });
-        lines.forEach(function (line) { return board.appendChild(line); });
-        return board;
     };
+    DOMGenerator.prototype.getItemWithPiece = function (boardItem) {
+        var itemElement = boardItem.createElement();
+        var piece = boardItem.getChildren()[0];
+        if (piece) {
+            var pieceElement = piece.createElement();
+            pieceElement.addEventListener('click', boardItem.boardItem.onClick);
+            itemElement.appendChild(pieceElement);
+        }
+        return itemElement;
+    };
+    return DOMGenerator;
+}());
+exports.DOMGenerator = DOMGenerator;
+
+},{"lodash":55}],2:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Board_1 = require("../domain/board/Board");
+var BoardItemComposite_1 = require("./BoardItemComposite");
+var BoardComposite = (function () {
+    function BoardComposite(board) {
+        this.board = board;
+        this.board.init();
+    }
     BoardComposite.createFromJSON = function (object) {
         var board = Object.assign(new Board_1.Board(), object);
         var items = board.getAllItems().map(function (item) { return BoardItemComposite_1.BoardItemComposite.createFromJSON(item); });
         return new BoardComposite(board);
     };
+    BoardComposite.prototype.createElement = function () {
+        return document.createElement('div');
+    };
     BoardComposite.prototype.getChildren = function () {
         var items = this.board.getAllItems();
         return items.map(function (item) { return new BoardItemComposite_1.BoardItemComposite(item); });
+    };
+    BoardComposite.prototype.getJSON = function () {
+        return this.board;
     };
     BoardComposite.prototype.setChildren = function (children) {
     };
@@ -76,35 +81,25 @@ var BoardComposite = (function () {
 }());
 exports.BoardComposite = BoardComposite;
 
-},{"../domain/board/Board":14,"./BoardItemComposite":3,"lodash":56}],3:[function(require,module,exports){
+},{"../domain/board/Board":13,"./BoardItemComposite":3}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var BoardItem_1 = require("../domain/board/BoardItem");
 var PieceComposite_1 = require("./PieceComposite");
 var BoardItemComposite = (function () {
-    function BoardItemComposite(boardItem, replicationFactory) {
+    function BoardItemComposite(boardItem) {
         this.boardItem = boardItem;
-        this.replicationFactory = replicationFactory;
         this.cleanCircularReferences = this.cleanCircularReferences.bind(this);
     }
     BoardItemComposite.prototype.createElement = function () {
-        var div = document.createElement('div');
-        div.setAttribute('class', 'container');
+        var container = document.createElement('div');
+        container.setAttribute('class', 'container');
         var square = document.createElement('span');
         square.setAttribute('class', "fas fa-square-full chess-square " + this.boardItem.getColor());
         square.addEventListener('click', this.boardItem.onClick);
+        container.append(square);
         this.boardItem.setElement(square);
-        var piece = this.getChildren()[0];
-        if (piece) {
-            var pieceElement = piece.createElement();
-            pieceElement.addEventListener('click', this.boardItem.onClick);
-            div.appendChild(square);
-            div.appendChild(pieceElement);
-        }
-        else {
-            div.appendChild(square);
-        }
-        return div;
+        return container;
     };
     BoardItemComposite.createFromJSON = function (object) {
         var boardItem = Object.assign(new BoardItem_1.BoardItem(object.position, object.color), object);
@@ -114,9 +109,12 @@ var BoardItemComposite = (function () {
     };
     BoardItemComposite.prototype.getChildren = function () {
         var piece = this.boardItem.getPiece();
-        return piece ? [new PieceComposite_1.PieceComposite(piece, this.replicationFactory)] : [];
+        return piece ? [new PieceComposite_1.PieceComposite(piece)] : [];
     };
     BoardItemComposite.prototype.setChildren = function (children) { };
+    BoardItemComposite.prototype.getJSON = function () {
+        return this.boardItem;
+    };
     BoardItemComposite.prototype.cleanCircularReferences = function () {
         this.boardItem.setBoard(null);
         var children = this.getChildren();
@@ -126,7 +124,7 @@ var BoardItemComposite = (function () {
 }());
 exports.BoardItemComposite = BoardItemComposite;
 
-},{"../domain/board/BoardItem":15,"./PieceComposite":5}],4:[function(require,module,exports){
+},{"../domain/board/BoardItem":14,"./PieceComposite":5}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var PieceBuilder_1 = require("../domain/PieceBuilder");
@@ -145,6 +143,9 @@ var MovementComposite = (function () {
     MovementComposite.prototype.cleanCircularReferences = function () {
         throw new Error('Method not implemented.');
     };
+    MovementComposite.prototype.getJSON = function () {
+        return this.movement;
+    };
     MovementComposite.prototype.getChildren = function () {
         return [];
     };
@@ -156,12 +157,11 @@ exports.MovementComposite = MovementComposite;
 },{"../domain/PieceBuilder":10}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var MovementComposite_1 = require("./MovementComposite");
 var PieceBuilder_1 = require("../domain/PieceBuilder");
+var MovementComposite_1 = require("./MovementComposite");
 var PieceComposite = (function () {
-    function PieceComposite(piece, replicationFactory) {
+    function PieceComposite(piece) {
         this.piece = piece;
-        this.replicationFactory = replicationFactory;
         this.cleanCircularReferences = this.cleanCircularReferences.bind(this);
     }
     PieceComposite.prototype.createElement = function () {
@@ -182,6 +182,9 @@ var PieceComposite = (function () {
     PieceComposite.prototype.getChildren = function () {
         var movements = this.piece.getMovements();
         return movements.map(function (movement) { return new MovementComposite_1.MovementComposite(movement); });
+    };
+    PieceComposite.prototype.getJSON = function () {
+        return this.piece;
     };
     PieceComposite.prototype.setChildren = function (children) { };
     PieceComposite.prototype.cleanCircularReferences = function () {
@@ -370,21 +373,19 @@ var GameStateHandler = (function () {
         this.saveGame = this.saveGame.bind(this);
     }
     GameStateHandler.prototype.newGame = function () {
-        var initialBoard = this.chessFactory.createInitialBoard();
-        this.domGenerator.injectBoard(initialBoard);
-        this.domGenerator.refresh();
+        this.boardComposite = this.chessFactory.createInitialBoard();
+        this.domGenerator.refresh(this.boardComposite);
     };
     GameStateHandler.prototype.loadGame = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, board;
+            var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, axios_1.default.get(config_1.API.LOAD_URL)];
                     case 1:
                         response = _a.sent();
-                        board = this.chessFactory.createBoardFromJSON(response.data);
-                        this.domGenerator.injectBoard(board);
-                        this.domGenerator.refresh();
+                        this.boardComposite = this.chessFactory.createBoardFromJSON(response.data);
+                        this.domGenerator.refresh(this.boardComposite);
                         return [2];
                 }
             });
@@ -396,8 +397,8 @@ var GameStateHandler = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.domGenerator.getBoard().cleanCircularReferences();
-                        content = JSON.stringify(this.domGenerator.getBoard().board);
+                        this.boardComposite.cleanCircularReferences();
+                        content = JSON.stringify(this.boardComposite.getJSON());
                         config = { headers: { 'Content-Type': 'application/json' } };
                         data = { json: content };
                         return [4, axios_1.default.post(config_1.API.SAVE_URL, data, config)];
@@ -413,7 +414,7 @@ var GameStateHandler = (function () {
 }());
 exports.GameStateHandler = GameStateHandler;
 
-},{"../constants/config":7,"axios":30}],10:[function(require,module,exports){
+},{"../constants/config":7,"axios":29}],10:[function(require,module,exports){
 "use strict";
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -460,7 +461,7 @@ var PieceBuilder;
     PieceBuilder.build = build;
 })(PieceBuilder = exports.PieceBuilder || (exports.PieceBuilder = {}));
 
-},{"../constants/InitialPositions":6,"../definitions/PieceKind":8,"./adapter/ColorAdapter":11,"./board/BoardItem":15,"./movement/DiagonalMovement":16,"./movement/HorizontalMovement":17,"./movement/LMovement":18,"./movement/VerticalMovement":20,"./piece/Bishop":21,"./piece/King":22,"./piece/Knight":23,"./piece/Pawn":24,"./piece/Queen":26,"./piece/Rook":27}],11:[function(require,module,exports){
+},{"../constants/InitialPositions":6,"../definitions/PieceKind":8,"./adapter/ColorAdapter":11,"./board/BoardItem":14,"./movement/DiagonalMovement":15,"./movement/HorizontalMovement":16,"./movement/LMovement":17,"./movement/VerticalMovement":19,"./piece/Bishop":20,"./piece/King":21,"./piece/Knight":22,"./piece/Pawn":23,"./piece/Queen":25,"./piece/Rook":26}],11:[function(require,module,exports){
 "use strict";
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -502,126 +503,12 @@ exports.MovementAdapter = MovementAdapter;
 
 },{}],13:[function(require,module,exports){
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var Board_1 = require("../board/Board");
-var BoardItem_1 = require("../board/BoardItem");
-var PieceBuilder_1 = require("../PieceBuilder");
-var BoardReplicationAdapter = (function () {
-    function BoardReplicationAdapter(itemReplication) {
-        this.itemReplication = itemReplication;
-        this.replicate = this.replicate.bind(this);
-    }
-    BoardReplicationAdapter.prototype.replicate = function (object) {
-        var board = Object.assign(new Board_1.Board(), object);
-        board.items = board.getAllItems().map(this.itemReplication.replicate);
-        return board;
-    };
-    return BoardReplicationAdapter;
-}());
-exports.BoardReplicationAdapter = BoardReplicationAdapter;
-var BoardItemReplicationAdapter = (function () {
-    function BoardItemReplicationAdapter(pieceReplication) {
-        this.pieceReplication = pieceReplication;
-        this.replicate = this.replicate.bind(this);
-    }
-    BoardItemReplicationAdapter.prototype.replicate = function (object) {
-        var item = Object.assign(new BoardItem_1.BoardItem(object.position, object.color), object);
-        this.pieceReplication.replicate(item.getPiece());
-        return item;
-    };
-    return BoardItemReplicationAdapter;
-}());
-exports.BoardItemReplicationAdapter = BoardItemReplicationAdapter;
-var PieceReplicationAdapter = (function () {
-    function PieceReplicationAdapter(movementReplication) {
-        this.movementReplication = movementReplication;
-        this.replicate = this.replicate.bind(this);
-    }
-    PieceReplicationAdapter.prototype.replicate = function (object) {
-        if (!object)
-            return;
-        var instantiationFn = PieceBuilder_1.PieceBuilderMap.get(object.kind);
-        var piece = Object.assign(new instantiationFn(object.color), object);
-        piece.setMovements(piece.getMovements().map(this.movementReplication.replicate));
-        return piece;
-    };
-    return PieceReplicationAdapter;
-}());
-exports.PieceReplicationAdapter = PieceReplicationAdapter;
-var MovementReplicationAdapter = (function () {
-    function MovementReplicationAdapter() {
-    }
-    MovementReplicationAdapter.prototype.replicate = function (object) {
-        var model = new PieceBuilder_1.MovementBuilderMap[object.kind]();
-        return Object.assign(model, object);
-    };
-    return MovementReplicationAdapter;
-}());
-exports.MovementReplicationAdapter = MovementReplicationAdapter;
-var ReplicationAdapterFactory = (function () {
-    function ReplicationAdapterFactory() {
-    }
-    ReplicationAdapterFactory.prototype.createBoardReplicationAdapter = function () {
-        return new BoardReplicationAdapter(this.createItemReplicationAdapter());
-    };
-    ReplicationAdapterFactory.prototype.createItemReplicationAdapter = function () {
-        return new BoardItemReplicationAdapter(this.createPieceReplicationAdapter());
-    };
-    ReplicationAdapterFactory.prototype.createPieceReplicationAdapter = function () {
-        return new PieceReplicationAdapter(this.createMovementReplicationAdapter());
-    };
-    ReplicationAdapterFactory.prototype.createMovementReplicationAdapter = function () {
-        return new MovementReplicationAdapter();
-    };
-    return ReplicationAdapterFactory;
-}());
-exports.ReplicationAdapterFactory = ReplicationAdapterFactory;
-
-},{"../PieceBuilder":10,"../board/Board":14,"../board/BoardItem":15}],14:[function(require,module,exports){
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var axios_1 = __importDefault(require("axios"));
 var lodash_1 = __importDefault(require("lodash"));
-var config_1 = require("../../constants/config");
+var BoardComposite_1 = require("../../composite/BoardComposite");
 var InitialPositions_1 = require("../../constants/InitialPositions");
 var PieceKind_1 = require("../../definitions/PieceKind");
 var DOMGenerator_1 = require("../../DOMGenerator");
@@ -644,37 +531,6 @@ var Board = (function () {
     function Board() {
         var _this = this;
         this.matrix = initMatrix();
-        this.init = function () {
-            var whites = _this.buildPieces("white");
-            var pinks = _this.buildPieces("dark-pink");
-            var empties = _this.buildEmptyPieces();
-            whites
-                .concat(pinks)
-                .concat(empties)
-                .forEach(_this.addItem);
-            return _this;
-        };
-        this.save = function () { return __awaiter(_this, void 0, void 0, function () {
-            var content, config, data;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        this.executeForAll(function (item) {
-                            item.setBoard(null);
-                            if (item.getPiece()) {
-                                item.getPiece().addToItem(null);
-                            }
-                        });
-                        content = JSON.stringify(this);
-                        config = { headers: { 'Content-Type': 'application/json' } };
-                        data = { json: content };
-                        return [4, axios_1.default.post(config_1.API.SAVE_URL, data, config)];
-                    case 1:
-                        _a.sent();
-                        return [2];
-                }
-            });
-        }); };
         this.isValidPosition = function (position) {
             return _this.isPositionInMatrixRange(position) && !_this.getPieceByPosition(position);
         };
@@ -684,6 +540,15 @@ var Board = (function () {
             item.addToBoard(_this);
         };
     }
+    Board.prototype.init = function () {
+        var whites = this.buildPieces("white");
+        var pinks = this.buildPieces("dark-pink");
+        var empties = this.buildEmptyPieces();
+        whites
+            .concat(pinks)
+            .concat(empties)
+            .forEach(this.addItem);
+    };
     Board.prototype.getAllItems = function () {
         return lodash_1.default.flatten(this.matrix);
     };
@@ -721,7 +586,7 @@ var Board = (function () {
         clickedItem.setPiece(this.currentMovingPieces);
         this.currentMovingPieces = null;
         pieceItem.setPiece(null);
-        DOMGenerator_1.DOMGenerator.getInstance().refresh();
+        DOMGenerator_1.DOMGenerator.getInstance().refresh(new BoardComposite_1.BoardComposite(this));
     };
     Board.prototype.executeForAll = function (callback) {
         for (var line = 0; line < 8; line++)
@@ -746,7 +611,7 @@ var Board = (function () {
 }());
 exports.Board = Board;
 
-},{"../../DOMGenerator":1,"../../constants/InitialPositions":6,"../../constants/config":7,"../../definitions/PieceKind":8,"../PieceBuilder":10,"../adapter/ColorAdapter":11,"./BoardItem":15,"axios":30,"lodash":56}],15:[function(require,module,exports){
+},{"../../DOMGenerator":1,"../../composite/BoardComposite":2,"../../constants/InitialPositions":6,"../../definitions/PieceKind":8,"../PieceBuilder":10,"../adapter/ColorAdapter":11,"./BoardItem":14,"lodash":55}],14:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -846,7 +711,7 @@ var BoardItem = (function () {
 }());
 exports.BoardItem = BoardItem;
 
-},{"lodash":56}],16:[function(require,module,exports){
+},{"lodash":55}],15:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -893,7 +758,7 @@ var DiagonalMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.DiagonalMovement = DiagonalMovement;
 
-},{"../adapter/MovementAdapter":12,"./Movement":19}],17:[function(require,module,exports){
+},{"../adapter/MovementAdapter":12,"./Movement":18}],16:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -932,7 +797,7 @@ var HorizontalMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.HorizontalMovement = HorizontalMovement;
 
-},{"../adapter/MovementAdapter":12,"./Movement":19}],18:[function(require,module,exports){
+},{"../adapter/MovementAdapter":12,"./Movement":18}],17:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1005,7 +870,7 @@ var LMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.LMovement = LMovement;
 
-},{"../adapter/MovementAdapter":12,"./Movement":19}],19:[function(require,module,exports){
+},{"../adapter/MovementAdapter":12,"./Movement":18}],18:[function(require,module,exports){
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -1063,7 +928,7 @@ var Movement = (function () {
 }());
 exports.Movement = Movement;
 
-},{"lodash":56}],20:[function(require,module,exports){
+},{"lodash":55}],19:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1102,7 +967,7 @@ var VerticalMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.VerticalMovement = VerticalMovement;
 
-},{"../adapter/MovementAdapter":12,"./Movement":19}],21:[function(require,module,exports){
+},{"../adapter/MovementAdapter":12,"./Movement":18}],20:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1133,7 +998,7 @@ var Bishop = (function (_super) {
 }(Piece_1.Piece));
 exports.Bishop = Bishop;
 
-},{"../../definitions/PieceKind":8,"../movement/DiagonalMovement":16,"./Piece":25}],22:[function(require,module,exports){
+},{"../../definitions/PieceKind":8,"../movement/DiagonalMovement":15,"./Piece":24}],21:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1185,7 +1050,7 @@ var King = (function (_super) {
 }(Piece_1.Piece));
 exports.King = King;
 
-},{"../../definitions/PieceKind":8,"../movement/DiagonalMovement":16,"../movement/HorizontalMovement":17,"../movement/VerticalMovement":20,"./Piece":25,"lodash":56}],23:[function(require,module,exports){
+},{"../../definitions/PieceKind":8,"../movement/DiagonalMovement":15,"../movement/HorizontalMovement":16,"../movement/VerticalMovement":19,"./Piece":24,"lodash":55}],22:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1216,7 +1081,7 @@ var Knight = (function (_super) {
 }(Piece_1.Piece));
 exports.Knight = Knight;
 
-},{"../../definitions/PieceKind":8,"../movement/LMovement":18,"./Piece":25}],24:[function(require,module,exports){
+},{"../../definitions/PieceKind":8,"../movement/LMovement":17,"./Piece":24}],23:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1292,7 +1157,7 @@ var Pawn = (function (_super) {
 }(Piece_1.Piece));
 exports.Pawn = Pawn;
 
-},{"../../definitions/PieceKind":8,"../movement/VerticalMovement":20,"./Piece":25,"lodash":56}],25:[function(require,module,exports){
+},{"../../definitions/PieceKind":8,"../movement/VerticalMovement":19,"./Piece":24,"lodash":55}],24:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -1342,7 +1207,7 @@ var Piece = (function () {
 }());
 exports.Piece = Piece;
 
-},{"lodash":56}],26:[function(require,module,exports){
+},{"lodash":55}],25:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1375,7 +1240,7 @@ var Queen = (function (_super) {
 }(Piece_1.Piece));
 exports.Queen = Queen;
 
-},{"../../definitions/PieceKind":8,"../movement/DiagonalMovement":16,"../movement/HorizontalMovement":17,"../movement/VerticalMovement":20,"./Piece":25}],27:[function(require,module,exports){
+},{"../../definitions/PieceKind":8,"../movement/DiagonalMovement":15,"../movement/HorizontalMovement":16,"../movement/VerticalMovement":19,"./Piece":24}],26:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1407,14 +1272,13 @@ var Rook = (function (_super) {
 }(Piece_1.Piece));
 exports.Rook = Rook;
 
-},{"../../definitions/PieceKind":8,"../movement/HorizontalMovement":17,"../movement/VerticalMovement":20,"./Piece":25}],28:[function(require,module,exports){
+},{"../../definitions/PieceKind":8,"../movement/HorizontalMovement":16,"../movement/VerticalMovement":19,"./Piece":24}],27:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var BoardComposite_1 = require("../composite/BoardComposite");
 var Board_1 = require("../domain/board/Board");
 var ChessFactoryImpl = (function () {
-    function ChessFactoryImpl(boardAdapterFactory) {
-        this.boardAdapterFactory = boardAdapterFactory;
+    function ChessFactoryImpl() {
     }
     ChessFactoryImpl.prototype.createBoardFromJSON = function (loaded) {
         return BoardComposite_1.BoardComposite.createFromJSON(loaded);
@@ -1426,16 +1290,14 @@ var ChessFactoryImpl = (function () {
 }());
 exports.ChessFactoryImpl = ChessFactoryImpl;
 
-},{"../composite/BoardComposite":2,"../domain/board/Board":14}],29:[function(require,module,exports){
+},{"../composite/BoardComposite":2,"../domain/board/Board":13}],28:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ChessFactory_1 = require("./factory/ChessFactory");
 var GameStateHandler_1 = require("./domain/GameStateHandler");
 var DOMGenerator_1 = require("./DOMGenerator");
-var ReplicableObjectAdapter_1 = require("./domain/adapter/ReplicableObjectAdapter");
+var ChessFactory_1 = require("./factory/ChessFactory");
 var domGeneratorInstance = DOMGenerator_1.DOMGenerator.getInstance();
-var adapterFactory = new ReplicableObjectAdapter_1.ReplicationAdapterFactory();
-var chessFactory = new ChessFactory_1.ChessFactoryImpl(adapterFactory);
+var chessFactory = new ChessFactory_1.ChessFactoryImpl();
 var gameStateHandler = new GameStateHandler_1.GameStateHandler(chessFactory, domGeneratorInstance);
 var newGameButton = document.getElementById('novoJogo');
 var loadGameButton = document.getElementById('carregarJogo');
@@ -1444,9 +1306,9 @@ newGameButton.addEventListener('click', gameStateHandler.newGame);
 loadGameButton.addEventListener('click', gameStateHandler.loadGame);
 saveGameButton.addEventListener('click', gameStateHandler.saveGame);
 
-},{"./DOMGenerator":1,"./domain/GameStateHandler":9,"./domain/adapter/ReplicableObjectAdapter":13,"./factory/ChessFactory":28}],30:[function(require,module,exports){
+},{"./DOMGenerator":1,"./domain/GameStateHandler":9,"./factory/ChessFactory":27}],29:[function(require,module,exports){
 module.exports = require('./lib/axios');
-},{"./lib/axios":32}],31:[function(require,module,exports){
+},{"./lib/axios":31}],30:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1622,7 +1484,7 @@ module.exports = function xhrAdapter(config) {
   });
 };
 
-},{"../core/createError":38,"./../core/settle":42,"./../helpers/buildURL":46,"./../helpers/cookies":48,"./../helpers/isURLSameOrigin":50,"./../helpers/parseHeaders":52,"./../utils":54}],32:[function(require,module,exports){
+},{"../core/createError":37,"./../core/settle":41,"./../helpers/buildURL":45,"./../helpers/cookies":47,"./../helpers/isURLSameOrigin":49,"./../helpers/parseHeaders":51,"./../utils":53}],31:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -1677,7 +1539,7 @@ module.exports = axios;
 // Allow use of default import syntax in TypeScript
 module.exports.default = axios;
 
-},{"./cancel/Cancel":33,"./cancel/CancelToken":34,"./cancel/isCancel":35,"./core/Axios":36,"./core/mergeConfig":41,"./defaults":44,"./helpers/bind":45,"./helpers/spread":53,"./utils":54}],33:[function(require,module,exports){
+},{"./cancel/Cancel":32,"./cancel/CancelToken":33,"./cancel/isCancel":34,"./core/Axios":35,"./core/mergeConfig":40,"./defaults":43,"./helpers/bind":44,"./helpers/spread":52,"./utils":53}],32:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1698,7 +1560,7 @@ Cancel.prototype.__CANCEL__ = true;
 
 module.exports = Cancel;
 
-},{}],34:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 'use strict';
 
 var Cancel = require('./Cancel');
@@ -1757,14 +1619,14 @@ CancelToken.source = function source() {
 
 module.exports = CancelToken;
 
-},{"./Cancel":33}],35:[function(require,module,exports){
+},{"./Cancel":32}],34:[function(require,module,exports){
 'use strict';
 
 module.exports = function isCancel(value) {
   return !!(value && value.__CANCEL__);
 };
 
-},{}],36:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1852,7 +1714,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = Axios;
 
-},{"../helpers/buildURL":46,"./../utils":54,"./InterceptorManager":37,"./dispatchRequest":39,"./mergeConfig":41}],37:[function(require,module,exports){
+},{"../helpers/buildURL":45,"./../utils":53,"./InterceptorManager":36,"./dispatchRequest":38,"./mergeConfig":40}],36:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1906,7 +1768,7 @@ InterceptorManager.prototype.forEach = function forEach(fn) {
 
 module.exports = InterceptorManager;
 
-},{"./../utils":54}],38:[function(require,module,exports){
+},{"./../utils":53}],37:[function(require,module,exports){
 'use strict';
 
 var enhanceError = require('./enhanceError');
@@ -1926,7 +1788,7 @@ module.exports = function createError(message, config, code, request, response) 
   return enhanceError(error, config, code, request, response);
 };
 
-},{"./enhanceError":40}],39:[function(require,module,exports){
+},{"./enhanceError":39}],38:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2014,7 +1876,7 @@ module.exports = function dispatchRequest(config) {
   });
 };
 
-},{"../cancel/isCancel":35,"../defaults":44,"./../helpers/combineURLs":47,"./../helpers/isAbsoluteURL":49,"./../utils":54,"./transformData":43}],40:[function(require,module,exports){
+},{"../cancel/isCancel":34,"../defaults":43,"./../helpers/combineURLs":46,"./../helpers/isAbsoluteURL":48,"./../utils":53,"./transformData":42}],39:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2058,7 +1920,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
   return error;
 };
 
-},{}],41:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -2111,7 +1973,7 @@ module.exports = function mergeConfig(config1, config2) {
   return config;
 };
 
-},{"../utils":54}],42:[function(require,module,exports){
+},{"../utils":53}],41:[function(require,module,exports){
 'use strict';
 
 var createError = require('./createError');
@@ -2138,7 +2000,7 @@ module.exports = function settle(resolve, reject, response) {
   }
 };
 
-},{"./createError":38}],43:[function(require,module,exports){
+},{"./createError":37}],42:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2160,7 +2022,7 @@ module.exports = function transformData(data, headers, fns) {
   return data;
 };
 
-},{"./../utils":54}],44:[function(require,module,exports){
+},{"./../utils":53}],43:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -2262,7 +2124,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 }).call(this,require('_process'))
-},{"./adapters/http":31,"./adapters/xhr":31,"./helpers/normalizeHeaderName":51,"./utils":54,"_process":57}],45:[function(require,module,exports){
+},{"./adapters/http":30,"./adapters/xhr":30,"./helpers/normalizeHeaderName":50,"./utils":53,"_process":56}],44:[function(require,module,exports){
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -2275,7 +2137,7 @@ module.exports = function bind(fn, thisArg) {
   };
 };
 
-},{}],46:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2348,7 +2210,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
   return url;
 };
 
-},{"./../utils":54}],47:[function(require,module,exports){
+},{"./../utils":53}],46:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2364,7 +2226,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
     : baseURL;
 };
 
-},{}],48:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2419,7 +2281,7 @@ module.exports = (
     })()
 );
 
-},{"./../utils":54}],49:[function(require,module,exports){
+},{"./../utils":53}],48:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2435,7 +2297,7 @@ module.exports = function isAbsoluteURL(url) {
   return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
 };
 
-},{}],50:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2505,7 +2367,7 @@ module.exports = (
     })()
 );
 
-},{"./../utils":54}],51:[function(require,module,exports){
+},{"./../utils":53}],50:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -2519,7 +2381,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
   });
 };
 
-},{"../utils":54}],52:[function(require,module,exports){
+},{"../utils":53}],51:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2574,7 +2436,7 @@ module.exports = function parseHeaders(headers) {
   return parsed;
 };
 
-},{"./../utils":54}],53:[function(require,module,exports){
+},{"./../utils":53}],52:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2603,7 +2465,7 @@ module.exports = function spread(callback) {
   };
 };
 
-},{}],54:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 'use strict';
 
 var bind = require('./helpers/bind');
@@ -2939,7 +2801,7 @@ module.exports = {
   trim: trim
 };
 
-},{"./helpers/bind":45,"is-buffer":55}],55:[function(require,module,exports){
+},{"./helpers/bind":44,"is-buffer":54}],54:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -2952,7 +2814,7 @@ module.exports = function isBuffer (obj) {
     typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
 }
 
-},{}],56:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -20068,7 +19930,7 @@ module.exports = function isBuffer (obj) {
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],57:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -20254,4 +20116,4 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[29]);
+},{}]},{},[28]);

@@ -1,6 +1,5 @@
-import axios from 'axios'
 import _ from 'lodash'
-import { API } from '../../constants/config'
+import { BoardComposite } from '../../composite/BoardComposite'
 import { WhitePiecesPositionMap } from '../../constants/InitialPositions'
 import { Color } from '../../definitions/Color'
 import { Position } from '../../definitions/Movement'
@@ -28,7 +27,7 @@ export class Board {
   public matrix: Array<Array<BoardItem>> = initMatrix()
   public currentMovingPieces: Piece
 
-  public init = (): Board => {
+  public init(): void {
     const whites = this.buildPieces(Color.WHITE)
     const pinks = this.buildPieces(Color.DARK_PINK)
     const empties = this.buildEmptyPieces()
@@ -36,7 +35,6 @@ export class Board {
       .concat(pinks)
       .concat(empties)
       .forEach(this.addItem)
-    return this
   }
 
   public getAllItems(): BoardItem[] {
@@ -54,19 +52,6 @@ export class Board {
 
   public clearHighlights(): void {
     this.executeForAll((item: BoardItem) => item.removeHighlight())
-  }
-
-  public save = async (): Promise<void> => {
-    this.executeForAll((item: BoardItem) => {
-      item.setBoard(null)
-      if (item.getPiece()) {
-        item.getPiece().addToItem(null)
-      }
-    })
-    const content = JSON.stringify(this)
-    const config = { headers: { 'Content-Type': 'application/json' } }
-    const data = { json: content }
-    await axios.post(API.SAVE_URL, data, config)
   }
 
   public isPositionBlockedByOpponent(position: Position, initialPosition: Position): boolean {
@@ -95,7 +80,7 @@ export class Board {
     clickedItem.setPiece(this.currentMovingPieces)
     this.currentMovingPieces = null
     pieceItem.setPiece(null)
-    DOMGenerator.getInstance().refresh()
+    DOMGenerator.getInstance().refresh(new BoardComposite(this))
   }
 
   public executeForAll(callback: (item: BoardItem, position?: Position) => void): void {

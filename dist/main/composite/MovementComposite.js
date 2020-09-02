@@ -16,6 +16,9 @@ var MovementComposite = (function () {
     MovementComposite.prototype.cleanCircularReferences = function () {
         throw new Error('Method not implemented.');
     };
+    MovementComposite.prototype.getJSON = function () {
+        return this.movement;
+    };
     MovementComposite.prototype.getChildren = function () {
         return [];
     };

@@ -8,23 +8,14 @@ var BoardItemComposite = (function () {
         this.cleanCircularReferences = this.cleanCircularReferences.bind(this);
     }
     BoardItemComposite.prototype.createElement = function () {
-        var div = document.createElement('div');
-        div.setAttribute('class', 'container');
+        var container = document.createElement('div');
+        container.setAttribute('class', 'container');
         var square = document.createElement('span');
         square.setAttribute('class', "fas fa-square-full chess-square " + this.boardItem.getColor());
         square.addEventListener('click', this.boardItem.onClick);
+        container.append(square);
         this.boardItem.setElement(square);
-        var piece = this.getChildren()[0];
-        if (piece) {
-            var pieceElement = piece.createElement();
-            pieceElement.addEventListener('click', this.boardItem.onClick);
-            div.appendChild(square);
-            div.appendChild(pieceElement);
-        }
-        else {
-            div.appendChild(square);
-        }
-        return div;
+        return container;
     };
     BoardItemComposite.createFromJSON = function (object) {
         var boardItem = Object.assign(new BoardItem_1.BoardItem(object.position, object.color), object);
@@ -37,6 +28,9 @@ var BoardItemComposite = (function () {
         return piece ? [new PieceComposite_1.PieceComposite(piece)] : [];
     };
     BoardItemComposite.prototype.setChildren = function (children) { };
+    BoardItemComposite.prototype.getJSON = function () {
+        return this.boardItem;
+    };
     BoardItemComposite.prototype.cleanCircularReferences = function () {
         this.boardItem.setBoard(null);
         var children = this.getChildren();
