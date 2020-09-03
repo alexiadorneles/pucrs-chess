@@ -1,16 +1,28 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var BoardComposite_1 = require("../../composite/BoardComposite");
 var InitialPositions_1 = require("../../constants/InitialPositions");
 var PieceKind_1 = require("../../definitions/PieceKind");
-var DOMGenerator_1 = require("../../DOMGenerator");
 var ColorAdapter_1 = require("../adapter/ColorAdapter");
 var PieceBuilder_1 = require("../PieceBuilder");
 var BoardItem_1 = require("./BoardItem");
+var Model_1 = require("../../definitions/Model");
 var initMatrix = function () {
     var matrix = [];
     matrix[0] = [];
@@ -23,18 +35,21 @@ var initMatrix = function () {
     matrix[7] = [];
     return matrix;
 };
-var Board = (function () {
+var Board = (function (_super) {
+    __extends(Board, _super);
     function Board() {
-        var _this = this;
-        this.matrix = initMatrix();
-        this.isValidPosition = function (position) {
+        var _this = _super.call(this) || this;
+        _this.matrix = initMatrix();
+        _this.isValidPosition = function (position) {
             return _this.isPositionInMatrixRange(position) && !_this.getPieceByPosition(position);
         };
-        this.addItem = function (item) {
-            var _a = item.getPosition(), line = _a.line, column = _a.column;
+        _this.addItem = function (item) {
+            var _a = item.get('position'), line = _a.line, column = _a.column;
             _this.matrix[line][column] = item;
-            item.addToBoard(_this);
+            item.set('board', _this);
         };
+        _this.movePiece = _this.movePiece.bind(_this);
+        return _this;
     }
     Board.prototype.init = function () {
         var whites = this.buildPieces("white");
@@ -62,27 +77,24 @@ var Board = (function () {
     };
     Board.prototype.isPositionBlockedByOpponent = function (position, initialPosition) {
         var blockingPiece = this.isPositionInMatrixRange(position) && this.getPieceByPosition(position);
-        var blockingColor = blockingPiece && this.getPieceByPosition(position).getColor();
+        var blockingColor = blockingPiece && this.getPieceByPosition(position).get('color');
         var blockedColor = this.getItem(initialPosition)
-            .getPiece()
-            .getColor();
+            .get('piece')
+            .get('color');
         return blockingColor && blockedColor !== blockingColor;
     };
     Board.prototype.setCurrentMovingPiece = function (piece) {
-        if (this.currentMovingPieces && !lodash_1.default.isEqual(this.currentMovingPieces, piece)) {
+        var currentMovingPieces = this.get('currentMovingPieces');
+        if (currentMovingPieces && !lodash_1.default.isEqual(currentMovingPieces, piece)) {
             this.clearHighlights();
         }
-        this.currentMovingPieces = piece;
-    };
-    Board.prototype.isMovingPiece = function () {
-        return !!this.currentMovingPieces;
+        this.set('currentMovingPieces', piece);
     };
     Board.prototype.movePiece = function (clickedItem) {
-        var pieceItem = this.currentMovingPieces.getBoardItem();
-        clickedItem.setPiece(this.currentMovingPieces);
-        this.currentMovingPieces = null;
-        pieceItem.setPiece(null);
-        DOMGenerator_1.DOMGenerator.getInstance().refresh(new BoardComposite_1.BoardComposite(this));
+        var pieceItem = this.get('currentMovingPieces').get('boardItem');
+        clickedItem.set('piece', this.get('currentMovingPieces').get('control'));
+        this.set('currentMovingPieces', null);
+        pieceItem.set('piece', null);
     };
     Board.prototype.executeForAll = function (callback) {
         for (var line = 0; line < 8; line++)
@@ -93,7 +105,7 @@ var Board = (function () {
         return position.column < 8 && position.column >= 0 && position.line >= 0 && position.line < 8;
     };
     Board.prototype.getPieceByPosition = function (position) {
-        return this.isPositionInMatrixRange(position) ? this.getItem(position).getPiece() : null;
+        return this.isPositionInMatrixRange(position) ? this.getItem(position).get('piece') : null;
     };
     Board.prototype.buildPieces = function (color) {
         return Object.values(PieceKind_1.PieceKind)
@@ -104,5 +116,5 @@ var Board = (function () {
         return InitialPositions_1.WhitePiecesPositionMap.get(PieceKind_1.PieceKind.EMPTY).map(function (position) { return new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position)); });
     };
     return Board;
-}());
+}(Model_1.Model));
 exports.Board = Board;

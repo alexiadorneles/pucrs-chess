@@ -10,10 +10,10 @@ var HorizontalMovement_1 = require("./movement/HorizontalMovement");
 var LMovement_1 = require("./movement/LMovement");
 var VerticalMovement_1 = require("./movement/VerticalMovement");
 var Bishop_1 = require("./piece/Bishop");
+var King_1 = require("./piece/King");
 var Knight_1 = require("./piece/Knight");
 var Pawn_1 = require("./piece/Pawn");
 var Queen_1 = require("./piece/Queen");
-var King_1 = require("./piece/King");
 var Rook_1 = require("./piece/Rook");
 exports.PieceBuilderMap = new Map([
     [PieceKind_1.PieceKind.PAWN, Pawn_1.Pawn],
@@ -37,7 +37,7 @@ var PieceBuilder;
             var clazz = exports.PieceBuilderMap.get(kind);
             var item = new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position));
             var piece = new clazz(pieceColor);
-            item.setPiece(piece);
+            item.set('piece', piece);
             return item;
         });
     }

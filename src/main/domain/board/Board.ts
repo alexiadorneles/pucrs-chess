@@ -6,9 +6,10 @@ import { Position } from '../../definitions/Movement'
 import { PieceKind } from '../../definitions/PieceKind'
 import { DOMGenerator } from '../../DOMGenerator'
 import { ColorAdapter } from '../adapter/ColorAdapter'
-import { Piece } from '../piece/Piece'
+import { Piece, PieceAttributes } from '../piece/Piece'
 import { PieceBuilder } from '../PieceBuilder'
 import { BoardItem } from './BoardItem'
+import { Model, ControlAttribute } from '../../definitions/Model'
 
 const initMatrix = (): BoardItem[][] => {
   const matrix = []
@@ -23,9 +24,17 @@ const initMatrix = (): BoardItem[][] => {
   return matrix
 }
 
-export class Board {
+export interface BoardAttributes extends ControlAttribute<Board> {
+  currentMovingPieces: Model<PieceAttributes>
+}
+
+export class Board extends Model<BoardAttributes> {
   public matrix: Array<Array<BoardItem>> = initMatrix()
-  public currentMovingPieces: Piece
+
+  constructor() {
+    super()
+    this.movePiece = this.movePiece.bind(this)
+  }
 
   public init(): void {
     const whites = this.buildPieces(Color.WHITE)
@@ -57,30 +66,27 @@ export class Board {
   public isPositionBlockedByOpponent(position: Position, initialPosition: Position): boolean {
     const blockingPiece =
       this.isPositionInMatrixRange(position) && this.getPieceByPosition(position)
-    const blockingColor = blockingPiece && this.getPieceByPosition(position).getColor()
+    const blockingColor = blockingPiece && this.getPieceByPosition(position).get('color')
     const blockedColor = this.getItem(initialPosition)
-      .getPiece()
-      .getColor()
+      .get('piece')
+      .get('color')
     return blockingColor && blockedColor !== blockingColor
   }
 
   public setCurrentMovingPiece(piece: Piece): void {
-    if (this.currentMovingPieces && !_.isEqual(this.currentMovingPieces, piece)) {
+    const currentMovingPieces = this.get('currentMovingPieces')
+    if (currentMovingPieces && !_.isEqual(currentMovingPieces, piece)) {
       this.clearHighlights()
     }
-    this.currentMovingPieces = piece
-  }
-
-  public isMovingPiece(): boolean {
-    return !!this.currentMovingPieces
+    this.set('currentMovingPieces', piece)
   }
 
   public movePiece(clickedItem: BoardItem): void {
-    const pieceItem = this.currentMovingPieces.getBoardItem()
-    clickedItem.setPiece(this.currentMovingPieces)
-    this.currentMovingPieces = null
-    pieceItem.setPiece(null)
-    DOMGenerator.getInstance().refresh(new BoardComposite(this))
+    const pieceItem = this.get('currentMovingPieces').get('boardItem')
+    clickedItem.set('piece', this.get('currentMovingPieces').get('control'))
+    this.set('currentMovingPieces', null)
+    pieceItem.set('piece', null)
+    // DOMGenerator.getInstance().refresh(new BoardComposite(this))
   }
 
   public executeForAll(callback: (item: BoardItem, position?: Position) => void): void {
@@ -98,13 +104,13 @@ export class Board {
   }
 
   public getPieceByPosition(position: Position): Piece | null {
-    return this.isPositionInMatrixRange(position) ? this.getItem(position).getPiece() : null
+    return this.isPositionInMatrixRange(position) ? this.getItem(position).get('piece') : null
   }
 
   public addItem = (item: BoardItem) => {
-    const { line: line, column: column } = item.getPosition()
+    const { line: line, column: column } = item.get('position')
     this.matrix[line][column] = item
-    item.addToBoard(this)
+    item.set('board', this)
   }
 
   private buildPieces(color: Color): BoardItem[] {

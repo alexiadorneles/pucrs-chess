@@ -11,7 +11,7 @@ export class Pawn extends Piece {
   }
 
   public simulateMovement(): Position[] {
-    const currentPosition = this.boardItem.getPosition()
+    const currentPosition = this.boardItem.get('position')
     const newPosition = this.getNewPositionByColor(currentPosition)
     const possibleAttacks = this.getAttacksByColor(currentPosition)
     return _.compact([newPosition, ...possibleAttacks])

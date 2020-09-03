@@ -1,13 +1,13 @@
 import { ChessFactory } from '../factory/ChessFactory'
 import { DOMGenerator } from '../DOMGenerator'
-import { Board } from './board/Board'
+import { Board, BoardAttributes } from './board/Board'
 import Axios from 'axios'
 import { API } from '../constants/config'
 import { BoardComposite } from '../composite/BoardComposite'
 import { Composite } from '../definitions/Composite'
 
 export class GameStateHandler {
-  private boardComposite: Composite
+  private boardComposite: Composite<BoardAttributes>
   constructor(private chessFactory: ChessFactory, private domGenerator: DOMGenerator) {
     this.newGame = this.newGame.bind(this)
     this.loadGame = this.loadGame.bind(this)

@@ -3,39 +3,29 @@ import { Board } from 'main/domain/board/Board'
 import { Color } from '../../definitions/Color'
 import { Position } from '../../definitions/Movement'
 import { PieceKind } from '../../definitions/PieceKind'
-import { BoardItem } from '../board/BoardItem'
+import { BoardItem, BoardItemAttributes } from '../board/BoardItem'
 import { Movement } from '../movement/Movement'
 import { PieceBuilderMap } from '../PieceBuilder'
+import { Model, ControlAttribute } from '../../definitions/Model'
 
-export abstract class Piece {
+export interface PieceAttributes extends ControlAttribute<Piece> {
+  boardItem: Model<BoardItemAttributes>
+  kind: PieceKind
+  movements: Movement[]
+  color: Color
+  isAllowedToGoBackwards: boolean
+}
+
+export abstract class Piece extends Model<PieceAttributes> {
   protected boardItem: BoardItem
-  protected kind: PieceKind
-  protected movements: Movement[]
-  protected color: Color
-  protected isAllowedToGoBackwards: boolean
 
   constructor(
-    kind: PieceKind,
-    color: Color,
-    movements: Movement[],
-    isAllowedToGoBackwards: boolean,
+    protected kind: PieceKind,
+    protected color: Color,
+    protected movements: Movement[],
+    protected isAllowedToGoBackwards: boolean,
   ) {
-    this.kind = kind
-    this.color = color
-    this.movements = movements
-    this.isAllowedToGoBackwards = isAllowedToGoBackwards
-  }
-
-  public getMovements(): Movement[] {
-    return this.movements
-  }
-
-  public setMovements(movements: Movement[]): void {
-    this.movements = movements
-  }
-
-  public canGoBackwards(): boolean {
-    return this.isAllowedToGoBackwards
+    super()
   }
 
   public getBoardItem(): BoardItem {
@@ -43,11 +33,11 @@ export abstract class Piece {
   }
 
   public getBoard(): Board {
-    return this.boardItem.getBoard()
+    return this.boardItem.get('board')
   }
 
   public simulateMovement(): Position[] {
-    const currentPosition = this.getBoardItem().getPosition()
+    const currentPosition = this.getBoardItem().get('position')
     const positions = this.movements.map(movement =>
       movement.executeSimulation(currentPosition, this.getBoard()),
     )
@@ -56,13 +46,5 @@ export abstract class Piece {
 
   public addToItem(item: BoardItem): void {
     this.boardItem = item
-  }
-
-  public getColor(): Color {
-    return this.color
-  }
-
-  public getKind(): PieceKind {
-    return this.kind
   }
 }

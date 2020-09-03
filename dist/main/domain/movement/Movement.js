@@ -1,4 +1,17 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -15,13 +28,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var Movement = (function () {
+var Model_1 = require("../../definitions/Model");
+var Movement = (function (_super) {
+    __extends(Movement, _super);
     function Movement(kind) {
-        this.kind = kind;
+        var _this = _super.call(this) || this;
+        _this.set('kind', kind);
+        return _this;
     }
-    Movement.prototype.getKind = function () {
-        return this.kind;
-    };
     Movement.prototype.executeSimulation = function (position, board) {
         var boundGetter = this.getValidPositionsForEachOffset.bind(this, position, board);
         var positions = this.getMovementOffsets().map(boundGetter);
@@ -52,5 +66,5 @@ var Movement = (function () {
         };
     };
     return Movement;
-}());
+}(Model_1.Model));
 exports.Movement = Movement;

@@ -1,15 +1,19 @@
 import _ from 'lodash'
-import { MovementOffset, Position, MovementKind } from '../../definitions/Movement'
+import { MovementKind, MovementOffset, Position } from '../../definitions/Movement'
 import { Board } from '../board/Board'
-import { MovementBuilderMap } from '../PieceBuilder'
+import { Model, ControlAttribute } from '../../definitions/Model'
 
-export abstract class Movement {
-  constructor(private kind: MovementKind) {}
-  public abstract getMovementOffsets(): MovementOffset[]
+export interface MovementAttributes extends ControlAttribute<Movement> {
+  kind: MovementKind
+}
 
-  public getKind(): MovementKind {
-    return this.kind
+export abstract class Movement extends Model<MovementAttributes> {
+  constructor(kind: MovementKind) {
+    super()
+    this.set('kind', kind)
   }
+
+  public abstract getMovementOffsets(): MovementOffset[]
 
   public executeSimulation(position: Position, board: Board): Position[] {
     const boundGetter = this.getValidPositionsForEachOffset.bind(this, position, board)

@@ -1,5 +1,15 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var ChessEngine = (function () {
+    function ChessEngine() {
+    }
+    return ChessEngine;
+}());
+exports.ChessEngine = ChessEngine;
+
+},{}],2:[function(require,module,exports){
+"use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -38,7 +48,7 @@ var DOMGenerator = (function () {
         var piece = boardItem.getChildren()[0];
         if (piece) {
             var pieceElement = piece.createElement();
-            pieceElement.addEventListener('click', boardItem.boardItem.onClick);
+            pieceElement.addEventListener('click', boardItem.onClick);
             itemElement.appendChild(pieceElement);
         }
         return itemElement;
@@ -47,32 +57,41 @@ var DOMGenerator = (function () {
 }());
 exports.DOMGenerator = DOMGenerator;
 
-},{"lodash":55}],2:[function(require,module,exports){
+},{"lodash":57}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Board_1 = require("../domain/board/Board");
 var BoardItemComposite_1 = require("./BoardItemComposite");
 var BoardComposite = (function () {
-    function BoardComposite(board) {
+    function BoardComposite(board, engine) {
         this.board = board;
+        this.engine = engine;
         this.board.init();
     }
-    BoardComposite.createFromJSON = function (object) {
+    BoardComposite.prototype.getModel = function () {
+        return this.board;
+    };
+    BoardComposite.prototype.getParent = function () {
+        throw new Error('Board is the root of the tree.');
+    };
+    BoardComposite.createFromJSON = function (object, engine) {
         var board = Object.assign(new Board_1.Board(), object);
-        var items = board.getAllItems().map(function (item) { return BoardItemComposite_1.BoardItemComposite.createFromJSON(item); });
-        return new BoardComposite(board);
+        var composite = new BoardComposite(board, engine);
+        var items = board
+            .getAllItems()
+            .map(function (item) { return BoardItemComposite_1.BoardItemComposite.createFromJSON(item, composite, engine); });
+        return composite;
     };
     BoardComposite.prototype.createElement = function () {
         return document.createElement('div');
     };
     BoardComposite.prototype.getChildren = function () {
+        var _this = this;
         var items = this.board.getAllItems();
-        return items.map(function (item) { return new BoardItemComposite_1.BoardItemComposite(item); });
+        return items.map(function (item) { return new BoardItemComposite_1.BoardItemComposite(item, _this, _this.engine); });
     };
     BoardComposite.prototype.getJSON = function () {
         return this.board;
-    };
-    BoardComposite.prototype.setChildren = function (children) {
     };
     BoardComposite.prototype.cleanCircularReferences = function () {
         this.getChildren().forEach(function (child) { return child.cleanCircularReferences(); });
@@ -81,42 +100,82 @@ var BoardComposite = (function () {
 }());
 exports.BoardComposite = BoardComposite;
 
-},{"../domain/board/Board":13,"./BoardItemComposite":3}],3:[function(require,module,exports){
+},{"../domain/board/Board":15,"./BoardItemComposite":4}],4:[function(require,module,exports){
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __importDefault(require("lodash"));
 var BoardItem_1 = require("../domain/board/BoardItem");
 var PieceComposite_1 = require("./PieceComposite");
 var BoardItemComposite = (function () {
-    function BoardItemComposite(boardItem) {
-        this.boardItem = boardItem;
+    function BoardItemComposite(model, parent, engine) {
+        this.model = model;
+        this.parent = parent;
+        this.engine = engine;
         this.cleanCircularReferences = this.cleanCircularReferences.bind(this);
+        this.onClick = this.onClick.bind(this);
     }
+    BoardItemComposite.prototype.getModel = function () {
+        return this.model;
+    };
+    BoardItemComposite.prototype.getParent = function () {
+        return this.parent;
+    };
+    BoardItemComposite.prototype.onClick = function (element) {
+        var piece = this.getChildren()[0];
+        var boardModel = this.getParent().getModel();
+        if (!this.model.get('isHighlighted')) {
+            if (piece) {
+                boardModel.set('currentMovingPieces', piece.getModel());
+                this.model.setHighlight(true);
+            }
+        }
+        else {
+            if (!piece) {
+                if (boardModel.get('currentMovingPieces')) {
+                    ;
+                    this.getParent().board.movePiece(this.model);
+                }
+            }
+            else {
+                if (boardModel.get('currentMovingPieces')) {
+                    if (!lodash_1.default.isEqual(piece, boardModel.get('currentMovingPieces'))) {
+                        ;
+                        this.getParent().board.movePiece(this.model);
+                    }
+                }
+                this.model.setHighlight(false);
+            }
+        }
+    };
     BoardItemComposite.prototype.createElement = function () {
         var container = document.createElement('div');
         container.setAttribute('class', 'container');
         var square = document.createElement('span');
-        square.setAttribute('class', "fas fa-square-full chess-square " + this.boardItem.getColor());
-        square.addEventListener('click', this.boardItem.onClick);
+        square.setAttribute('class', "fas fa-square-full chess-square " + this.model.get('color'));
+        square.addEventListener('click', this.onClick);
         container.append(square);
-        this.boardItem.setElement(square);
+        this.model.set('element', square);
         return container;
     };
-    BoardItemComposite.createFromJSON = function (object) {
+    BoardItemComposite.createFromJSON = function (object, parent, engine) {
         var boardItem = Object.assign(new BoardItem_1.BoardItem(object.position, object.color), object);
         var piece = boardItem.getPiece();
-        piece && PieceComposite_1.PieceComposite.createFromJSON(piece);
-        return new BoardItemComposite(boardItem);
+        var composite = new BoardItemComposite(boardItem, parent, engine);
+        piece && PieceComposite_1.PieceComposite.createFromJSON(piece, composite, engine);
+        return composite;
     };
     BoardItemComposite.prototype.getChildren = function () {
-        var piece = this.boardItem.getPiece();
-        return piece ? [new PieceComposite_1.PieceComposite(piece)] : [];
+        var piece = this.model.get('piece');
+        return piece ? [new PieceComposite_1.PieceComposite(piece, this, this.engine)] : [];
     };
-    BoardItemComposite.prototype.setChildren = function (children) { };
     BoardItemComposite.prototype.getJSON = function () {
-        return this.boardItem;
+        return this.model;
     };
     BoardItemComposite.prototype.cleanCircularReferences = function () {
-        this.boardItem.setBoard(null);
+        this.model.set('board', null);
         var children = this.getChildren();
         children.forEach(function (children) { return children.cleanCircularReferences(); });
     };
@@ -124,21 +183,29 @@ var BoardItemComposite = (function () {
 }());
 exports.BoardItemComposite = BoardItemComposite;
 
-},{"../domain/board/BoardItem":14,"./PieceComposite":5}],4:[function(require,module,exports){
+},{"../domain/board/BoardItem":16,"./PieceComposite":6,"lodash":57}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var PieceBuilder_1 = require("../domain/PieceBuilder");
 var MovementComposite = (function () {
-    function MovementComposite(movement) {
+    function MovementComposite(movement, parent, engine) {
         this.movement = movement;
+        this.parent = parent;
+        this.engine = engine;
     }
+    MovementComposite.prototype.getModel = function () {
+        return this.movement;
+    };
+    MovementComposite.prototype.getParent = function () {
+        return this.parent;
+    };
     MovementComposite.prototype.createElement = function () {
         return null;
     };
-    MovementComposite.createFromJSON = function (object) {
+    MovementComposite.createFromJSON = function (object, parent, engine) {
         var model = new PieceBuilder_1.MovementBuilderMap[object.kind]();
         var movement = Object.assign(model, object);
-        return new MovementComposite(movement);
+        return new MovementComposite(movement, parent, engine);
     };
     MovementComposite.prototype.cleanCircularReferences = function () {
         throw new Error('Method not implemented.');
@@ -149,44 +216,62 @@ var MovementComposite = (function () {
     MovementComposite.prototype.getChildren = function () {
         return [];
     };
-    MovementComposite.prototype.setChildren = function (children) { };
     return MovementComposite;
 }());
 exports.MovementComposite = MovementComposite;
 
-},{"../domain/PieceBuilder":10}],5:[function(require,module,exports){
+},{"../domain/PieceBuilder":12}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var PieceBuilder_1 = require("../domain/PieceBuilder");
 var MovementComposite_1 = require("./MovementComposite");
 var PieceComposite = (function () {
-    function PieceComposite(piece) {
+    function PieceComposite(piece, parent, engine) {
         this.piece = piece;
+        this.parent = parent;
+        this.engine = engine;
         this.cleanCircularReferences = this.cleanCircularReferences.bind(this);
     }
+    PieceComposite.prototype.getModel = function () {
+        return this.piece;
+    };
+    PieceComposite.prototype.getParent = function () {
+        return this.parent;
+    };
     PieceComposite.prototype.createElement = function () {
-        var pieceType = (this.piece && this.piece.getKind()) || '';
-        var pieceColor = (this.piece && this.piece.getColor()) || '';
+        var pieceType = (this.piece && this.piece.get('kind')) || '';
+        var pieceColor = (this.piece && this.piece.get('color')) || '';
         var pieceIcon = document.createElement('i');
         pieceIcon.setAttribute('class', "fas fa-" + pieceType + " piece " + pieceColor);
         return pieceIcon;
     };
-    PieceComposite.createFromJSON = function (object) {
+    PieceComposite.createFromJSON = function (object, parent, engine) {
+        var _this = this;
         if (!object)
             return;
         var instantiationFn = PieceBuilder_1.PieceBuilderMap.get(object.kind);
         var piece = Object.assign(new instantiationFn(object.color), object);
-        piece.setMovements(piece.getMovements().map(function (mov) { return MovementComposite_1.MovementComposite.createFromJSON(mov).movement; }));
-        return new PieceComposite(piece);
+        var mapMovements = function (mov) {
+            return MovementComposite_1.MovementComposite.createFromJSON(mov, _this, engine)
+                .getModel()
+                .get('control');
+        };
+        piece.set('movements', piece.get('movements').map(function (mov) {
+            return MovementComposite_1.MovementComposite.createFromJSON(mov, _this, engine)
+                .getModel()
+                .get('control');
+        }));
+        return new PieceComposite(piece, parent, engine);
     };
     PieceComposite.prototype.getChildren = function () {
-        var movements = this.piece.getMovements();
-        return movements.map(function (movement) { return new MovementComposite_1.MovementComposite(movement); });
+        var _this = this;
+        return this.piece
+            .get('movements')
+            .map(function (movement) { return new MovementComposite_1.MovementComposite(movement, _this, _this.engine); });
     };
     PieceComposite.prototype.getJSON = function () {
         return this.piece;
     };
-    PieceComposite.prototype.setChildren = function (children) { };
     PieceComposite.prototype.cleanCircularReferences = function () {
         this.piece.addToItem(null);
     };
@@ -194,7 +279,7 @@ var PieceComposite = (function () {
 }());
 exports.PieceComposite = PieceComposite;
 
-},{"../domain/PieceBuilder":10,"./MovementComposite":4}],6:[function(require,module,exports){
+},{"../domain/PieceBuilder":12,"./MovementComposite":5}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var PieceKind_1 = require("../definitions/PieceKind");
@@ -298,7 +383,7 @@ exports.PinkPiecesPositionMap = new Map([
     [PieceKind_1.PieceKind.KING, pinkKingPosition],
 ]);
 
-},{"../definitions/PieceKind":8}],7:[function(require,module,exports){
+},{"../definitions/PieceKind":10}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.API = {
@@ -306,7 +391,24 @@ exports.API = {
     SAVE_URL: 'http://localhost:9090/save',
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Model = (function () {
+    function Model() {
+        this.store = {};
+    }
+    Model.prototype.set = function (key, value) {
+        this.store[key] = value;
+    };
+    Model.prototype.get = function (key) {
+        return this.store[key];
+    };
+    return Model;
+}());
+exports.Model = Model;
+
+},{}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var PieceKind;
@@ -320,7 +422,7 @@ var PieceKind;
     PieceKind["EMPTY"] = "";
 })(PieceKind = exports.PieceKind || (exports.PieceKind = {}));
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -414,7 +516,7 @@ var GameStateHandler = (function () {
 }());
 exports.GameStateHandler = GameStateHandler;
 
-},{"../constants/config":7,"axios":29}],10:[function(require,module,exports){
+},{"../constants/config":8,"axios":31}],12:[function(require,module,exports){
 "use strict";
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -427,10 +529,10 @@ var HorizontalMovement_1 = require("./movement/HorizontalMovement");
 var LMovement_1 = require("./movement/LMovement");
 var VerticalMovement_1 = require("./movement/VerticalMovement");
 var Bishop_1 = require("./piece/Bishop");
+var King_1 = require("./piece/King");
 var Knight_1 = require("./piece/Knight");
 var Pawn_1 = require("./piece/Pawn");
 var Queen_1 = require("./piece/Queen");
-var King_1 = require("./piece/King");
 var Rook_1 = require("./piece/Rook");
 exports.PieceBuilderMap = new Map([
     [PieceKind_1.PieceKind.PAWN, Pawn_1.Pawn],
@@ -454,14 +556,14 @@ var PieceBuilder;
             var clazz = exports.PieceBuilderMap.get(kind);
             var item = new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position));
             var piece = new clazz(pieceColor);
-            item.setPiece(piece);
+            item.set('piece', piece);
             return item;
         });
     }
     PieceBuilder.build = build;
 })(PieceBuilder = exports.PieceBuilder || (exports.PieceBuilder = {}));
 
-},{"../constants/InitialPositions":6,"../definitions/PieceKind":8,"./adapter/ColorAdapter":11,"./board/BoardItem":14,"./movement/DiagonalMovement":15,"./movement/HorizontalMovement":16,"./movement/LMovement":17,"./movement/VerticalMovement":19,"./piece/Bishop":20,"./piece/King":21,"./piece/Knight":22,"./piece/Pawn":23,"./piece/Queen":25,"./piece/Rook":26}],11:[function(require,module,exports){
+},{"../constants/InitialPositions":7,"../definitions/PieceKind":10,"./adapter/ColorAdapter":13,"./board/BoardItem":16,"./movement/DiagonalMovement":17,"./movement/HorizontalMovement":18,"./movement/LMovement":19,"./movement/VerticalMovement":21,"./piece/Bishop":22,"./piece/King":23,"./piece/Knight":24,"./piece/Pawn":25,"./piece/Queen":27,"./piece/Rook":28}],13:[function(require,module,exports){
 "use strict";
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -485,7 +587,7 @@ var ColorAdapter;
     }
 })(ColorAdapter = exports.ColorAdapter || (exports.ColorAdapter = {}));
 
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var MovementAdapter = (function () {
@@ -501,20 +603,32 @@ var MovementAdapter = (function () {
 }());
 exports.MovementAdapter = MovementAdapter;
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var BoardComposite_1 = require("../../composite/BoardComposite");
 var InitialPositions_1 = require("../../constants/InitialPositions");
 var PieceKind_1 = require("../../definitions/PieceKind");
-var DOMGenerator_1 = require("../../DOMGenerator");
 var ColorAdapter_1 = require("../adapter/ColorAdapter");
 var PieceBuilder_1 = require("../PieceBuilder");
 var BoardItem_1 = require("./BoardItem");
+var Model_1 = require("../../definitions/Model");
 var initMatrix = function () {
     var matrix = [];
     matrix[0] = [];
@@ -527,18 +641,21 @@ var initMatrix = function () {
     matrix[7] = [];
     return matrix;
 };
-var Board = (function () {
+var Board = (function (_super) {
+    __extends(Board, _super);
     function Board() {
-        var _this = this;
-        this.matrix = initMatrix();
-        this.isValidPosition = function (position) {
+        var _this = _super.call(this) || this;
+        _this.matrix = initMatrix();
+        _this.isValidPosition = function (position) {
             return _this.isPositionInMatrixRange(position) && !_this.getPieceByPosition(position);
         };
-        this.addItem = function (item) {
-            var _a = item.getPosition(), line = _a.line, column = _a.column;
+        _this.addItem = function (item) {
+            var _a = item.get('position'), line = _a.line, column = _a.column;
             _this.matrix[line][column] = item;
-            item.addToBoard(_this);
+            item.set('board', _this);
         };
+        _this.movePiece = _this.movePiece.bind(_this);
+        return _this;
     }
     Board.prototype.init = function () {
         var whites = this.buildPieces("white");
@@ -566,27 +683,24 @@ var Board = (function () {
     };
     Board.prototype.isPositionBlockedByOpponent = function (position, initialPosition) {
         var blockingPiece = this.isPositionInMatrixRange(position) && this.getPieceByPosition(position);
-        var blockingColor = blockingPiece && this.getPieceByPosition(position).getColor();
+        var blockingColor = blockingPiece && this.getPieceByPosition(position).get('color');
         var blockedColor = this.getItem(initialPosition)
-            .getPiece()
-            .getColor();
+            .get('piece')
+            .get('color');
         return blockingColor && blockedColor !== blockingColor;
     };
     Board.prototype.setCurrentMovingPiece = function (piece) {
-        if (this.currentMovingPieces && !lodash_1.default.isEqual(this.currentMovingPieces, piece)) {
+        var currentMovingPieces = this.get('currentMovingPieces');
+        if (currentMovingPieces && !lodash_1.default.isEqual(currentMovingPieces, piece)) {
             this.clearHighlights();
         }
-        this.currentMovingPieces = piece;
-    };
-    Board.prototype.isMovingPiece = function () {
-        return !!this.currentMovingPieces;
+        this.set('currentMovingPieces', piece);
     };
     Board.prototype.movePiece = function (clickedItem) {
-        var pieceItem = this.currentMovingPieces.getBoardItem();
-        clickedItem.setPiece(this.currentMovingPieces);
-        this.currentMovingPieces = null;
-        pieceItem.setPiece(null);
-        DOMGenerator_1.DOMGenerator.getInstance().refresh(new BoardComposite_1.BoardComposite(this));
+        var pieceItem = this.get('currentMovingPieces').get('boardItem');
+        clickedItem.set('piece', this.get('currentMovingPieces').get('control'));
+        this.set('currentMovingPieces', null);
+        pieceItem.set('piece', null);
     };
     Board.prototype.executeForAll = function (callback) {
         for (var line = 0; line < 8; line++)
@@ -597,7 +711,7 @@ var Board = (function () {
         return position.column < 8 && position.column >= 0 && position.line >= 0 && position.line < 8;
     };
     Board.prototype.getPieceByPosition = function (position) {
-        return this.isPositionInMatrixRange(position) ? this.getItem(position).getPiece() : null;
+        return this.isPositionInMatrixRange(position) ? this.getItem(position).get('piece') : null;
     };
     Board.prototype.buildPieces = function (color) {
         return Object.values(PieceKind_1.PieceKind)
@@ -608,77 +722,43 @@ var Board = (function () {
         return InitialPositions_1.WhitePiecesPositionMap.get(PieceKind_1.PieceKind.EMPTY).map(function (position) { return new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position)); });
     };
     return Board;
-}());
+}(Model_1.Model));
 exports.Board = Board;
 
-},{"../../DOMGenerator":1,"../../composite/BoardComposite":2,"../../constants/InitialPositions":6,"../../definitions/PieceKind":8,"../PieceBuilder":10,"../adapter/ColorAdapter":11,"./BoardItem":14,"lodash":55}],14:[function(require,module,exports){
+},{"../../constants/InitialPositions":7,"../../definitions/Model":9,"../../definitions/PieceKind":10,"../PieceBuilder":12,"../adapter/ColorAdapter":13,"./BoardItem":16,"lodash":57}],16:[function(require,module,exports){
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var BoardItem = (function () {
+var Model_1 = require("../../definitions/Model");
+var BoardItem = (function (_super) {
+    __extends(BoardItem, _super);
     function BoardItem(position, color) {
-        var _this = this;
-        this.position = position;
-        this.color = color;
-        this.onClick = function () {
-            if (!_this.isHighlighted) {
-                if (_this.piece) {
-                    _this.board.setCurrentMovingPiece(_this.piece);
-                    _this.setHighlight(true);
-                }
-            }
-            else {
-                if (!_this.piece) {
-                    if (_this.board.isMovingPiece()) {
-                        _this.board.movePiece(_this);
-                    }
-                }
-                else {
-                    if (_this.board.isMovingPiece()) {
-                        if (!lodash_1.default.isEqual(_this.piece, _this.board.currentMovingPieces)) {
-                            _this.board.movePiece(_this);
-                        }
-                    }
-                    _this.setHighlight(false);
-                }
-            }
-        };
+        var _this = _super.call(this) || this;
+        _this.set('color', color);
+        _this.set('position', position);
+        return _this;
     }
-    BoardItem.prototype.setPiece = function (piece) {
-        this.piece = piece;
-        if (piece) {
-            this.piece.addToItem(this);
-        }
-    };
-    BoardItem.prototype.setElement = function (element) {
-        this.element = element;
-    };
-    BoardItem.prototype.addToBoard = function (board) {
-        this.board = board;
-    };
-    BoardItem.prototype.setBoard = function (board) {
-        this.board = board;
-    };
-    BoardItem.prototype.getColor = function () {
-        return this.color;
-    };
-    BoardItem.prototype.getPiece = function () {
-        return this.piece;
-    };
-    BoardItem.prototype.getPosition = function () {
-        return this.position;
-    };
-    BoardItem.prototype.getBoard = function () {
-        return this.board;
-    };
-    BoardItem.prototype.setHighlight = function (isDestacado) {
-        this.isHighlighted = isDestacado;
+    BoardItem.prototype.setHighlight = function (isHighlighted) {
+        this.set('isHighlighted', isHighlighted);
         this.updateStyles();
-        if (this.isHighlighted) {
-            if (lodash_1.default.isEqual(this.piece, this.board.currentMovingPieces)) {
+        if (isHighlighted) {
+            if (lodash_1.default.isEqual(this.get('piece'), this.get('board').get('currentMovingPieces'))) {
                 this.simulateMovement();
             }
         }
@@ -687,31 +767,35 @@ var BoardItem = (function () {
         }
     };
     BoardItem.prototype.removeHighlight = function () {
-        this.isHighlighted = false;
+        this.set('isHighlighted', false);
         this.updateStyles();
     };
     BoardItem.prototype.removeHighlightFromBoard = function () {
-        this.board.clearHighlights();
+        this.get('board')
+            .get('control')
+            .clearHighlights();
     };
     BoardItem.prototype.simulateMovement = function () {
-        if (this.piece) {
-            var positions = this.piece.simulateMovement();
-            this.board.highlightPositions(positions);
+        if (this.get('piece')) {
+            var positions = this.get('piece').simulateMovement();
+            this.get('board')
+                .get('control')
+                .highlightPositions(positions);
         }
     };
     BoardItem.prototype.updateStyles = function () {
-        var styleClass = this.element.getAttribute('class');
+        var styleClass = this.get('element').getAttribute('class');
         var alreadyHighlighted = styleClass.includes('highlight');
-        if (alreadyHighlighted && !this.isHighlighted)
+        if (alreadyHighlighted && !this.get('isHighlighted'))
             styleClass = styleClass.replace('highlight', '');
-        var highlightClass = this.isHighlighted && !alreadyHighlighted ? 'highlight' : '';
-        this.element.setAttribute('class', styleClass + " " + highlightClass);
+        var highlightClass = this.get('isHighlighted') && !alreadyHighlighted ? 'highlight' : '';
+        this.get('element').setAttribute('class', styleClass + " " + highlightClass);
     };
     return BoardItem;
-}());
+}(Model_1.Model));
 exports.BoardItem = BoardItem;
 
-},{"lodash":55}],15:[function(require,module,exports){
+},{"../../definitions/Model":9,"lodash":57}],17:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -758,7 +842,7 @@ var DiagonalMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.DiagonalMovement = DiagonalMovement;
 
-},{"../adapter/MovementAdapter":12,"./Movement":18}],16:[function(require,module,exports){
+},{"../adapter/MovementAdapter":14,"./Movement":20}],18:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -797,7 +881,7 @@ var HorizontalMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.HorizontalMovement = HorizontalMovement;
 
-},{"../adapter/MovementAdapter":12,"./Movement":18}],17:[function(require,module,exports){
+},{"../adapter/MovementAdapter":14,"./Movement":20}],19:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -870,8 +954,21 @@ var LMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.LMovement = LMovement;
 
-},{"../adapter/MovementAdapter":12,"./Movement":18}],18:[function(require,module,exports){
+},{"../adapter/MovementAdapter":14,"./Movement":20}],20:[function(require,module,exports){
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -888,13 +985,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var Movement = (function () {
+var Model_1 = require("../../definitions/Model");
+var Movement = (function (_super) {
+    __extends(Movement, _super);
     function Movement(kind) {
-        this.kind = kind;
+        var _this = _super.call(this) || this;
+        _this.set('kind', kind);
+        return _this;
     }
-    Movement.prototype.getKind = function () {
-        return this.kind;
-    };
     Movement.prototype.executeSimulation = function (position, board) {
         var boundGetter = this.getValidPositionsForEachOffset.bind(this, position, board);
         var positions = this.getMovementOffsets().map(boundGetter);
@@ -925,10 +1023,10 @@ var Movement = (function () {
         };
     };
     return Movement;
-}());
+}(Model_1.Model));
 exports.Movement = Movement;
 
-},{"lodash":55}],19:[function(require,module,exports){
+},{"../../definitions/Model":9,"lodash":57}],21:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -967,7 +1065,7 @@ var VerticalMovement = (function (_super) {
 }(Movement_1.Movement));
 exports.VerticalMovement = VerticalMovement;
 
-},{"../adapter/MovementAdapter":12,"./Movement":18}],20:[function(require,module,exports){
+},{"../adapter/MovementAdapter":14,"./Movement":20}],22:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -998,7 +1096,7 @@ var Bishop = (function (_super) {
 }(Piece_1.Piece));
 exports.Bishop = Bishop;
 
-},{"../../definitions/PieceKind":8,"../movement/DiagonalMovement":15,"./Piece":24}],21:[function(require,module,exports){
+},{"../../definitions/PieceKind":10,"../movement/DiagonalMovement":17,"./Piece":26}],23:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1032,7 +1130,7 @@ var King = (function (_super) {
         return _this;
     }
     King.prototype.simulateMovement = function () {
-        var initialPosition = this.getBoardItem().getPosition();
+        var initialPosition = this.getBoardItem().get('position');
         var board = this.getBoard();
         var positions = this.movements.map(function (movements) {
             return movements
@@ -1050,7 +1148,7 @@ var King = (function (_super) {
 }(Piece_1.Piece));
 exports.King = King;
 
-},{"../../definitions/PieceKind":8,"../movement/DiagonalMovement":15,"../movement/HorizontalMovement":16,"../movement/VerticalMovement":19,"./Piece":24,"lodash":55}],22:[function(require,module,exports){
+},{"../../definitions/PieceKind":10,"../movement/DiagonalMovement":17,"../movement/HorizontalMovement":18,"../movement/VerticalMovement":21,"./Piece":26,"lodash":57}],24:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1081,7 +1179,7 @@ var Knight = (function (_super) {
 }(Piece_1.Piece));
 exports.Knight = Knight;
 
-},{"../../definitions/PieceKind":8,"../movement/LMovement":17,"./Piece":24}],23:[function(require,module,exports){
+},{"../../definitions/PieceKind":10,"../movement/LMovement":19,"./Piece":26}],25:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1128,7 +1226,7 @@ var Pawn = (function (_super) {
         return _super.call(this, PieceKind_1.PieceKind.PAWN, color, [new VerticalMovement_1.VerticalMovement()], false) || this;
     }
     Pawn.prototype.simulateMovement = function () {
-        var currentPosition = this.boardItem.getPosition();
+        var currentPosition = this.boardItem.get('position');
         var newPosition = this.getNewPositionByColor(currentPosition);
         var possibleAttacks = this.getAttacksByColor(currentPosition);
         return lodash_1.default.compact(__spreadArrays([newPosition], possibleAttacks));
@@ -1157,38 +1255,46 @@ var Pawn = (function (_super) {
 }(Piece_1.Piece));
 exports.Pawn = Pawn;
 
-},{"../../definitions/PieceKind":8,"../movement/VerticalMovement":19,"./Piece":24,"lodash":55}],24:[function(require,module,exports){
+},{"../../definitions/PieceKind":10,"../movement/VerticalMovement":21,"./Piece":26,"lodash":57}],26:[function(require,module,exports){
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var Piece = (function () {
+var Model_1 = require("../../definitions/Model");
+var Piece = (function (_super) {
+    __extends(Piece, _super);
     function Piece(kind, color, movements, isAllowedToGoBackwards) {
-        this.kind = kind;
-        this.color = color;
-        this.movements = movements;
-        this.isAllowedToGoBackwards = isAllowedToGoBackwards;
+        var _this = _super.call(this) || this;
+        _this.kind = kind;
+        _this.color = color;
+        _this.movements = movements;
+        _this.isAllowedToGoBackwards = isAllowedToGoBackwards;
+        return _this;
     }
-    Piece.prototype.getMovements = function () {
-        return this.movements;
-    };
-    Piece.prototype.setMovements = function (movements) {
-        this.movements = movements;
-    };
-    Piece.prototype.canGoBackwards = function () {
-        return this.isAllowedToGoBackwards;
-    };
     Piece.prototype.getBoardItem = function () {
         return this.boardItem;
     };
     Piece.prototype.getBoard = function () {
-        return this.boardItem.getBoard();
+        return this.boardItem.get('board');
     };
     Piece.prototype.simulateMovement = function () {
         var _this = this;
-        var currentPosition = this.getBoardItem().getPosition();
+        var currentPosition = this.getBoardItem().get('position');
         var positions = this.movements.map(function (movement) {
             return movement.executeSimulation(currentPosition, _this.getBoard());
         });
@@ -1197,17 +1303,11 @@ var Piece = (function () {
     Piece.prototype.addToItem = function (item) {
         this.boardItem = item;
     };
-    Piece.prototype.getColor = function () {
-        return this.color;
-    };
-    Piece.prototype.getKind = function () {
-        return this.kind;
-    };
     return Piece;
-}());
+}(Model_1.Model));
 exports.Piece = Piece;
 
-},{"lodash":55}],25:[function(require,module,exports){
+},{"../../definitions/Model":9,"lodash":57}],27:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1240,7 +1340,7 @@ var Queen = (function (_super) {
 }(Piece_1.Piece));
 exports.Queen = Queen;
 
-},{"../../definitions/PieceKind":8,"../movement/DiagonalMovement":15,"../movement/HorizontalMovement":16,"../movement/VerticalMovement":19,"./Piece":24}],26:[function(require,module,exports){
+},{"../../definitions/PieceKind":10,"../movement/DiagonalMovement":17,"../movement/HorizontalMovement":18,"../movement/VerticalMovement":21,"./Piece":26}],28:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1272,32 +1372,34 @@ var Rook = (function (_super) {
 }(Piece_1.Piece));
 exports.Rook = Rook;
 
-},{"../../definitions/PieceKind":8,"../movement/HorizontalMovement":16,"../movement/VerticalMovement":19,"./Piece":24}],27:[function(require,module,exports){
+},{"../../definitions/PieceKind":10,"../movement/HorizontalMovement":18,"../movement/VerticalMovement":21,"./Piece":26}],29:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var BoardComposite_1 = require("../composite/BoardComposite");
 var Board_1 = require("../domain/board/Board");
 var ChessFactoryImpl = (function () {
-    function ChessFactoryImpl() {
+    function ChessFactoryImpl(engine) {
+        this.engine = engine;
     }
     ChessFactoryImpl.prototype.createBoardFromJSON = function (loaded) {
-        return BoardComposite_1.BoardComposite.createFromJSON(loaded);
+        return BoardComposite_1.BoardComposite.createFromJSON(loaded, this.engine);
     };
     ChessFactoryImpl.prototype.createInitialBoard = function () {
-        return new BoardComposite_1.BoardComposite(new Board_1.Board());
+        return new BoardComposite_1.BoardComposite(new Board_1.Board(), this.engine);
     };
     return ChessFactoryImpl;
 }());
 exports.ChessFactoryImpl = ChessFactoryImpl;
 
-},{"../composite/BoardComposite":2,"../domain/board/Board":13}],28:[function(require,module,exports){
+},{"../composite/BoardComposite":3,"../domain/board/Board":15}],30:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var GameStateHandler_1 = require("./domain/GameStateHandler");
 var DOMGenerator_1 = require("./DOMGenerator");
 var ChessFactory_1 = require("./factory/ChessFactory");
+var ChessEngine_1 = require("./ChessEngine");
 var domGeneratorInstance = DOMGenerator_1.DOMGenerator.getInstance();
-var chessFactory = new ChessFactory_1.ChessFactoryImpl();
+var chessFactory = new ChessFactory_1.ChessFactoryImpl(new ChessEngine_1.ChessEngine());
 var gameStateHandler = new GameStateHandler_1.GameStateHandler(chessFactory, domGeneratorInstance);
 var newGameButton = document.getElementById('novoJogo');
 var loadGameButton = document.getElementById('carregarJogo');
@@ -1306,9 +1408,9 @@ newGameButton.addEventListener('click', gameStateHandler.newGame);
 loadGameButton.addEventListener('click', gameStateHandler.loadGame);
 saveGameButton.addEventListener('click', gameStateHandler.saveGame);
 
-},{"./DOMGenerator":1,"./domain/GameStateHandler":9,"./factory/ChessFactory":27}],29:[function(require,module,exports){
+},{"./ChessEngine":1,"./DOMGenerator":2,"./domain/GameStateHandler":11,"./factory/ChessFactory":29}],31:[function(require,module,exports){
 module.exports = require('./lib/axios');
-},{"./lib/axios":31}],30:[function(require,module,exports){
+},{"./lib/axios":33}],32:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1484,7 +1586,7 @@ module.exports = function xhrAdapter(config) {
   });
 };
 
-},{"../core/createError":37,"./../core/settle":41,"./../helpers/buildURL":45,"./../helpers/cookies":47,"./../helpers/isURLSameOrigin":49,"./../helpers/parseHeaders":51,"./../utils":53}],31:[function(require,module,exports){
+},{"../core/createError":39,"./../core/settle":43,"./../helpers/buildURL":47,"./../helpers/cookies":49,"./../helpers/isURLSameOrigin":51,"./../helpers/parseHeaders":53,"./../utils":55}],33:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -1539,7 +1641,7 @@ module.exports = axios;
 // Allow use of default import syntax in TypeScript
 module.exports.default = axios;
 
-},{"./cancel/Cancel":32,"./cancel/CancelToken":33,"./cancel/isCancel":34,"./core/Axios":35,"./core/mergeConfig":40,"./defaults":43,"./helpers/bind":44,"./helpers/spread":52,"./utils":53}],32:[function(require,module,exports){
+},{"./cancel/Cancel":34,"./cancel/CancelToken":35,"./cancel/isCancel":36,"./core/Axios":37,"./core/mergeConfig":42,"./defaults":45,"./helpers/bind":46,"./helpers/spread":54,"./utils":55}],34:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1560,7 +1662,7 @@ Cancel.prototype.__CANCEL__ = true;
 
 module.exports = Cancel;
 
-},{}],33:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 'use strict';
 
 var Cancel = require('./Cancel');
@@ -1619,14 +1721,14 @@ CancelToken.source = function source() {
 
 module.exports = CancelToken;
 
-},{"./Cancel":32}],34:[function(require,module,exports){
+},{"./Cancel":34}],36:[function(require,module,exports){
 'use strict';
 
 module.exports = function isCancel(value) {
   return !!(value && value.__CANCEL__);
 };
 
-},{}],35:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1714,7 +1816,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = Axios;
 
-},{"../helpers/buildURL":45,"./../utils":53,"./InterceptorManager":36,"./dispatchRequest":38,"./mergeConfig":40}],36:[function(require,module,exports){
+},{"../helpers/buildURL":47,"./../utils":55,"./InterceptorManager":38,"./dispatchRequest":40,"./mergeConfig":42}],38:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1768,7 +1870,7 @@ InterceptorManager.prototype.forEach = function forEach(fn) {
 
 module.exports = InterceptorManager;
 
-},{"./../utils":53}],37:[function(require,module,exports){
+},{"./../utils":55}],39:[function(require,module,exports){
 'use strict';
 
 var enhanceError = require('./enhanceError');
@@ -1788,7 +1890,7 @@ module.exports = function createError(message, config, code, request, response) 
   return enhanceError(error, config, code, request, response);
 };
 
-},{"./enhanceError":39}],38:[function(require,module,exports){
+},{"./enhanceError":41}],40:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -1876,7 +1978,7 @@ module.exports = function dispatchRequest(config) {
   });
 };
 
-},{"../cancel/isCancel":34,"../defaults":43,"./../helpers/combineURLs":46,"./../helpers/isAbsoluteURL":48,"./../utils":53,"./transformData":42}],39:[function(require,module,exports){
+},{"../cancel/isCancel":36,"../defaults":45,"./../helpers/combineURLs":48,"./../helpers/isAbsoluteURL":50,"./../utils":55,"./transformData":44}],41:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1920,7 +2022,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
   return error;
 };
 
-},{}],40:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -1973,7 +2075,7 @@ module.exports = function mergeConfig(config1, config2) {
   return config;
 };
 
-},{"../utils":53}],41:[function(require,module,exports){
+},{"../utils":55}],43:[function(require,module,exports){
 'use strict';
 
 var createError = require('./createError');
@@ -2000,7 +2102,7 @@ module.exports = function settle(resolve, reject, response) {
   }
 };
 
-},{"./createError":37}],42:[function(require,module,exports){
+},{"./createError":39}],44:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2022,7 +2124,7 @@ module.exports = function transformData(data, headers, fns) {
   return data;
 };
 
-},{"./../utils":53}],43:[function(require,module,exports){
+},{"./../utils":55}],45:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -2124,7 +2226,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 }).call(this,require('_process'))
-},{"./adapters/http":30,"./adapters/xhr":30,"./helpers/normalizeHeaderName":50,"./utils":53,"_process":56}],44:[function(require,module,exports){
+},{"./adapters/http":32,"./adapters/xhr":32,"./helpers/normalizeHeaderName":52,"./utils":55,"_process":58}],46:[function(require,module,exports){
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -2137,7 +2239,7 @@ module.exports = function bind(fn, thisArg) {
   };
 };
 
-},{}],45:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2210,7 +2312,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
   return url;
 };
 
-},{"./../utils":53}],46:[function(require,module,exports){
+},{"./../utils":55}],48:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2226,7 +2328,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
     : baseURL;
 };
 
-},{}],47:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2281,7 +2383,7 @@ module.exports = (
     })()
 );
 
-},{"./../utils":53}],48:[function(require,module,exports){
+},{"./../utils":55}],50:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2297,7 +2399,7 @@ module.exports = function isAbsoluteURL(url) {
   return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
 };
 
-},{}],49:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2367,7 +2469,7 @@ module.exports = (
     })()
 );
 
-},{"./../utils":53}],50:[function(require,module,exports){
+},{"./../utils":55}],52:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -2381,7 +2483,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
   });
 };
 
-},{"../utils":53}],51:[function(require,module,exports){
+},{"../utils":55}],53:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -2436,7 +2538,7 @@ module.exports = function parseHeaders(headers) {
   return parsed;
 };
 
-},{"./../utils":53}],52:[function(require,module,exports){
+},{"./../utils":55}],54:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2465,7 +2567,7 @@ module.exports = function spread(callback) {
   };
 };
 
-},{}],53:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 'use strict';
 
 var bind = require('./helpers/bind');
@@ -2801,7 +2903,7 @@ module.exports = {
   trim: trim
 };
 
-},{"./helpers/bind":44,"is-buffer":54}],54:[function(require,module,exports){
+},{"./helpers/bind":46,"is-buffer":56}],56:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -2814,7 +2916,7 @@ module.exports = function isBuffer (obj) {
     typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
 }
 
-},{}],55:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -19930,7 +20032,7 @@ module.exports = function isBuffer (obj) {
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],56:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -20116,4 +20218,4 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[28]);
+},{}]},{},[30]);

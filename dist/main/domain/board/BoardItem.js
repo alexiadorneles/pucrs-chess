@@ -1,70 +1,36 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var BoardItem = (function () {
+var Model_1 = require("../../definitions/Model");
+var BoardItem = (function (_super) {
+    __extends(BoardItem, _super);
     function BoardItem(position, color) {
-        var _this = this;
-        this.position = position;
-        this.color = color;
-        this.onClick = function () {
-            if (!_this.isHighlighted) {
-                if (_this.piece) {
-                    _this.board.setCurrentMovingPiece(_this.piece);
-                    _this.setHighlight(true);
-                }
-            }
-            else {
-                if (!_this.piece) {
-                    if (_this.board.isMovingPiece()) {
-                        _this.board.movePiece(_this);
-                    }
-                }
-                else {
-                    if (_this.board.isMovingPiece()) {
-                        if (!lodash_1.default.isEqual(_this.piece, _this.board.currentMovingPieces)) {
-                            _this.board.movePiece(_this);
-                        }
-                    }
-                    _this.setHighlight(false);
-                }
-            }
-        };
+        var _this = _super.call(this) || this;
+        _this.set('color', color);
+        _this.set('position', position);
+        return _this;
     }
-    BoardItem.prototype.setPiece = function (piece) {
-        this.piece = piece;
-        if (piece) {
-            this.piece.addToItem(this);
-        }
-    };
-    BoardItem.prototype.setElement = function (element) {
-        this.element = element;
-    };
-    BoardItem.prototype.addToBoard = function (board) {
-        this.board = board;
-    };
-    BoardItem.prototype.setBoard = function (board) {
-        this.board = board;
-    };
-    BoardItem.prototype.getColor = function () {
-        return this.color;
-    };
-    BoardItem.prototype.getPiece = function () {
-        return this.piece;
-    };
-    BoardItem.prototype.getPosition = function () {
-        return this.position;
-    };
-    BoardItem.prototype.getBoard = function () {
-        return this.board;
-    };
-    BoardItem.prototype.setHighlight = function (isDestacado) {
-        this.isHighlighted = isDestacado;
+    BoardItem.prototype.setHighlight = function (isHighlighted) {
+        this.set('isHighlighted', isHighlighted);
         this.updateStyles();
-        if (this.isHighlighted) {
-            if (lodash_1.default.isEqual(this.piece, this.board.currentMovingPieces)) {
+        if (isHighlighted) {
+            if (lodash_1.default.isEqual(this.get('piece'), this.get('board').get('currentMovingPieces'))) {
                 this.simulateMovement();
             }
         }
@@ -73,26 +39,30 @@ var BoardItem = (function () {
         }
     };
     BoardItem.prototype.removeHighlight = function () {
-        this.isHighlighted = false;
+        this.set('isHighlighted', false);
         this.updateStyles();
     };
     BoardItem.prototype.removeHighlightFromBoard = function () {
-        this.board.clearHighlights();
+        this.get('board')
+            .get('control')
+            .clearHighlights();
     };
     BoardItem.prototype.simulateMovement = function () {
-        if (this.piece) {
-            var positions = this.piece.simulateMovement();
-            this.board.highlightPositions(positions);
+        if (this.get('piece')) {
+            var positions = this.get('piece').simulateMovement();
+            this.get('board')
+                .get('control')
+                .highlightPositions(positions);
         }
     };
     BoardItem.prototype.updateStyles = function () {
-        var styleClass = this.element.getAttribute('class');
+        var styleClass = this.get('element').getAttribute('class');
         var alreadyHighlighted = styleClass.includes('highlight');
-        if (alreadyHighlighted && !this.isHighlighted)
+        if (alreadyHighlighted && !this.get('isHighlighted'))
             styleClass = styleClass.replace('highlight', '');
-        var highlightClass = this.isHighlighted && !alreadyHighlighted ? 'highlight' : '';
-        this.element.setAttribute('class', styleClass + " " + highlightClass);
+        var highlightClass = this.get('isHighlighted') && !alreadyHighlighted ? 'highlight' : '';
+        this.get('element').setAttribute('class', styleClass + " " + highlightClass);
     };
     return BoardItem;
-}());
+}(Model_1.Model));
 exports.BoardItem = BoardItem;

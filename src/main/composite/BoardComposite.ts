@@ -1,34 +1,46 @@
 import _ from 'lodash'
-import { Composite } from '../definitions/Composite'
+import { Composite, BaseComposite } from '../definitions/Composite'
 import { JSONObject } from '../definitions/JSONObject'
-import { Board } from '../domain/board/Board'
+import { Board, BoardAttributes } from '../domain/board/Board'
 import { BoardItemComposite } from './BoardItemComposite'
-export class BoardComposite implements Composite {
-  constructor(private board: Board) {
+import { Model } from '../definitions/Model'
+import { ChessEngine } from '../ChessEngine'
+export class BoardComposite implements Composite<BoardAttributes> {
+  constructor(private board: Board, private engine: ChessEngine) {
     this.board.init()
   }
 
-  public static createFromJSON(object: JSONObject): Composite {
+  public getModel(): Model<BoardAttributes> {
+    return this.board
+  }
+
+  public getParent(): Composite<any> {
+    throw new Error('Board is the root of the tree.')
+  }
+
+  public static createFromJSON(
+    object: JSONObject,
+    engine: ChessEngine,
+  ): Composite<BoardAttributes> {
     const board = Object.assign(new Board(), object)
-    const items = board.getAllItems().map(item => BoardItemComposite.createFromJSON(item))
-    return new BoardComposite(board)
+    const composite = new BoardComposite(board, engine)
+    const items = board
+      .getAllItems()
+      .map(item => BoardItemComposite.createFromJSON(item, composite, engine))
+    return composite
   }
 
   public createElement(): Element {
     return document.createElement('div')
   }
 
-  getChildren(): Composite[] {
+  getChildren(): BaseComposite[] {
     const items = this.board.getAllItems()
-    return items.map(item => new BoardItemComposite(item))
+    return items.map(item => new BoardItemComposite(item, this, this.engine))
   }
 
   public getJSON(): JSONObject {
     return this.board
-  }
-
-  setChildren(children: Composite[]): void {
-    // this.board.setItems(children)
   }
 
   cleanCircularReferences(): void {

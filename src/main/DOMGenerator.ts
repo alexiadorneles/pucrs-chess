@@ -1,5 +1,8 @@
 import { Composite } from './definitions/Composite'
 import _ from 'lodash'
+import { BoardAttributes } from './domain/board/Board'
+import { BoardItemAttributes } from './domain/board/BoardItem'
+import { ReactiveComposite } from './definitions/ReactiveItem'
 
 export class DOMGenerator {
   private static instance: DOMGenerator
@@ -14,17 +17,19 @@ export class DOMGenerator {
     return DOMGenerator.instance
   }
 
-  public refresh(boardComposite: Composite): void {
+  public refresh(boardComposite: Composite<BoardAttributes>): void {
     const root = document.getElementById('root')
     root.innerHTML = ''
     const board = boardComposite.createElement()
-    const itemCompositeMatrix = _.chunk(boardComposite.getChildren(), 8)
+    const itemCompositeMatrix = _.chunk(boardComposite.getChildren(), 8) as ReactiveComposite<
+      BoardItemAttributes
+    >[][]
     const lines = this.getBoardLines(itemCompositeMatrix)
     lines.forEach(line => board.appendChild(line))
     root.appendChild(board)
   }
 
-  private getBoardLines(items: Composite[][]): Element[] {
+  private getBoardLines(items: ReactiveComposite<BoardItemAttributes>[][]): Element[] {
     const columns = items.map(composites => composites.map(item => this.getItemWithPiece(item)))
     return columns.map(column => {
       const lineElement = document.createElement('div')
@@ -34,13 +39,13 @@ export class DOMGenerator {
     })
   }
 
-  private getItemWithPiece(boardItem: Composite): Element {
+  private getItemWithPiece(boardItem: ReactiveComposite<BoardItemAttributes>): Element {
     const itemElement = boardItem.createElement()
     const [piece] = boardItem.getChildren()
     if (piece) {
       const pieceElement = piece.createElement()
       // TODO: FIX
-      pieceElement.addEventListener('click', (boardItem as any).boardItem.onClick)
+      pieceElement.addEventListener('click', boardItem.onClick)
       itemElement.appendChild(pieceElement)
     }
     return itemElement

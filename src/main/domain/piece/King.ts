@@ -14,7 +14,7 @@ export class King extends Piece {
   }
 
   public simulateMovement(): Position[] {
-    const initialPosition = this.getBoardItem().getPosition()
+    const initialPosition = this.getBoardItem().get('position')
     const board = this.getBoard()
     const positions = this.movements.map(movements =>
       movements

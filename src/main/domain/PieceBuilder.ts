@@ -1,5 +1,5 @@
+import { PinkPiecesPositionMap, WhitePiecesPositionMap } from '../constants/InitialPositions'
 import { Color } from '../definitions/Color'
-import { WhitePiecesPositionMap, PinkPiecesPositionMap } from '../constants/InitialPositions'
 import { MovementKind } from '../definitions/Movement'
 import { PieceKind } from '../definitions/PieceKind'
 import { ColorAdapter } from './adapter/ColorAdapter'
@@ -9,11 +9,11 @@ import { HorizontalMovement } from './movement/HorizontalMovement'
 import { LMovement } from './movement/LMovement'
 import { VerticalMovement } from './movement/VerticalMovement'
 import { Bishop } from './piece/Bishop'
+import { King } from './piece/King'
 import { Knight } from './piece/Knight'
 import { Pawn } from './piece/Pawn'
 import { Piece } from './piece/Piece'
 import { Queen } from './piece/Queen'
-import { King } from './piece/King'
 import { Rook } from './piece/Rook'
 
 export const PieceBuilderMap: Map<PieceKind, new (color: Color) => Piece> = new Map([
@@ -39,7 +39,7 @@ export namespace PieceBuilder {
       const clazz = PieceBuilderMap.get(kind)
       const item = new BoardItem(position, ColorAdapter.defineItemColor(position))
       const piece = new clazz(pieceColor)
-      item.setPiece(piece)
+      item.set('piece', piece)
       return item
     })
   }

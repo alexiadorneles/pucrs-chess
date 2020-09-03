@@ -44,7 +44,7 @@ var Pawn = (function (_super) {
         return _super.call(this, PieceKind_1.PieceKind.PAWN, color, [new VerticalMovement_1.VerticalMovement()], false) || this;
     }
     Pawn.prototype.simulateMovement = function () {
-        var currentPosition = this.boardItem.getPosition();
+        var currentPosition = this.boardItem.get('position');
         var newPosition = this.getNewPositionByColor(currentPosition);
         var possibleAttacks = this.getAttacksByColor(currentPosition);
         return lodash_1.default.compact(__spreadArrays([newPosition], possibleAttacks));

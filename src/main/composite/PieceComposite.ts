@@ -1,40 +1,70 @@
-import { Composite } from '../definitions/Composite'
+import { Composite, BaseComposite } from '../definitions/Composite'
 import { JSONObject } from '../definitions/JSONObject'
-import { Piece } from '../domain/piece/Piece'
+import { Piece, PieceAttributes } from '../domain/piece/Piece'
 import { PieceBuilderMap } from '../domain/PieceBuilder'
 import { MovementComposite } from './MovementComposite'
-export class PieceComposite implements Composite {
-  constructor(private piece: Piece) {
+import { BoardItemAttributes } from '../domain/board/BoardItem'
+import { Model } from '../definitions/Model'
+import { ChessEngine } from '../ChessEngine'
+import { Movement } from '../domain/movement/Movement'
+
+export class PieceComposite implements Composite<PieceAttributes> {
+  constructor(
+    private piece: Piece,
+    private parent: Composite<BoardItemAttributes>,
+    private engine: ChessEngine,
+  ) {
     this.cleanCircularReferences = this.cleanCircularReferences.bind(this)
   }
+
+  public getModel(): Model<PieceAttributes> {
+    return this.piece
+  }
+
+  public getParent(): Composite<BoardItemAttributes> {
+    return this.parent
+  }
+
   public createElement(): Element {
-    const pieceType = (this.piece && this.piece.getKind()) || ''
-    const pieceColor = (this.piece && this.piece.getColor()) || ''
+    const pieceType = (this.piece && this.piece.get('kind')) || ''
+    const pieceColor = (this.piece && this.piece.get('color')) || ''
     const pieceIcon = document.createElement('i')
     pieceIcon.setAttribute('class', `fas fa-${pieceType} piece ${pieceColor}`)
     return pieceIcon
   }
 
-  public static createFromJSON(object: JSONObject): Composite {
+  public static createFromJSON(
+    object: JSONObject,
+    parent: Composite<BoardItemAttributes>,
+    engine: ChessEngine,
+  ): Composite<PieceAttributes> {
     if (!object) return
     const instantiationFn = PieceBuilderMap.get(object.kind)
-    const piece = Object.assign(new instantiationFn(object.color), object)
-    piece.setMovements(
-      piece.getMovements().map(mov => (MovementComposite.createFromJSON(mov) as any).movement),
+    const piece = Object.assign(new instantiationFn(object.color), object) as Piece
+    const mapMovements = (mov: Movement) =>
+      MovementComposite.createFromJSON(mov, this as any, engine)
+        .getModel()
+        .get('control')
+    piece.set(
+      'movements',
+      piece.get('movements').map((mov: Movement) =>
+        MovementComposite.createFromJSON(mov, this as any, engine)
+          .getModel()
+          .get('control'),
+      ),
     )
-    return new PieceComposite(piece)
+    return new PieceComposite(piece, parent, engine)
   }
 
-  getChildren(): Composite[] {
-    const movements = this.piece.getMovements()
-    return movements.map(movement => new MovementComposite(movement))
+  getChildren(): BaseComposite[] {
+    return this.piece
+      .get('movements')
+      .map(movement => new MovementComposite(movement, this, this.engine))
   }
 
   public getJSON(): JSONObject {
     return this.piece
   }
-
-  setChildren(children: Composite[]): void {}
 
   cleanCircularReferences(): void {
     this.piece.addToItem(null)

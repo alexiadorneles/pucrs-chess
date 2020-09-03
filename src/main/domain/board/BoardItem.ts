@@ -3,76 +3,29 @@ import { Color } from '../../definitions/Color'
 import { Position } from '../../definitions/Movement'
 import { Piece } from '../piece/Piece'
 import { Board } from './Board'
+import { Model, ControlAttribute } from '../../definitions/Model'
 
-export class BoardItem {
-  private piece: Piece
-  private isHighlighted: boolean
-  private element: Element
-  private board: Board
-  constructor(private position: Position, private color: Color) {}
+export interface BoardItemAttributes extends ControlAttribute<BoardItem> {
+  piece: Piece
+  isHighlighted: boolean
+  element: Element
+  board: Board
+  color: Color
+  position: Position
+}
 
-  public setPiece(piece: Piece): void {
-    this.piece = piece
-    if (piece) {
-      this.piece.addToItem(this)
-    }
+export class BoardItem extends Model<BoardItemAttributes> {
+  constructor(position: Position, color: Color) {
+    super()
+    this.set('color', color)
+    this.set('position', position)
   }
 
-  public setElement(element: Element): void {
-    this.element = element
-  }
-
-  public addToBoard(board: Board): void {
-    this.board = board
-  }
-
-  public setBoard(board: Board): void {
-    this.board = board
-  }
-
-  public onClick = () => {
-    if (!this.isHighlighted) {
-      if (this.piece) {
-        this.board.setCurrentMovingPiece(this.piece)
-        this.setHighlight(true)
-      }
-    } else {
-      if (!this.piece) {
-        if (this.board.isMovingPiece()) {
-          this.board.movePiece(this)
-        }
-      } else {
-        if (this.board.isMovingPiece()) {
-          if (!_.isEqual(this.piece, this.board.currentMovingPieces)) {
-            this.board.movePiece(this)
-          }
-        }
-        this.setHighlight(false)
-      }
-    }
-  }
-
-  public getColor(): Color {
-    return this.color
-  }
-
-  public getPiece(): Piece {
-    return this.piece
-  }
-
-  public getPosition(): Position {
-    return this.position
-  }
-
-  public getBoard(): Board {
-    return this.board
-  }
-
-  public setHighlight(isDestacado: boolean): void {
-    this.isHighlighted = isDestacado
+  public setHighlight(isHighlighted: boolean): void {
+    this.set('isHighlighted', isHighlighted)
     this.updateStyles()
-    if (this.isHighlighted) {
-      if (_.isEqual(this.piece, this.board.currentMovingPieces)) {
+    if (isHighlighted) {
+      if (_.isEqual(this.get('piece'), this.get('board').get('currentMovingPieces'))) {
         this.simulateMovement()
       }
     } else {
@@ -81,26 +34,31 @@ export class BoardItem {
   }
 
   public removeHighlight(): void {
-    this.isHighlighted = false
+    this.set('isHighlighted', false)
     this.updateStyles()
   }
 
   private removeHighlightFromBoard(): void {
-    this.board.clearHighlights()
+    this.get('board')
+      .get('control')
+      .clearHighlights()
   }
 
   private simulateMovement(): void {
-    if (this.piece) {
-      const positions = this.piece.simulateMovement()
-      this.board.highlightPositions(positions)
+    if (this.get('piece')) {
+      const positions = this.get('piece').simulateMovement()
+      this.get('board')
+        .get('control')
+        .highlightPositions(positions)
     }
   }
 
   private updateStyles(): void {
-    let styleClass = this.element.getAttribute('class')
+    let styleClass = this.get('element').getAttribute('class')
     const alreadyHighlighted = styleClass.includes('highlight')
-    if (alreadyHighlighted && !this.isHighlighted) styleClass = styleClass.replace('highlight', '')
-    const highlightClass = this.isHighlighted && !alreadyHighlighted ? 'highlight' : ''
-    this.element.setAttribute('class', `${styleClass} ${highlightClass}`)
+    if (alreadyHighlighted && !this.get('isHighlighted'))
+      styleClass = styleClass.replace('highlight', '')
+    const highlightClass = this.get('isHighlighted') && !alreadyHighlighted ? 'highlight' : ''
+    this.get('element').setAttribute('class', `${styleClass} ${highlightClass}`)
   }
 }

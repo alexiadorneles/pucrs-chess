@@ -37,7 +37,7 @@ var DOMGenerator = (function () {
         var piece = boardItem.getChildren()[0];
         if (piece) {
             var pieceElement = piece.createElement();
-            pieceElement.addEventListener('click', boardItem.boardItem.onClick);
+            pieceElement.addEventListener('click', boardItem.onClick);
             itemElement.appendChild(pieceElement);
         }
         return itemElement;
