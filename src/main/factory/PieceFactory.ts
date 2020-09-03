@@ -12,6 +12,7 @@ import { Bishop } from '../models/piece/Bishop'
 import { King } from '../models/piece/King'
 import { Knight } from '../models/piece/Knight'
 import { Pawn } from '../models/piece/Pawn'
+import { Piece } from '../models/piece/Piece'
 import { Queen } from '../models/piece/Queen'
 import { Rook } from '../models/piece/Rook'
 
