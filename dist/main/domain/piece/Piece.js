@@ -22,28 +22,22 @@ var Piece = (function (_super) {
     __extends(Piece, _super);
     function Piece(kind, color, movements, isAllowedToGoBackwards) {
         var _this = _super.call(this) || this;
-        _this.kind = kind;
-        _this.color = color;
-        _this.movements = movements;
-        _this.isAllowedToGoBackwards = isAllowedToGoBackwards;
+        _this.set('kind', kind);
+        _this.set('color', color);
+        _this.set('movements', movements);
+        _this.set('isAllowedToGoBackwards', isAllowedToGoBackwards);
         return _this;
     }
-    Piece.prototype.getBoardItem = function () {
-        return this.boardItem;
-    };
     Piece.prototype.getBoard = function () {
-        return this.boardItem.get('board');
+        return this.get('boardItem').get('board');
     };
     Piece.prototype.simulateMovement = function () {
         var _this = this;
-        var currentPosition = this.getBoardItem().get('position');
-        var positions = this.movements.map(function (movement) {
+        var currentPosition = this.get('boardItem').get('position');
+        var positions = this.get('movements').map(function (movement) {
             return movement.executeSimulation(currentPosition, _this.getBoard());
         });
         return lodash_1.default.flatten(positions);
-    };
-    Piece.prototype.addToItem = function (item) {
-        this.boardItem = item;
     };
     return Piece;
 }(Model_1.Model));

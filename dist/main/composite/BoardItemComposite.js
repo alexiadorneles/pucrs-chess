@@ -13,6 +13,7 @@ var BoardItemComposite = (function () {
         this.engine = engine;
         this.cleanCircularReferences = this.cleanCircularReferences.bind(this);
         this.onClick = this.onClick.bind(this);
+        this.model.set('board', parent.getModel().get('control'));
     }
     BoardItemComposite.prototype.getModel = function () {
         return this.model;
@@ -20,30 +21,28 @@ var BoardItemComposite = (function () {
     BoardItemComposite.prototype.getParent = function () {
         return this.parent;
     };
-    BoardItemComposite.prototype.onClick = function (element) {
+    BoardItemComposite.prototype.onClick = function (event) {
         var piece = this.getChildren()[0];
         var boardModel = this.getParent().getModel();
         if (!this.model.get('isHighlighted')) {
             if (piece) {
-                boardModel.set('currentMovingPieces', piece.getModel());
-                this.model.setHighlight(true);
+                this.engine.setCurrentMovingPiece(piece.getModel());
+                this.engine.highlightItem(this);
             }
         }
         else {
             if (!piece) {
-                if (boardModel.get('currentMovingPieces')) {
-                    ;
-                    this.getParent().board.movePiece(this.model);
+                if (this.engine.getCurrentMovingPiece()) {
+                    this.engine.movePiece(this.getParent(), this);
                 }
             }
             else {
-                if (boardModel.get('currentMovingPieces')) {
-                    if (!lodash_1.default.isEqual(piece, boardModel.get('currentMovingPieces'))) {
-                        ;
-                        this.getParent().board.movePiece(this.model);
+                if (this.engine.getCurrentMovingPiece()) {
+                    if (!lodash_1.default.isEqual(piece, this.engine.getCurrentMovingPiece())) {
+                        this.engine.movePiece(this.getParent(), this);
                     }
                 }
-                this.model.setHighlight(false);
+                this.engine.removeItemHighlight(this);
             }
         }
     };

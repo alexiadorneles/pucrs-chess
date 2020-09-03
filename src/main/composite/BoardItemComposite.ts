@@ -17,6 +17,7 @@ export class BoardItemComposite implements ReactiveComposite<BoardItemAttributes
   ) {
     this.cleanCircularReferences = this.cleanCircularReferences.bind(this)
     this.onClick = this.onClick.bind(this)
+    this.model.set('board', parent.getModel().get('control'))
   }
 
   public getModel(): Model<BoardItemAttributes> {
@@ -27,26 +28,26 @@ export class BoardItemComposite implements ReactiveComposite<BoardItemAttributes
     return this.parent
   }
 
-  public onClick(element: Event): void {
+  public onClick(event: Event): void {
     const [piece] = this.getChildren() as Composite<PieceAttributes>[]
     const boardModel = this.getParent().getModel()
     if (!this.model.get('isHighlighted')) {
       if (piece) {
-        boardModel.set('currentMovingPieces', piece.getModel())
-        this.model.setHighlight(true)
+        this.engine.setCurrentMovingPiece(piece.getModel())
+        this.engine.highlightItem(this)
       }
     } else {
       if (!piece) {
-        if (boardModel.get('currentMovingPieces')) {
-          ;(this.getParent() as any).board.movePiece(this.model)
+        if (this.engine.getCurrentMovingPiece()) {
+          this.engine.movePiece(this.getParent(), this)
         }
       } else {
-        if (boardModel.get('currentMovingPieces')) {
-          if (!_.isEqual(piece, boardModel.get('currentMovingPieces'))) {
-            ;(this.getParent() as any).board.movePiece(this.model)
+        if (this.engine.getCurrentMovingPiece()) {
+          if (!_.isEqual(piece, this.engine.getCurrentMovingPiece())) {
+            this.engine.movePiece(this.getParent(), this)
           }
         }
-        this.model.setHighlight(false)
+        this.engine.removeItemHighlight(this)
       }
     }
   }

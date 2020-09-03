@@ -1,12 +1,11 @@
 import _ from 'lodash'
 import { Board } from 'main/domain/board/Board'
 import { Color } from '../../definitions/Color'
+import { ControlAttribute, Model } from '../../definitions/Model'
 import { Position } from '../../definitions/Movement'
 import { PieceKind } from '../../definitions/PieceKind'
-import { BoardItem, BoardItemAttributes } from '../board/BoardItem'
+import { BoardItemAttributes } from '../board/BoardItem'
 import { Movement } from '../movement/Movement'
-import { PieceBuilderMap } from '../PieceBuilder'
-import { Model, ControlAttribute } from '../../definitions/Model'
 
 export interface PieceAttributes extends ControlAttribute<Piece> {
   boardItem: Model<BoardItemAttributes>
@@ -17,34 +16,28 @@ export interface PieceAttributes extends ControlAttribute<Piece> {
 }
 
 export abstract class Piece extends Model<PieceAttributes> {
-  protected boardItem: BoardItem
-
   constructor(
-    protected kind: PieceKind,
-    protected color: Color,
-    protected movements: Movement[],
-    protected isAllowedToGoBackwards: boolean,
+    kind: PieceKind,
+    color: Color,
+    movements: Movement[],
+    isAllowedToGoBackwards: boolean,
   ) {
     super()
-  }
-
-  public getBoardItem(): BoardItem {
-    return this.boardItem
+    this.set('kind', kind)
+    this.set('color', color)
+    this.set('movements', movements)
+    this.set('isAllowedToGoBackwards', isAllowedToGoBackwards)
   }
 
   public getBoard(): Board {
-    return this.boardItem.get('board')
+    return this.get('boardItem').get('board')
   }
 
   public simulateMovement(): Position[] {
-    const currentPosition = this.getBoardItem().get('position')
-    const positions = this.movements.map(movement =>
+    const currentPosition = this.get('boardItem').get('position')
+    const positions = this.get('movements').map(movement =>
       movement.executeSimulation(currentPosition, this.getBoard()),
     )
     return _.flatten(positions)
-  }
-
-  public addToItem(item: BoardItem): void {
-    this.boardItem = item
   }
 }

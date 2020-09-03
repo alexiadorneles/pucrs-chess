@@ -13,7 +13,21 @@ var DOMGenerator = (function () {
         }
         return DOMGenerator.instance;
     };
-    DOMGenerator.prototype.refresh = function (boardComposite) {
+    DOMGenerator.prototype.refreshItem = function (itemComposite) {
+        var styleClass = itemComposite
+            .getModel()
+            .get('element')
+            .getAttribute('class');
+        var alreadyHighlighted = styleClass.includes('highlight');
+        if (alreadyHighlighted && !itemComposite.getModel().get('isHighlighted'))
+            styleClass = styleClass.replace('highlight', '');
+        var highlightClass = itemComposite.getModel().get('isHighlighted') && !alreadyHighlighted ? 'highlight' : '';
+        itemComposite
+            .getModel()
+            .get('element')
+            .setAttribute('class', styleClass + " " + highlightClass);
+    };
+    DOMGenerator.prototype.refreshBoard = function (boardComposite) {
         var root = document.getElementById('root');
         root.innerHTML = '';
         var board = boardComposite.createElement();

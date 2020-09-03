@@ -11,14 +11,14 @@ export class Pawn extends Piece {
   }
 
   public simulateMovement(): Position[] {
-    const currentPosition = this.boardItem.get('position')
+    const currentPosition = this.get('boardItem').get('position')
     const newPosition = this.getNewPositionByColor(currentPosition)
     const possibleAttacks = this.getAttacksByColor(currentPosition)
     return _.compact([newPosition, ...possibleAttacks])
   }
 
   private getNewPositionByColor({ line, column }: Position): Position | null {
-    const newLine = this.color === Color.WHITE ? ++line : --line
+    const newLine = this.get('color') === Color.WHITE ? ++line : --line
     const newPosition = { line: newLine, column }
     const isOccupied = this.getBoard().getPieceByPosition(newPosition)
     return (!isOccupied && newPosition) || null
@@ -26,7 +26,7 @@ export class Pawn extends Piece {
 
   private getAttacksByColor(currentPosition: Position): Position[] {
     const clone = { ...currentPosition }
-    const newLine = this.color === Color.WHITE ? ++clone.line : --clone.line
+    const newLine = this.get('color') === Color.WHITE ? ++clone.line : --clone.line
     const newPosition = { line: newLine, column: clone.column }
     const { line, column } = newPosition
     const rightDiagonal = { line, column: column + 1 }

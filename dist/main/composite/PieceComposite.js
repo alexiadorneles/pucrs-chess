@@ -8,6 +8,7 @@ var PieceComposite = (function () {
         this.parent = parent;
         this.engine = engine;
         this.cleanCircularReferences = this.cleanCircularReferences.bind(this);
+        this.piece.set('boardItem', parent.getModel());
     }
     PieceComposite.prototype.getModel = function () {
         return this.piece;
@@ -50,7 +51,7 @@ var PieceComposite = (function () {
         return this.piece;
     };
     PieceComposite.prototype.cleanCircularReferences = function () {
-        this.piece.addToItem(null);
+        this.piece.set('boardItem', null);
     };
     return PieceComposite;
 }());

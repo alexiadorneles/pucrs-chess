@@ -15,6 +15,7 @@ export class PieceComposite implements Composite<PieceAttributes> {
     private engine: ChessEngine,
   ) {
     this.cleanCircularReferences = this.cleanCircularReferences.bind(this)
+    this.piece.set('boardItem', parent.getModel())
   }
 
   public getModel(): Model<PieceAttributes> {
@@ -67,6 +68,6 @@ export class PieceComposite implements Composite<PieceAttributes> {
   }
 
   cleanCircularReferences(): void {
-    this.piece.addToItem(null)
+    this.piece.set('boardItem', null)
   }
 }

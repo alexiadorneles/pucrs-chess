@@ -16,13 +16,13 @@ export class GameStateHandler {
 
   public newGame(): void {
     this.boardComposite = this.chessFactory.createInitialBoard()
-    this.domGenerator.refresh(this.boardComposite)
+    this.domGenerator.refreshBoard(this.boardComposite)
   }
 
   public async loadGame(): Promise<void> {
     const response = await Axios.get(API.LOAD_URL)
     this.boardComposite = this.chessFactory.createBoardFromJSON(response.data)
-    this.domGenerator.refresh(this.boardComposite)
+    this.domGenerator.refreshBoard(this.boardComposite)
   }
 
   public async saveGame(): Promise<void> {

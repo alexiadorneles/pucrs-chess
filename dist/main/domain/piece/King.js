@@ -31,9 +31,9 @@ var King = (function (_super) {
         return _this;
     }
     King.prototype.simulateMovement = function () {
-        var initialPosition = this.getBoardItem().get('position');
+        var initialPosition = this.get('boardItem').get('position');
         var board = this.getBoard();
-        var positions = this.movements.map(function (movements) {
+        var positions = this.get('movements').map(function (movements) {
             return movements
                 .getMovementOffsets()
                 .map(function (offset) { return movements.createNewPositionBasedOnOffset(initialPosition, offset); })

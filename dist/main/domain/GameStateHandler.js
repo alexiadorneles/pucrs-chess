@@ -51,7 +51,7 @@ var GameStateHandler = (function () {
     }
     GameStateHandler.prototype.newGame = function () {
         this.boardComposite = this.chessFactory.createInitialBoard();
-        this.domGenerator.refresh(this.boardComposite);
+        this.domGenerator.refreshBoard(this.boardComposite);
     };
     GameStateHandler.prototype.loadGame = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -62,7 +62,7 @@ var GameStateHandler = (function () {
                     case 1:
                         response = _a.sent();
                         this.boardComposite = this.chessFactory.createBoardFromJSON(response.data);
-                        this.domGenerator.refresh(this.boardComposite);
+                        this.domGenerator.refreshBoard(this.boardComposite);
                         return [2];
                 }
             });

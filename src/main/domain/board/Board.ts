@@ -1,15 +1,13 @@
 import _ from 'lodash'
-import { BoardComposite } from '../../composite/BoardComposite'
 import { WhitePiecesPositionMap } from '../../constants/InitialPositions'
 import { Color } from '../../definitions/Color'
+import { ControlAttribute, Model } from '../../definitions/Model'
 import { Position } from '../../definitions/Movement'
 import { PieceKind } from '../../definitions/PieceKind'
-import { DOMGenerator } from '../../DOMGenerator'
 import { ColorAdapter } from '../adapter/ColorAdapter'
 import { Piece, PieceAttributes } from '../piece/Piece'
 import { PieceBuilder } from '../PieceBuilder'
 import { BoardItem } from './BoardItem'
-import { Model, ControlAttribute } from '../../definitions/Model'
 
 const initMatrix = (): BoardItem[][] => {
   const matrix = []
@@ -31,11 +29,6 @@ export interface BoardAttributes extends ControlAttribute<Board> {
 export class Board extends Model<BoardAttributes> {
   public matrix: Array<Array<BoardItem>> = initMatrix()
 
-  constructor() {
-    super()
-    this.movePiece = this.movePiece.bind(this)
-  }
-
   public init(): void {
     const whites = this.buildPieces(Color.WHITE)
     const pinks = this.buildPieces(Color.DARK_PINK)
@@ -55,14 +48,6 @@ export class Board extends Model<BoardAttributes> {
     return positionExists ? this.matrix[line][column] : null
   }
 
-  public highlightPositions(positions: Position[]): void {
-    positions.forEach(position => this.getItem(position).setHighlight(true))
-  }
-
-  public clearHighlights(): void {
-    this.executeForAll((item: BoardItem) => item.removeHighlight())
-  }
-
   public isPositionBlockedByOpponent(position: Position, initialPosition: Position): boolean {
     const blockingPiece =
       this.isPositionInMatrixRange(position) && this.getPieceByPosition(position)
@@ -71,28 +56,6 @@ export class Board extends Model<BoardAttributes> {
       .get('piece')
       .get('color')
     return blockingColor && blockedColor !== blockingColor
-  }
-
-  public setCurrentMovingPiece(piece: Piece): void {
-    const currentMovingPieces = this.get('currentMovingPieces')
-    if (currentMovingPieces && !_.isEqual(currentMovingPieces, piece)) {
-      this.clearHighlights()
-    }
-    this.set('currentMovingPieces', piece)
-  }
-
-  public movePiece(clickedItem: BoardItem): void {
-    const pieceItem = this.get('currentMovingPieces').get('boardItem')
-    clickedItem.set('piece', this.get('currentMovingPieces').get('control'))
-    this.set('currentMovingPieces', null)
-    pieceItem.set('piece', null)
-    // DOMGenerator.getInstance().refresh(new BoardComposite(this))
-  }
-
-  public executeForAll(callback: (item: BoardItem, position?: Position) => void): void {
-    for (let line = 0; line < 8; line++)
-      for (let column = 0; column < 8; column++)
-        callback(this.getItem({ line: line, column: column }), { line: line, column: column })
   }
 
   public isValidPosition = (position: Position): boolean => {
