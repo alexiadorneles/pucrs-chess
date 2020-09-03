@@ -18,6 +18,7 @@ export class BoardItemComposite implements ReactiveComposite<BoardItemAttributes
     this.cleanCircularReferences = this.cleanCircularReferences.bind(this)
     this.onClick = this.onClick.bind(this)
     this.model.set('board', parent.getModel().get('control'))
+    this.model.set('control', model)
   }
 
   public getModel(): Model<BoardItemAttributes> {

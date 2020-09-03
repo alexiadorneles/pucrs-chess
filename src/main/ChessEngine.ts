@@ -11,8 +11,12 @@ import { PieceAttributes } from './domain/piece/Piece'
 export class ChessEngine {
   private currentMovingPiece: Model<PieceAttributes>
 
-  public setCurrentMovingPiece(piece: Model<PieceAttributes>): void {
+  public setCurrentMovingPiece(piece: Model<PieceAttributes> | null): void {
     if (this.currentMovingPiece && !_.isEqual(this.currentMovingPiece, piece)) {
+      if (!piece) {
+        const board = this.currentMovingPiece.get('boardItem').get('board')
+        return this.removeHighlightFromBoard(new BoardComposite(board, this))
+      }
       const board = piece.get('boardItem').get('board')
       this.removeHighlightFromBoard(new BoardComposite(board, this))
     }
@@ -54,7 +58,9 @@ export class ChessEngine {
       const positions = piece.simulateMovement()
       positions.forEach(position => {
         const item = boardControl.getItem(position)
-        this.highlightItem(new BoardItemComposite(item, board, this))
+        item.set('isHighlighted', true)
+        DOMGenerator.getInstance().refreshItem(new BoardItemComposite(item, board, this))
+        // this.highlightItem(new BoardItemComposite(item, board, this))
       })
     }
   }

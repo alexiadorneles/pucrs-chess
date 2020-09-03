@@ -18,19 +18,15 @@ export class DOMGenerator {
   }
 
   public refreshItem(itemComposite: Composite<BoardItemAttributes>): void {
-    let styleClass = itemComposite
-      .getModel()
-      .get('element')
-      .getAttribute('class')
+    const element = itemComposite.getModel().get('element')
+    if (!element) return
+    let styleClass = element.getAttribute('class')
     const alreadyHighlighted = styleClass.includes('highlight')
     if (alreadyHighlighted && !itemComposite.getModel().get('isHighlighted'))
       styleClass = styleClass.replace('highlight', '')
     const highlightClass =
       itemComposite.getModel().get('isHighlighted') && !alreadyHighlighted ? 'highlight' : ''
-    itemComposite
-      .getModel()
-      .get('element')
-      .setAttribute('class', `${styleClass} ${highlightClass}`)
+    element.setAttribute('class', `${styleClass} ${highlightClass}`)
   }
 
   public refreshBoard(boardComposite: Composite<BoardAttributes>): void {

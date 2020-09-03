@@ -6,6 +6,7 @@ var MovementComposite = (function () {
         this.movement = movement;
         this.parent = parent;
         this.engine = engine;
+        this.movement.set('control', this.movement);
     }
     MovementComposite.prototype.getModel = function () {
         return this.movement;

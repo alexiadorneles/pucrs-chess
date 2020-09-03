@@ -10,7 +10,9 @@ export class MovementComposite implements Composite<MovementAttributes> {
     private movement: Movement,
     private parent: Composite<PieceAttributes>,
     private engine: ChessEngine,
-  ) {}
+  ) {
+    this.movement.set('control', this.movement)
+  }
 
   public getModel(): Model<MovementAttributes> {
     return this.movement

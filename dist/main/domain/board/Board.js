@@ -38,7 +38,7 @@ var initMatrix = function () {
 var Board = (function (_super) {
     __extends(Board, _super);
     function Board() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super.call(this) || this;
         _this.matrix = initMatrix();
         _this.isValidPosition = function (position) {
             return _this.isPositionInMatrixRange(position) && !_this.getPieceByPosition(position);
@@ -48,6 +48,7 @@ var Board = (function (_super) {
             _this.matrix[line][column] = item;
             item.set('board', _this);
         };
+        _this.init();
         return _this;
     }
     Board.prototype.init = function () {

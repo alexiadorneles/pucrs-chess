@@ -29,6 +29,11 @@ export interface BoardAttributes extends ControlAttribute<Board> {
 export class Board extends Model<BoardAttributes> {
   public matrix: Array<Array<BoardItem>> = initMatrix()
 
+  constructor() {
+    super()
+    this.init()
+  }
+
   public init(): void {
     const whites = this.buildPieces(Color.WHITE)
     const pinks = this.buildPieces(Color.DARK_PINK)

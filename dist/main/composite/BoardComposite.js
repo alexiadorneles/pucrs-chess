@@ -6,7 +6,7 @@ var BoardComposite = (function () {
     function BoardComposite(board, engine) {
         this.board = board;
         this.engine = engine;
-        this.board.init();
+        this.getModel().set('control', board);
     }
     BoardComposite.prototype.getModel = function () {
         return this.board;

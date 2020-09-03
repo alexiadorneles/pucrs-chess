@@ -14,6 +14,7 @@ var BoardItemComposite = (function () {
         this.cleanCircularReferences = this.cleanCircularReferences.bind(this);
         this.onClick = this.onClick.bind(this);
         this.model.set('board', parent.getModel().get('control'));
+        this.model.set('control', model);
     }
     BoardItemComposite.prototype.getModel = function () {
         return this.model;

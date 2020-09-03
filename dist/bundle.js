@@ -13,6 +13,10 @@ var ChessEngine = (function () {
     }
     ChessEngine.prototype.setCurrentMovingPiece = function (piece) {
         if (this.currentMovingPiece && !lodash_1.default.isEqual(this.currentMovingPiece, piece)) {
+            if (!piece) {
+                var board_1 = this.currentMovingPiece.get('boardItem').get('board');
+                return this.removeHighlightFromBoard(new BoardComposite_1.BoardComposite(board_1, this));
+            }
             var board = piece.get('boardItem').get('board');
             this.removeHighlightFromBoard(new BoardComposite_1.BoardComposite(board, this));
         }
@@ -49,7 +53,8 @@ var ChessEngine = (function () {
             var positions = piece.simulateMovement();
             positions.forEach(function (position) {
                 var item = boardControl.getItem(position);
-                _this.highlightItem(new BoardItemComposite_1.BoardItemComposite(item, board, _this));
+                item.set('isHighlighted', true);
+                DOMGenerator_1.DOMGenerator.getInstance().refreshItem(new BoardItemComposite_1.BoardItemComposite(item, board, _this));
             });
         }
     };
@@ -86,18 +91,15 @@ var DOMGenerator = (function () {
         return DOMGenerator.instance;
     };
     DOMGenerator.prototype.refreshItem = function (itemComposite) {
-        var styleClass = itemComposite
-            .getModel()
-            .get('element')
-            .getAttribute('class');
+        var element = itemComposite.getModel().get('element');
+        if (!element)
+            return;
+        var styleClass = element.getAttribute('class');
         var alreadyHighlighted = styleClass.includes('highlight');
         if (alreadyHighlighted && !itemComposite.getModel().get('isHighlighted'))
             styleClass = styleClass.replace('highlight', '');
         var highlightClass = itemComposite.getModel().get('isHighlighted') && !alreadyHighlighted ? 'highlight' : '';
-        itemComposite
-            .getModel()
-            .get('element')
-            .setAttribute('class', styleClass + " " + highlightClass);
+        element.setAttribute('class', styleClass + " " + highlightClass);
     };
     DOMGenerator.prototype.refreshBoard = function (boardComposite) {
         var root = document.getElementById('root');
@@ -141,7 +143,7 @@ var BoardComposite = (function () {
     function BoardComposite(board, engine) {
         this.board = board;
         this.engine = engine;
-        this.board.init();
+        this.getModel().set('control', board);
     }
     BoardComposite.prototype.getModel = function () {
         return this.board;
@@ -192,6 +194,7 @@ var BoardItemComposite = (function () {
         this.cleanCircularReferences = this.cleanCircularReferences.bind(this);
         this.onClick = this.onClick.bind(this);
         this.model.set('board', parent.getModel().get('control'));
+        this.model.set('control', model);
     }
     BoardItemComposite.prototype.getModel = function () {
         return this.model;
@@ -266,6 +269,7 @@ var MovementComposite = (function () {
         this.movement = movement;
         this.parent = parent;
         this.engine = engine;
+        this.movement.set('control', this.movement);
     }
     MovementComposite.prototype.getModel = function () {
         return this.movement;
@@ -306,6 +310,7 @@ var PieceComposite = (function () {
         this.engine = engine;
         this.cleanCircularReferences = this.cleanCircularReferences.bind(this);
         this.piece.set('boardItem', parent.getModel());
+        this.piece.set('control', piece);
     }
     PieceComposite.prototype.getModel = function () {
         return this.piece;
@@ -719,7 +724,7 @@ var initMatrix = function () {
 var Board = (function (_super) {
     __extends(Board, _super);
     function Board() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super.call(this) || this;
         _this.matrix = initMatrix();
         _this.isValidPosition = function (position) {
             return _this.isPositionInMatrixRange(position) && !_this.getPieceByPosition(position);
@@ -729,6 +734,7 @@ var Board = (function (_super) {
             _this.matrix[line][column] = item;
             item.set('board', _this);
         };
+        _this.init();
         return _this;
     }
     Board.prototype.init = function () {

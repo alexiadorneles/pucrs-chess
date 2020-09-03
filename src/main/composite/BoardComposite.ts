@@ -7,7 +7,7 @@ import { Model } from '../definitions/Model'
 import { ChessEngine } from '../ChessEngine'
 export class BoardComposite implements Composite<BoardAttributes> {
   constructor(private board: Board, private engine: ChessEngine) {
-    this.board.init()
+    this.getModel().set('control', board)
   }
 
   public getModel(): Model<BoardAttributes> {

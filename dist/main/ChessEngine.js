@@ -12,6 +12,10 @@ var ChessEngine = (function () {
     }
     ChessEngine.prototype.setCurrentMovingPiece = function (piece) {
         if (this.currentMovingPiece && !lodash_1.default.isEqual(this.currentMovingPiece, piece)) {
+            if (!piece) {
+                var board_1 = this.currentMovingPiece.get('boardItem').get('board');
+                return this.removeHighlightFromBoard(new BoardComposite_1.BoardComposite(board_1, this));
+            }
             var board = piece.get('boardItem').get('board');
             this.removeHighlightFromBoard(new BoardComposite_1.BoardComposite(board, this));
         }
@@ -48,7 +52,8 @@ var ChessEngine = (function () {
             var positions = piece.simulateMovement();
             positions.forEach(function (position) {
                 var item = boardControl.getItem(position);
-                _this.highlightItem(new BoardItemComposite_1.BoardItemComposite(item, board, _this));
+                item.set('isHighlighted', true);
+                DOMGenerator_1.DOMGenerator.getInstance().refreshItem(new BoardItemComposite_1.BoardItemComposite(item, board, _this));
             });
         }
     };

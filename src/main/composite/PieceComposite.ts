@@ -16,6 +16,7 @@ export class PieceComposite implements Composite<PieceAttributes> {
   ) {
     this.cleanCircularReferences = this.cleanCircularReferences.bind(this)
     this.piece.set('boardItem', parent.getModel())
+    this.piece.set('control', piece)
   }
 
   public getModel(): Model<PieceAttributes> {
