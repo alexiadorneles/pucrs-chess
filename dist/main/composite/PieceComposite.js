@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var PieceBuilder_1 = require("../domain/PieceBuilder");
+var factory_1 = require("../factory");
 var MovementComposite_1 = require("./MovementComposite");
 var PieceComposite = (function () {
     function PieceComposite(piece, parent, engine) {
@@ -28,15 +28,15 @@ var PieceComposite = (function () {
         var _this = this;
         if (!object)
             return;
-        var instantiationFn = PieceBuilder_1.PieceBuilderMap.get(object.kind);
+        var instantiationFn = factory_1.PieceBuilderMap.get(object.kind);
         var piece = Object.assign(new instantiationFn(object.color), object);
         var mapMovements = function (mov) {
-            return MovementComposite_1.MovementComposite.createFromJSON(mov, _this, engine)
+            return MovementComposite_1.MovementComposite.createFromJSON(mov, _this)
                 .getModel()
                 .get('control');
         };
         piece.set('movements', piece.get('movements').map(function (mov) {
-            return MovementComposite_1.MovementComposite.createFromJSON(mov, _this, engine)
+            return MovementComposite_1.MovementComposite.createFromJSON(mov, _this)
                 .getModel()
                 .get('control');
         }));
@@ -44,9 +44,7 @@ var PieceComposite = (function () {
     };
     PieceComposite.prototype.getChildren = function () {
         var _this = this;
-        return this.piece
-            .get('movements')
-            .map(function (movement) { return new MovementComposite_1.MovementComposite(movement, _this, _this.engine); });
+        return this.piece.get('movements').map(function (movement) { return new MovementComposite_1.MovementComposite(movement, _this); });
     };
     PieceComposite.prototype.getJSON = function () {
         return this.piece;

@@ -1,24 +1,15 @@
-import { Composite } from './definitions/Composite'
-import { BoardAttributes, Board } from './domain/board/Board'
-import { BoardItemAttributes, BoardItem } from './domain/board/BoardItem'
-import { DOMGenerator } from './DOMGenerator'
 import _ from 'lodash'
-import { BoardComposite } from './composite/BoardComposite'
-import { BoardItemComposite } from './composite/BoardItemComposite'
-import { Model } from './definitions/Model'
-import { PieceAttributes } from './domain/piece/Piece'
+import { BoardComposite, BoardItemComposite, Composite } from './composite'
+import { DOMGenerator } from './DOMGenerator'
+import { BoardAttributes, BoardItemAttributes, Model, PieceAttributes } from './models'
 
 export class ChessEngine {
   private currentMovingPiece: Model<PieceAttributes>
 
   public setCurrentMovingPiece(piece: Model<PieceAttributes> | null): void {
     if (this.currentMovingPiece && !_.isEqual(this.currentMovingPiece, piece)) {
-      if (!piece) {
-        const board = this.currentMovingPiece.get('boardItem').get('board')
-        return this.removeHighlightFromBoard(new BoardComposite(board, this))
-      }
-      const board = piece.get('boardItem').get('board')
-      this.removeHighlightFromBoard(new BoardComposite(board, this))
+      if (!piece) return this.removeHighLightFromPieceBoard(this.currentMovingPiece)
+      this.removeHighLightFromPieceBoard(piece)
     }
     this.currentMovingPiece = piece
   }
@@ -60,7 +51,6 @@ export class ChessEngine {
         const item = boardControl.getItem(position)
         item.set('isHighlighted', true)
         DOMGenerator.getInstance().refreshItem(new BoardItemComposite(item, board, this))
-        // this.highlightItem(new BoardItemComposite(item, board, this))
       })
     }
   }
@@ -71,11 +61,16 @@ export class ChessEngine {
     this.removeHighlightFromBoard(item.getParent() as Composite<BoardAttributes>)
   }
 
-  removeHighlightFromBoard(board: Composite<BoardAttributes>): void {
+  private removeHighlightFromBoard(board: Composite<BoardAttributes>): void {
     const allItems = board.getChildren()
     allItems.forEach((item: Composite<BoardItemAttributes>) => {
       item.getModel().set('isHighlighted', false)
       DOMGenerator.getInstance().refreshItem(item)
     })
+  }
+
+  private removeHighLightFromPieceBoard(piece: Model<PieceAttributes>): void {
+    const board = piece.get('boardItem').get('board')
+    this.removeHighlightFromBoard(new BoardComposite(board, this))
   }
 }

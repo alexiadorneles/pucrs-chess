@@ -1,4 +1,4 @@
-import { Composite } from './Composite'
+import { Composite } from '../composite/Composite'
 
 export interface ReactiveItem {
   onClick(element: Event): void

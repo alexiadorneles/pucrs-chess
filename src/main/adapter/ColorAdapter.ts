@@ -1,5 +1,5 @@
-import { Color } from '../../definitions/Color'
-import { Position } from '../../definitions/Movement'
+import { Color } from '../definitions/Color'
+import { Position } from '../definitions/Movement'
 
 const ColorOppositeMap: { [key in Color]: Color } = {
   [Color.BLACK]: Color.PINK,

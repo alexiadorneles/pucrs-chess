@@ -1,13 +1,10 @@
 import _ from 'lodash'
-import { BaseComposite, Composite } from '../definitions/Composite'
-import { JSONObject } from '../definitions/JSONObject'
-import { Model } from '../definitions/Model'
-import { ReactiveComposite } from '../definitions/ReactiveItem'
-import { BoardAttributes, Board } from '../domain/board/Board'
-import { BoardItem, BoardItemAttributes } from '../domain/board/BoardItem'
-import { PieceAttributes } from '../domain/piece/Piece'
-import { PieceComposite } from './PieceComposite'
 import { ChessEngine } from '../ChessEngine'
+import { JSONObject } from '../definitions/JSONObject'
+import { ReactiveComposite } from '../definitions/ReactiveItem'
+import { BoardAttributes, BoardItem, BoardItemAttributes, Model, PieceAttributes } from '../models'
+import { BaseComposite, Composite } from './Composite'
+import { PieceComposite } from './PieceComposite'
 
 export class BoardItemComposite implements ReactiveComposite<BoardItemAttributes> {
   constructor(

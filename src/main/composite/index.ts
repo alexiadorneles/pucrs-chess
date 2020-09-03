@@ -1,0 +1,5 @@
+export * from './BoardComposite'
+export * from './BoardItemComposite'
+export * from './Composite'
+export * from './MovementComposite'
+export * from './PieceComposite'

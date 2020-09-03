@@ -1,20 +1,19 @@
+import { ColorAdapter } from '../adapter'
 import { PinkPiecesPositionMap, WhitePiecesPositionMap } from '../constants/InitialPositions'
 import { Color } from '../definitions/Color'
 import { MovementKind } from '../definitions/Movement'
 import { PieceKind } from '../definitions/PieceKind'
-import { ColorAdapter } from './adapter/ColorAdapter'
-import { BoardItem } from './board/BoardItem'
-import { DiagonalMovement } from './movement/DiagonalMovement'
-import { HorizontalMovement } from './movement/HorizontalMovement'
-import { LMovement } from './movement/LMovement'
-import { VerticalMovement } from './movement/VerticalMovement'
-import { Bishop } from './piece/Bishop'
-import { King } from './piece/King'
-import { Knight } from './piece/Knight'
-import { Pawn } from './piece/Pawn'
-import { Piece } from './piece/Piece'
-import { Queen } from './piece/Queen'
-import { Rook } from './piece/Rook'
+import { BoardItem } from '../models/board/BoardItem'
+import { DiagonalMovement } from '../models/movement/DiagonalMovement'
+import { HorizontalMovement } from '../models/movement/HorizontalMovement'
+import { LMovement } from '../models/movement/LMovement'
+import { VerticalMovement } from '../models/movement/VerticalMovement'
+import { Bishop } from '../models/piece/Bishop'
+import { King } from '../models/piece/King'
+import { Knight } from '../models/piece/Knight'
+import { Pawn } from '../models/piece/Pawn'
+import { Queen } from '../models/piece/Queen'
+import { Rook } from '../models/piece/Rook'
 
 export const PieceBuilderMap: Map<PieceKind, new (color: Color) => Piece> = new Map([
   [PieceKind.PAWN, Pawn],
@@ -32,8 +31,8 @@ export const MovementBuilderMap = {
   [MovementKind.L]: LMovement,
 }
 
-export namespace PieceBuilder {
-  export function build(kind: PieceKind, pieceColor: Color): BoardItem[] {
+export namespace PieceFactory {
+  export function createPiece(kind: PieceKind, pieceColor: Color): BoardItem[] {
     const map = pieceColor === Color.WHITE ? WhitePiecesPositionMap : PinkPiecesPositionMap
     return map.get(kind).map(position => {
       const clazz = PieceBuilderMap.get(kind)

@@ -1,11 +1,11 @@
 import _ from 'lodash'
-import { Board } from 'main/domain/board/Board'
 import { Color } from '../../definitions/Color'
-import { ControlAttribute, Model } from '../../definitions/Model'
 import { Position } from '../../definitions/Movement'
 import { PieceKind } from '../../definitions/PieceKind'
 import { BoardItemAttributes } from '../board/BoardItem'
+import { ControlAttribute, Model } from '../Model'
 import { Movement } from '../movement/Movement'
+import { Board } from '../board/Board'
 
 export interface PieceAttributes extends ControlAttribute<Piece> {
   boardItem: Model<BoardItemAttributes>

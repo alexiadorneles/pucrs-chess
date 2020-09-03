@@ -1,11 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var PieceBuilder_1 = require("../domain/PieceBuilder");
+var factory_1 = require("../factory");
 var MovementComposite = (function () {
-    function MovementComposite(movement, parent, engine) {
+    function MovementComposite(movement, parent) {
         this.movement = movement;
         this.parent = parent;
-        this.engine = engine;
         this.movement.set('control', this.movement);
     }
     MovementComposite.prototype.getModel = function () {
@@ -17,10 +16,10 @@ var MovementComposite = (function () {
     MovementComposite.prototype.createElement = function () {
         return null;
     };
-    MovementComposite.createFromJSON = function (object, parent, engine) {
-        var model = new PieceBuilder_1.MovementBuilderMap[object.kind]();
+    MovementComposite.createFromJSON = function (object, parent) {
+        var model = new factory_1.MovementBuilderMap[object.kind]();
         var movement = Object.assign(model, object);
-        return new MovementComposite(movement, parent, engine);
+        return new MovementComposite(movement, parent);
     };
     MovementComposite.prototype.cleanCircularReferences = function () {
         throw new Error('Method not implemented.');

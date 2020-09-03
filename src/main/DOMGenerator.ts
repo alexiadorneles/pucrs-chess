@@ -1,8 +1,7 @@
-import { Composite } from './definitions/Composite'
 import _ from 'lodash'
-import { BoardAttributes } from './domain/board/Board'
-import { BoardItemAttributes } from './domain/board/BoardItem'
+import { Composite } from './composite'
 import { ReactiveComposite } from './definitions/ReactiveItem'
+import { BoardAttributes, BoardItemAttributes } from './models'
 
 export class DOMGenerator {
   private static instance: DOMGenerator
@@ -22,7 +21,7 @@ export class DOMGenerator {
     if (!element) return
     let styleClass = element.getAttribute('class')
     const alreadyHighlighted = styleClass.includes('highlight')
-    if (alreadyHighlighted && !itemComposite.getModel().get('isHighlighted'))
+    if (this.shouldRemoveHighlight(alreadyHighlighted, itemComposite))
       styleClass = styleClass.replace('highlight', '')
     const highlightClass =
       itemComposite.getModel().get('isHighlighted') && !alreadyHighlighted ? 'highlight' : ''
@@ -41,6 +40,13 @@ export class DOMGenerator {
     root.appendChild(board)
   }
 
+  private shouldRemoveHighlight(
+    alreadyHighlighted: boolean,
+    itemComposite: Composite<BoardItemAttributes>,
+  ): boolean {
+    return alreadyHighlighted && !itemComposite.getModel().get('isHighlighted')
+  }
+
   private getBoardLines(items: ReactiveComposite<BoardItemAttributes>[][]): Element[] {
     const columns = items.map(composites => composites.map(item => this.getItemWithPiece(item)))
     return columns.map(column => {
@@ -56,7 +62,6 @@ export class DOMGenerator {
     const [piece] = boardItem.getChildren()
     if (piece) {
       const pieceElement = piece.createElement()
-      // TODO: FIX
       pieceElement.addEventListener('click', boardItem.onClick)
       itemElement.appendChild(pieceElement)
     }

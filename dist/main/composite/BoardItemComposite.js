@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
-var BoardItem_1 = require("../domain/board/BoardItem");
+var models_1 = require("../models");
 var PieceComposite_1 = require("./PieceComposite");
 var BoardItemComposite = (function () {
     function BoardItemComposite(model, parent, engine) {
@@ -58,7 +58,7 @@ var BoardItemComposite = (function () {
         return container;
     };
     BoardItemComposite.createFromJSON = function (object, parent, engine) {
-        var boardItem = Object.assign(new BoardItem_1.BoardItem(object.position, object.color), object);
+        var boardItem = Object.assign(new models_1.BoardItem(object.position, object.color), object);
         var piece = boardItem.getPiece();
         var composite = new BoardItemComposite(boardItem, parent, engine);
         piece && PieceComposite_1.PieceComposite.createFromJSON(piece, composite, engine);

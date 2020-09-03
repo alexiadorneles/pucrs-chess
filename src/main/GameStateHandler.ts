@@ -1,10 +1,9 @@
-import { ChessFactory } from '../factory/ChessFactory'
-import { DOMGenerator } from '../DOMGenerator'
-import { Board, BoardAttributes } from './board/Board'
 import Axios from 'axios'
-import { API } from '../constants/config'
-import { BoardComposite } from '../composite/BoardComposite'
-import { Composite } from '../definitions/Composite'
+import { Composite } from './composite'
+import { API } from './constants/config'
+import { DOMGenerator } from './DOMGenerator'
+import { ChessFactory } from './factory'
+import { BoardAttributes } from './models'
 
 export class GameStateHandler {
   private boardComposite: Composite<BoardAttributes>

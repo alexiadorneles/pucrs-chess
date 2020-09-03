@@ -1,9 +1,8 @@
-import _ from 'lodash'
 import { Color } from '../../definitions/Color'
 import { Position } from '../../definitions/Movement'
+import { ControlAttribute, Model } from '../Model'
 import { Piece } from '../piece/Piece'
 import { Board } from './Board'
-import { Model, ControlAttribute } from '../../definitions/Model'
 
 export interface BoardItemAttributes extends ControlAttribute<BoardItem> {
   piece: Piece

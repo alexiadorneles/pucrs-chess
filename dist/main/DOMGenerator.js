@@ -19,7 +19,7 @@ var DOMGenerator = (function () {
             return;
         var styleClass = element.getAttribute('class');
         var alreadyHighlighted = styleClass.includes('highlight');
-        if (alreadyHighlighted && !itemComposite.getModel().get('isHighlighted'))
+        if (this.shouldRemoveHighlight(alreadyHighlighted, itemComposite))
             styleClass = styleClass.replace('highlight', '');
         var highlightClass = itemComposite.getModel().get('isHighlighted') && !alreadyHighlighted ? 'highlight' : '';
         element.setAttribute('class', styleClass + " " + highlightClass);
@@ -32,6 +32,9 @@ var DOMGenerator = (function () {
         var lines = this.getBoardLines(itemCompositeMatrix);
         lines.forEach(function (line) { return board.appendChild(line); });
         root.appendChild(board);
+    };
+    DOMGenerator.prototype.shouldRemoveHighlight = function (alreadyHighlighted, itemComposite) {
+        return alreadyHighlighted && !itemComposite.getModel().get('isHighlighted');
     };
     DOMGenerator.prototype.getBoardLines = function (items) {
         var _this = this;

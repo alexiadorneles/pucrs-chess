@@ -1,7 +1,7 @@
-import { GameStateHandler } from './domain/GameStateHandler'
+import { ChessEngine } from './ChessEngine'
+import { GameStateHandler } from './GameStateHandler'
 import { DOMGenerator } from './DOMGenerator'
 import { ChessFactoryImpl } from './factory/ChessFactory'
-import { ChessEngine } from './ChessEngine'
 
 const domGeneratorInstance = DOMGenerator.getInstance()
 const chessFactory = new ChessFactoryImpl(new ChessEngine())

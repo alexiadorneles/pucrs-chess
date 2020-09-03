@@ -1,8 +1,7 @@
-import { BoardComposite } from '../composite/BoardComposite'
-import { Composite } from '../definitions/Composite'
-import { JSONObject } from '../definitions/JSONObject'
-import { Board, BoardAttributes } from '../domain/board/Board'
 import { ChessEngine } from '../ChessEngine'
+import { BoardComposite, Composite } from '../composite'
+import { JSONObject } from '../definitions/JSONObject'
+import { Board, BoardAttributes } from '../models'
 
 export interface ChessFactory {
   createBoardFromJSON(board: JSONObject): Composite<BoardAttributes>

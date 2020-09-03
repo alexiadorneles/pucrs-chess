@@ -1,12 +1,9 @@
-import { Composite, BaseComposite } from '../definitions/Composite'
-import { JSONObject } from '../definitions/JSONObject'
-import { Piece, PieceAttributes } from '../domain/piece/Piece'
-import { PieceBuilderMap } from '../domain/PieceBuilder'
-import { MovementComposite } from './MovementComposite'
-import { BoardItemAttributes } from '../domain/board/BoardItem'
-import { Model } from '../definitions/Model'
 import { ChessEngine } from '../ChessEngine'
-import { Movement } from '../domain/movement/Movement'
+import { JSONObject } from '../definitions/JSONObject'
+import { PieceBuilderMap } from '../factory'
+import { BoardItemAttributes, Model, Movement, Piece, PieceAttributes } from '../models'
+import { BaseComposite, Composite } from './Composite'
+import { MovementComposite } from './MovementComposite'
 
 export class PieceComposite implements Composite<PieceAttributes> {
   constructor(
@@ -44,13 +41,13 @@ export class PieceComposite implements Composite<PieceAttributes> {
     const instantiationFn = PieceBuilderMap.get(object.kind)
     const piece = Object.assign(new instantiationFn(object.color), object) as Piece
     const mapMovements = (mov: Movement) =>
-      MovementComposite.createFromJSON(mov, this as any, engine)
+      MovementComposite.createFromJSON(mov, this as any)
         .getModel()
         .get('control')
     piece.set(
       'movements',
       piece.get('movements').map((mov: Movement) =>
-        MovementComposite.createFromJSON(mov, this as any, engine)
+        MovementComposite.createFromJSON(mov, this as any)
           .getModel()
           .get('control'),
       ),
@@ -59,9 +56,7 @@ export class PieceComposite implements Composite<PieceAttributes> {
   }
 
   getChildren(): BaseComposite[] {
-    return this.piece
-      .get('movements')
-      .map(movement => new MovementComposite(movement, this, this.engine))
+    return this.piece.get('movements').map(movement => new MovementComposite(movement, this))
   }
 
   public getJSON(): JSONObject {

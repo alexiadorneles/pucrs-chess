@@ -1,10 +1,8 @@
-import _ from 'lodash'
-import { Composite, BaseComposite } from '../definitions/Composite'
-import { JSONObject } from '../definitions/JSONObject'
-import { Board, BoardAttributes } from '../domain/board/Board'
-import { BoardItemComposite } from './BoardItemComposite'
-import { Model } from '../definitions/Model'
 import { ChessEngine } from '../ChessEngine'
+import { JSONObject } from '../definitions/JSONObject'
+import { Board, BoardAttributes, Model } from '../models'
+import { BoardItemComposite } from './BoardItemComposite'
+import { BaseComposite, Composite } from './Composite'
 export class BoardComposite implements Composite<BoardAttributes> {
   constructor(private board: Board, private engine: ChessEngine) {
     this.getModel().set('control', board)

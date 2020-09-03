@@ -1,9 +1,11 @@
-import { MovementOffset, MovementKind } from '../../definitions/Movement'
-import { MovementAdapter } from '../adapter/MovementAdapter'
+import { MovementAdapter } from '../../adapter'
+import { MovementKind, MovementOffset } from '../../definitions/Movement'
 import { Movement } from './Movement'
 
 export class HorizontalMovement extends Movement {
-  constructor() { super(MovementKind.HORIZONTAL) }
+  constructor() {
+    super(MovementKind.HORIZONTAL)
+  }
   public getMovementOffsets(): MovementOffset[] {
     return [
       {

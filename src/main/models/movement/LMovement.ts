@@ -1,5 +1,5 @@
-import { MovementOffset, Position, MovementKind } from '../../definitions/Movement'
-import { MovementAdapter } from '../adapter/MovementAdapter'
+import { MovementAdapter } from '../../adapter'
+import { MovementKind, MovementOffset, Position } from '../../definitions/Movement'
 import { Board } from '../board/Board'
 import { Movement } from './Movement'
 

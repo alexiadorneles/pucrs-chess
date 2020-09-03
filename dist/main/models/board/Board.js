@@ -17,11 +17,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(require("lodash"));
+var adapter_1 = require("../../adapter");
 var InitialPositions_1 = require("../../constants/InitialPositions");
-var Model_1 = require("../../definitions/Model");
 var PieceKind_1 = require("../../definitions/PieceKind");
-var ColorAdapter_1 = require("../adapter/ColorAdapter");
-var PieceFactory_1 = require("../../factory/PieceFactory");
+var factory_1 = require("../../factory");
+var Model_1 = require("../Model");
 var BoardItem_1 = require("./BoardItem");
 var initMatrix = function () {
     var matrix = [];
@@ -49,7 +49,7 @@ var Board = (function (_super) {
             item.set('board', _this);
         };
         _this.init();
-        _this.pieceFactory = new PieceFactory_1.PieceFactory();
+        _this.buildPieces = _this.buildPieces.bind(_this);
         return _this;
     }
     Board.prototype.init = function () {
@@ -84,13 +84,12 @@ var Board = (function (_super) {
         return this.isPositionInMatrixRange(position) ? this.getItem(position).get('piece') : null;
     };
     Board.prototype.buildPieces = function (color) {
-        var _this = this;
         return Object.values(PieceKind_1.PieceKind)
             .filter(Boolean)
-            .reduce(function (agg, kind) { return agg.concat(_this.pieceFactory.createPiece(kind, color)); }, []);
+            .reduce(function (agg, kind) { return agg.concat(factory_1.PieceFactory.createPiece(kind, color)); }, []);
     };
     Board.prototype.buildEmptyPieces = function () {
-        return InitialPositions_1.WhitePiecesPositionMap.get(PieceKind_1.PieceKind.EMPTY).map(function (position) { return new BoardItem_1.BoardItem(position, ColorAdapter_1.ColorAdapter.defineItemColor(position)); });
+        return InitialPositions_1.WhitePiecesPositionMap.get(PieceKind_1.PieceKind.EMPTY).map(function (position) { return new BoardItem_1.BoardItem(position, adapter_1.ColorAdapter.defineItemColor(position)); });
     };
     return Board;
 }(Model_1.Model));

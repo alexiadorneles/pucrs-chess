@@ -1,12 +1,12 @@
 import _ from 'lodash'
+import { ColorAdapter } from '../../adapter'
 import { WhitePiecesPositionMap } from '../../constants/InitialPositions'
 import { Color } from '../../definitions/Color'
-import { ControlAttribute, Model } from '../../definitions/Model'
 import { Position } from '../../definitions/Movement'
 import { PieceKind } from '../../definitions/PieceKind'
-import { ColorAdapter } from '../adapter/ColorAdapter'
+import { PieceFactory } from '../../factory'
+import { ControlAttribute, Model } from '../Model'
 import { Piece, PieceAttributes } from '../piece/Piece'
-import { PieceBuilder } from '../PieceBuilder'
 import { BoardItem } from './BoardItem'
 
 const initMatrix = (): BoardItem[][] => {
@@ -27,11 +27,12 @@ export interface BoardAttributes extends ControlAttribute<Board> {
 }
 
 export class Board extends Model<BoardAttributes> {
-  public matrix: Array<Array<BoardItem>> = initMatrix()
+  private matrix: Array<Array<BoardItem>> = initMatrix()
 
   constructor() {
     super()
     this.init()
+    this.buildPieces = this.buildPieces.bind(this)
   }
 
   public init(): void {
@@ -85,7 +86,7 @@ export class Board extends Model<BoardAttributes> {
     return Object.values(PieceKind)
       .filter(Boolean)
       .reduce(
-        (agg: BoardItem[], kind: PieceKind) => agg.concat(PieceBuilder.build(kind, color)),
+        (agg: BoardItem[], kind: PieceKind) => agg.concat(PieceFactory.createPiece(kind, color)),
         [],
       )
   }

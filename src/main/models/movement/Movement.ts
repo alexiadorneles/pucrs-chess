@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { MovementKind, MovementOffset, Position } from '../../definitions/Movement'
 import { Board } from '../board/Board'
-import { Model, ControlAttribute } from '../../definitions/Model'
+import { ControlAttribute, Model } from '../Model'
 
 export interface MovementAttributes extends ControlAttribute<Movement> {
   kind: MovementKind

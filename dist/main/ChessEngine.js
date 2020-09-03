@@ -3,21 +3,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var DOMGenerator_1 = require("./DOMGenerator");
 var lodash_1 = __importDefault(require("lodash"));
-var BoardComposite_1 = require("./composite/BoardComposite");
-var BoardItemComposite_1 = require("./composite/BoardItemComposite");
+var composite_1 = require("./composite");
+var DOMGenerator_1 = require("./DOMGenerator");
 var ChessEngine = (function () {
     function ChessEngine() {
     }
     ChessEngine.prototype.setCurrentMovingPiece = function (piece) {
         if (this.currentMovingPiece && !lodash_1.default.isEqual(this.currentMovingPiece, piece)) {
-            if (!piece) {
-                var board_1 = this.currentMovingPiece.get('boardItem').get('board');
-                return this.removeHighlightFromBoard(new BoardComposite_1.BoardComposite(board_1, this));
-            }
-            var board = piece.get('boardItem').get('board');
-            this.removeHighlightFromBoard(new BoardComposite_1.BoardComposite(board, this));
+            if (!piece)
+                return this.removeHighLightFromPieceBoard(this.currentMovingPiece);
+            this.removeHighLightFromPieceBoard(piece);
         }
         this.currentMovingPiece = piece;
     };
@@ -53,7 +49,7 @@ var ChessEngine = (function () {
             positions.forEach(function (position) {
                 var item = boardControl.getItem(position);
                 item.set('isHighlighted', true);
-                DOMGenerator_1.DOMGenerator.getInstance().refreshItem(new BoardItemComposite_1.BoardItemComposite(item, board, _this));
+                DOMGenerator_1.DOMGenerator.getInstance().refreshItem(new composite_1.BoardItemComposite(item, board, _this));
             });
         }
     };
@@ -68,6 +64,10 @@ var ChessEngine = (function () {
             item.getModel().set('isHighlighted', false);
             DOMGenerator_1.DOMGenerator.getInstance().refreshItem(item);
         });
+    };
+    ChessEngine.prototype.removeHighLightFromPieceBoard = function (piece) {
+        var board = piece.get('boardItem').get('board');
+        this.removeHighlightFromBoard(new composite_1.BoardComposite(board, this));
     };
     return ChessEngine;
 }());

@@ -1,9 +1,11 @@
-import { MovementOffset, MovementKind } from '../../definitions/Movement'
-import { MovementAdapter } from '../adapter/MovementAdapter'
+import { MovementAdapter } from '../../adapter'
+import { MovementKind, MovementOffset } from '../../definitions/Movement'
 import { Movement } from './Movement'
 
 export class VerticalMovement extends Movement {
-  constructor() { super(MovementKind.VERTICAL) }
+  constructor() {
+    super(MovementKind.VERTICAL)
+  }
   public getMovementOffsets(): MovementOffset[] {
     return [
       {
@@ -13,7 +15,7 @@ export class VerticalMovement extends Movement {
       {
         columnModifier: new MovementAdapter(0, MovementAdapter.minus),
         lineModifier: new MovementAdapter(1, MovementAdapter.minus),
-      }
+      },
     ]
   }
 }

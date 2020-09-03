@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Board_1 = require("../domain/board/Board");
+var models_1 = require("../models");
 var BoardItemComposite_1 = require("./BoardItemComposite");
 var BoardComposite = (function () {
     function BoardComposite(board, engine) {
@@ -15,7 +15,7 @@ var BoardComposite = (function () {
         throw new Error('Board is the root of the tree.');
     };
     BoardComposite.createFromJSON = function (object, engine) {
-        var board = Object.assign(new Board_1.Board(), object);
+        var board = Object.assign(new models_1.Board(), object);
         var composite = new BoardComposite(board, engine);
         var items = board
             .getAllItems()

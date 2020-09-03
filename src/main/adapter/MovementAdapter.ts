@@ -1,4 +1,4 @@
-import { Modifier } from '../../definitions/Movement'
+import { Modifier } from '../definitions/Movement'
 
 export class MovementAdapter implements Modifier {
   constructor(
