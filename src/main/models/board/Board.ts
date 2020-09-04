@@ -6,7 +6,7 @@ import { Position } from '../../definitions/Movement'
 import { PieceKind } from '../../definitions/PieceKind'
 import { PieceFactory } from '../../factory'
 import { ControlAttribute, Model } from '../Model'
-import { Piece, PieceAttributes } from '../piece/Piece'
+import { Piece } from '../piece/Piece'
 import { BoardItem } from './BoardItem'
 
 const initMatrix = (): BoardItem[][] => {
@@ -22,9 +22,7 @@ const initMatrix = (): BoardItem[][] => {
   return matrix
 }
 
-export interface BoardAttributes extends ControlAttribute<Board> {
-  currentMovingPieces: Model<PieceAttributes>
-}
+export interface BoardAttributes extends ControlAttribute<Board> {}
 
 export class Board extends Model<BoardAttributes> {
   private matrix: Array<Array<BoardItem>> = initMatrix()
