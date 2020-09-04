@@ -28,7 +28,6 @@ export class BoardItemComposite implements ReactiveComposite<BoardItemAttributes
 
   public onClick(event: Event): void {
     const [piece] = this.getChildren() as Composite<PieceAttributes>[]
-    const boardModel = this.getParent().getModel()
     if (!this.model.get('isHighlighted')) {
       if (piece) {
         this.engine.setCurrentMovingPiece(piece.getModel())

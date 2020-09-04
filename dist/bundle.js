@@ -24,8 +24,11 @@ var ChessEngine = (function () {
     ChessEngine.prototype.movePiece = function (board, item) {
         var clickedItem = item.getModel().get('control');
         var pieceItem = this.currentMovingPiece.get('boardItem');
+        if (lodash_1.default.isEqual(clickedItem, pieceItem)) {
+            this.setCurrentMovingPiece(null);
+            return;
+        }
         clickedItem.set('piece', this.currentMovingPiece.get('control'));
-        this.setCurrentMovingPiece(null);
         pieceItem.set('piece', null);
         DOMGenerator_1.DOMGenerator.getInstance().refreshBoard(board);
     };
@@ -350,7 +353,6 @@ var BoardItemComposite = (function () {
     };
     BoardItemComposite.prototype.onClick = function (event) {
         var piece = this.getChildren()[0];
-        var boardModel = this.getParent().getModel();
         if (!this.model.get('isHighlighted')) {
             if (piece) {
                 this.engine.setCurrentMovingPiece(piece.getModel());

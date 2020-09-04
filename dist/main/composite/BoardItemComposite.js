@@ -24,7 +24,6 @@ var BoardItemComposite = (function () {
     };
     BoardItemComposite.prototype.onClick = function (event) {
         var piece = this.getChildren()[0];
-        var boardModel = this.getParent().getModel();
         if (!this.model.get('isHighlighted')) {
             if (piece) {
                 this.engine.setCurrentMovingPiece(piece.getModel());

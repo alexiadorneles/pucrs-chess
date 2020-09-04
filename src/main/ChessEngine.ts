@@ -21,8 +21,11 @@ export class ChessEngine {
   public movePiece(board: Composite<BoardAttributes>, item: Composite<BoardItemAttributes>): void {
     const clickedItem = item.getModel().get('control')
     const pieceItem = this.currentMovingPiece.get('boardItem')
+    if (_.isEqual(clickedItem, pieceItem)) {
+      this.setCurrentMovingPiece(null)
+      return
+    }
     clickedItem.set('piece', this.currentMovingPiece.get('control'))
-    this.setCurrentMovingPiece(null)
     pieceItem.set('piece', null)
     DOMGenerator.getInstance().refreshBoard(board)
   }
