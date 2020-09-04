@@ -41,6 +41,12 @@ export class ChessEngine {
       : this.removeHighlightFromBoard(board)
   }
 
+  public removeItemHighlight(item: Composite<BoardItemAttributes>): void {
+    item.getModel().set('isHighlighted', false)
+    DOMGenerator.getInstance().refreshItem(item)
+    this.removeHighlightFromBoard(item.getParent() as Composite<BoardAttributes>)
+  }
+
   private simulateMovementForItem(itemComposite: Composite<BoardItemAttributes>): void {
     const board = itemComposite.getParent() as Composite<BoardAttributes>
     const boardControl = board.getModel().get('control')
@@ -53,12 +59,6 @@ export class ChessEngine {
         DOMGenerator.getInstance().refreshItem(new BoardItemComposite(item, board, this))
       })
     }
-  }
-
-  public removeItemHighlight(item: Composite<BoardItemAttributes>): void {
-    item.getModel().set('isHighlighted', false)
-    DOMGenerator.getInstance().refreshItem(item)
-    this.removeHighlightFromBoard(item.getParent() as Composite<BoardAttributes>)
   }
 
   private removeHighlightFromBoard(board: Composite<BoardAttributes>): void {

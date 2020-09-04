@@ -7,7 +7,7 @@ import { BoardAttributes } from './models'
 
 export class GameStateHandler {
   private boardComposite: Composite<BoardAttributes>
-  constructor(private chessFactory: ChessFactory, private domGenerator: DOMGenerator) {
+  constructor(private chessFactory: ChessFactory) {
     this.newGame = this.newGame.bind(this)
     this.loadGame = this.loadGame.bind(this)
     this.saveGame = this.saveGame.bind(this)
@@ -15,13 +15,13 @@ export class GameStateHandler {
 
   public newGame(): void {
     this.boardComposite = this.chessFactory.createInitialBoard()
-    this.domGenerator.refreshBoard(this.boardComposite)
+    DOMGenerator.getInstance().refreshBoard(this.boardComposite)
   }
 
   public async loadGame(): Promise<void> {
     const response = await Axios.get(API.LOAD_URL)
     this.boardComposite = this.chessFactory.createBoardFromJSON(response.data)
-    this.domGenerator.refreshBoard(this.boardComposite)
+    DOMGenerator.getInstance().refreshBoard(this.boardComposite)
   }
 
   public async saveGame(): Promise<void> {

@@ -40,6 +40,11 @@ var ChessEngine = (function () {
             ? this.simulateMovementForItem(item)
             : this.removeHighlightFromBoard(board);
     };
+    ChessEngine.prototype.removeItemHighlight = function (item) {
+        item.getModel().set('isHighlighted', false);
+        DOMGenerator_1.DOMGenerator.getInstance().refreshItem(item);
+        this.removeHighlightFromBoard(item.getParent());
+    };
     ChessEngine.prototype.simulateMovementForItem = function (itemComposite) {
         var _this = this;
         var board = itemComposite.getParent();
@@ -53,11 +58,6 @@ var ChessEngine = (function () {
                 DOMGenerator_1.DOMGenerator.getInstance().refreshItem(new composite_1.BoardItemComposite(item, board, _this));
             });
         }
-    };
-    ChessEngine.prototype.removeItemHighlight = function (item) {
-        item.getModel().set('isHighlighted', false);
-        DOMGenerator_1.DOMGenerator.getInstance().refreshItem(item);
-        this.removeHighlightFromBoard(item.getParent());
     };
     ChessEngine.prototype.removeHighlightFromBoard = function (board) {
         var allItems = board.getChildren();
@@ -181,17 +181,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 var config_1 = require("./constants/config");
+var DOMGenerator_1 = require("./DOMGenerator");
 var GameStateHandler = (function () {
-    function GameStateHandler(chessFactory, domGenerator) {
+    function GameStateHandler(chessFactory) {
         this.chessFactory = chessFactory;
-        this.domGenerator = domGenerator;
         this.newGame = this.newGame.bind(this);
         this.loadGame = this.loadGame.bind(this);
         this.saveGame = this.saveGame.bind(this);
     }
     GameStateHandler.prototype.newGame = function () {
         this.boardComposite = this.chessFactory.createInitialBoard();
-        this.domGenerator.refreshBoard(this.boardComposite);
+        DOMGenerator_1.DOMGenerator.getInstance().refreshBoard(this.boardComposite);
     };
     GameStateHandler.prototype.loadGame = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -202,7 +202,7 @@ var GameStateHandler = (function () {
                     case 1:
                         response = _a.sent();
                         this.boardComposite = this.chessFactory.createBoardFromJSON(response.data);
-                        this.domGenerator.refreshBoard(this.boardComposite);
+                        DOMGenerator_1.DOMGenerator.getInstance().refreshBoard(this.boardComposite);
                         return [2];
                 }
             });
@@ -231,7 +231,7 @@ var GameStateHandler = (function () {
 }());
 exports.GameStateHandler = GameStateHandler;
 
-},{"./constants/config":13,"axios":35}],4:[function(require,module,exports){
+},{"./DOMGenerator":2,"./constants/config":13,"axios":35}],4:[function(require,module,exports){
 "use strict";
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -718,12 +718,10 @@ __export(require("./PieceFactory"));
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ChessEngine_1 = require("./ChessEngine");
-var GameStateHandler_1 = require("./GameStateHandler");
-var DOMGenerator_1 = require("./DOMGenerator");
 var ChessFactory_1 = require("./factory/ChessFactory");
-var domGeneratorInstance = DOMGenerator_1.DOMGenerator.getInstance();
+var GameStateHandler_1 = require("./GameStateHandler");
 var chessFactory = new ChessFactory_1.ChessFactoryImpl(new ChessEngine_1.ChessEngine());
-var gameStateHandler = new GameStateHandler_1.GameStateHandler(chessFactory, domGeneratorInstance);
+var gameStateHandler = new GameStateHandler_1.GameStateHandler(chessFactory);
 var newGameButton = document.getElementById('novoJogo');
 var loadGameButton = document.getElementById('carregarJogo');
 var saveGameButton = document.getElementById('salvarJogo');
@@ -731,7 +729,7 @@ newGameButton.addEventListener('click', gameStateHandler.newGame);
 loadGameButton.addEventListener('click', gameStateHandler.loadGame);
 saveGameButton.addEventListener('click', gameStateHandler.saveGame);
 
-},{"./ChessEngine":1,"./DOMGenerator":2,"./GameStateHandler":3,"./factory/ChessFactory":15}],19:[function(require,module,exports){
+},{"./ChessEngine":1,"./GameStateHandler":3,"./factory/ChessFactory":15}],19:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Model = (function () {

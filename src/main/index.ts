@@ -1,11 +1,9 @@
 import { ChessEngine } from './ChessEngine'
-import { GameStateHandler } from './GameStateHandler'
-import { DOMGenerator } from './DOMGenerator'
 import { ChessFactoryImpl } from './factory/ChessFactory'
+import { GameStateHandler } from './GameStateHandler'
 
-const domGeneratorInstance = DOMGenerator.getInstance()
 const chessFactory = new ChessFactoryImpl(new ChessEngine())
-const gameStateHandler = new GameStateHandler(chessFactory, domGeneratorInstance)
+const gameStateHandler = new GameStateHandler(chessFactory)
 
 const newGameButton = document.getElementById('novoJogo')
 const loadGameButton = document.getElementById('carregarJogo')

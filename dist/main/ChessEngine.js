@@ -39,6 +39,11 @@ var ChessEngine = (function () {
             ? this.simulateMovementForItem(item)
             : this.removeHighlightFromBoard(board);
     };
+    ChessEngine.prototype.removeItemHighlight = function (item) {
+        item.getModel().set('isHighlighted', false);
+        DOMGenerator_1.DOMGenerator.getInstance().refreshItem(item);
+        this.removeHighlightFromBoard(item.getParent());
+    };
     ChessEngine.prototype.simulateMovementForItem = function (itemComposite) {
         var _this = this;
         var board = itemComposite.getParent();
@@ -52,11 +57,6 @@ var ChessEngine = (function () {
                 DOMGenerator_1.DOMGenerator.getInstance().refreshItem(new composite_1.BoardItemComposite(item, board, _this));
             });
         }
-    };
-    ChessEngine.prototype.removeItemHighlight = function (item) {
-        item.getModel().set('isHighlighted', false);
-        DOMGenerator_1.DOMGenerator.getInstance().refreshItem(item);
-        this.removeHighlightFromBoard(item.getParent());
     };
     ChessEngine.prototype.removeHighlightFromBoard = function (board) {
         var allItems = board.getChildren();

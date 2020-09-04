@@ -41,17 +41,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 var config_1 = require("./constants/config");
+var DOMGenerator_1 = require("./DOMGenerator");
 var GameStateHandler = (function () {
-    function GameStateHandler(chessFactory, domGenerator) {
+    function GameStateHandler(chessFactory) {
         this.chessFactory = chessFactory;
-        this.domGenerator = domGenerator;
         this.newGame = this.newGame.bind(this);
         this.loadGame = this.loadGame.bind(this);
         this.saveGame = this.saveGame.bind(this);
     }
     GameStateHandler.prototype.newGame = function () {
         this.boardComposite = this.chessFactory.createInitialBoard();
-        this.domGenerator.refreshBoard(this.boardComposite);
+        DOMGenerator_1.DOMGenerator.getInstance().refreshBoard(this.boardComposite);
     };
     GameStateHandler.prototype.loadGame = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -62,7 +62,7 @@ var GameStateHandler = (function () {
                     case 1:
                         response = _a.sent();
                         this.boardComposite = this.chessFactory.createBoardFromJSON(response.data);
-                        this.domGenerator.refreshBoard(this.boardComposite);
+                        DOMGenerator_1.DOMGenerator.getInstance().refreshBoard(this.boardComposite);
                         return [2];
                 }
             });
